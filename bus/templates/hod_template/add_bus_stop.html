@@ -1,0 +1,55 @@
+{% extends 'hod_template/base_template.html' %}
+{% load static %}
+
+{% block main_content %}
+
+<style>
+    .card {
+        border-radius: 20px;
+        /* box-shadow: 0 0.15rem 1.75rem 0 rgb(33 40 50 / 15%); */
+        box-shadow: 12px 16px 22px 9px rgba(0,0,0,0.1);
+    }
+    
+    .card-header{
+        border-top-left-radius: 20px !important;
+        border-top-right-radius: 20px !important;
+        background: rgb(62,7,75);
+        background: linear-gradient(180deg, rgba(62,7,75,1) 0%, rgba(40,10,69,1) 63%);
+    }
+    
+</style>
+<link rel="stylesheet" href="{% static "dist/css/add_product.css" %}">
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Add Bus Stop</h2>
+                </div>
+                <div class="card-body">
+                    {% if messages %}
+                        <ul class="messages">
+                            {% for message in messages %}
+                                <li{% if message.tags %} class="alert {{ message.tags }}"{% endif %}>{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+
+                    <form method="post" >
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="name">Select District:</label>
+                            <select name="name" id="name" class="form-control">
+                                {% for district in districts %}
+                                    <option value="{{ district.name }}">{{ district.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <button type="submit" class="save-btn">Add</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock main_content %}

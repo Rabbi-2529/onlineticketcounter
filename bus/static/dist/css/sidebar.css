@@ -1,0 +1,281 @@
+.sidebar-nav ul ul{
+    list-style-type: none;
+}
+
+.os-content{
+    padding: 0 !important;
+}
+
+.nav-sidebar{
+    padding: 0 0 0 8px !important;
+}
+
+.nav-item i{
+    font-size: 17px;
+}
+
+.nav-sidebar .nav-item{
+    line-height: 40px;
+}
+
+.nav-sidebar .nav-item a{
+    position: relative;
+}
+
+
+.nav-sidebar .nav-item a .angle-icon{
+    position: absolute;
+    font-size: 14px;
+    top: 22px;
+    right: 25px;
+    transition: 0.5s;
+}
+
+.angle-icon.rotate{
+    transform: rotate(180deg);
+    transition: 0.5s;
+}
+
+.second-nav-item-link .second-sidebar-dropdown-link{
+    position: relative;
+}
+
+.second-nav-item-link .second-sidebar-dropdown-link .second-angle-icon{
+    position: absolute;
+    font-size: 12px;
+    top: 13px;
+    right: 40px;
+    transition: 0.5s;
+}
+
+.second-angle-icon.rotate{
+    transform: rotate(180deg);
+    transition: 0.5s;
+}
+
+.nav-sidebar .nav-item a p{
+    position: absolute;
+    left: 50px;
+    font-size: 15px;
+    font-weight: 300;
+    color: rgb(155, 155, 155);
+}
+
+.nav-pills .nav-link:not(.active):hover {
+    color: rgb(255, 255, 255);
+}
+
+.nav-sidebar .nav-item .sub-menu li{
+    line-height: 25px;
+}
+
+.nav-sidebar .nav-item .sub-menu li a{
+    font-size: 14px;
+}
+
+.nav-sidebar .nav-item .sub-menu .nav-item-dropdown:hover .dropdown-item{
+    color: #ffffff !important;
+    /* font-size: 17px; */
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+
+
+.sidebar-dropdown-show .nav-item-dropdown .dropdown-item i{
+    position: relative;
+    top: -3px;
+    padding-right: 10px;
+    font-size: 6px;
+    color: rgb(155, 155, 155);
+}
+
+.nav-sidebar .nav-item-link .nav-link.active{
+    background-color: rgba(0, 0, 0, 0.4) !important;
+}
+
+.nav-sidebar .nav-item-link .sidebar-dropdown-show .nav-item-dropdown .dropdown-item.active{
+    background-color: rgba(0, 0, 0, 0.4) !important;
+}
+
+.nav-sidebar .nav-item-link .nav-link.active p{
+    color: rgb(255, 255, 255) !important;
+}
+
+.sidebar-dropdown-show .nav-item-dropdown .dropdown-item.active{
+    background-color: rgba(0, 0, 0, 0.1);
+    /* color: rgb(255, 255, 255); */
+}
+
+/* .sidebar-dropdown-show .nav-item-dropdown .dropdown-item.active i{
+    color: rgb(255, 255, 255);
+} */
+
+/* second menu */
+
+.sidebar-dropdown-show .nav-item-dropdown .dropdown-item i{
+    position: relative;
+    top: -3px;
+    padding-right: 10px;
+    font-size: 6px;
+    color: rgb(155, 155, 155);
+}
+
+/* .nav-sidebar .nav-item-link .sidebar-dropdown-show .nav-item-dropdown .dropdown-item.active{
+    background-color: rgba(0, 0, 0, 0.4) !important;
+} */
+
+.sidebar-dropdown-show .nav-item-dropdown .dropdown-item.active{
+    background-color: rgba(0, 0, 0, 0.1);
+    color: rgb(255, 255, 255);
+}
+
+.sidebar-dropdown-show .nav-item-dropdown .dropdown-item.active i{
+    color: rgb(255, 255, 255);
+}
+
+.second-sidebar-dropdown-show{
+    padding-left: 5px !important;
+}
+
+.second-nav-item-link .second-sidebar-dropdown-show .dropdown-item:hover{
+    color: #ffffff !important;
+    /* font-size: 17px; */
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.second-nav-item-link .second-sidebar-dropdown-show .dropdown-item.active{
+    background-color: rgba(0, 0, 0, 0.4) !important;
+}
+
+.second-sidebar-dropdown-show .fa-circle-dot{
+    position: relative;
+    top: -3px;
+    padding-right: 10px;
+    font-size: 6px;
+    color: rgb(155, 155, 155);
+}
+
+/* second menu */
+
+.nav-sidebar .nav-item:hover a p{
+    color: rgb(255, 255, 255) !important;
+}
+
+.sidebar-nav{
+    width: 100%;
+}
+
+.sidebar-nav ul .sidebar-dropdown-show{
+    /* display: none; */
+    max-height: 0;
+    overflow: hidden;
+    transition: 0.5s;
+}
+
+.sidebar-nav ul .sidebar-dropdown-show.show {
+    /* display: block; */
+    max-height: 600px;
+    transition: 0.5s;
+}
+
+.second-dropdown-show li{
+    line-height: 25px;
+}
+
+.sidebar-dropdown-show .second-nav-item-link{
+    line-height: 20px !important;
+}
+
+.nav-item-link .sidebar-dropdown-show .second-nav-item-link .second-sidebar-dropdown-show{
+    max-height: 0;
+    overflow: hidden;
+    transition: 0.5s;
+}
+
+.nav-item-link .sidebar-dropdown-show .second-nav-item-link .second-sidebar-dropdown-show.show{
+    max-height: 600px;
+    transition: 0.5s;
+}
+
+.nav-item-dropdown .second-sidebar-dropdown-link{
+    position: relative;
+}
+
+
+/* Styles for the user-panel */
+.user-panel {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
+}
+
+.user-panel .image {
+    width: 60px;
+    height: 50px;
+    overflow: hidden;
+    border-radius: 50%;
+}
+
+.user-panel img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.user-panel .info {
+    margin-left: 10px;
+}
+
+/* Styles for the online indicator */
+.online-indicator {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background-color: #2ecc71; /* Change this to the desired color for the online indicator */
+    border-radius: 50%;
+    margin-bottom: -2px;
+}
+
+/* Additional styles for the username and "Online" text */
+.user-panel .d-block {
+    font-weight: bold;
+}
+
+.user-panel .text-muted {
+    color: #888;
+    font-size: 0.8em;
+    margin-left: 5px;
+}
+
+.brand-link{
+    position: sticky;
+    top: 0;
+}
+
+.sidebar {
+    top: 0;
+    overflow: hidden;
+    height: 100%;
+    /* background-color: #19222a; */
+    /* background-color: #105591; */
+
+    /* background: rgb(28,5,41);
+    background: linear-gradient(180deg, rgba(28,5,41,1) 29%, rgba(17,6,61,1) 100%); */
+
+    background: rgb(62,7,75);
+    background: linear-gradient(180deg, rgba(62,7,75,1) 0%, rgba(40,10,69,1) 63%);
+    -webkit-transform: translateZ(0);
+    visibility: visible;
+    -webkit-backface-visibility: hidden;
+    header {
+        background-color: rgb(159, 167, 172);
+        width: 100%;
+        display: block;
+        padding: 0.75em 1em;
+    }
+}
+
+.nav-sidebar{
+    overflow-y: scroll;
+    padding-bottom: 100px !important;
+}
+

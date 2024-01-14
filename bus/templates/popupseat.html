@@ -1,0 +1,569 @@
+{% load static %}
+<link rel="stylesheet" href={% static "css/popupseat.css" %}>
+<style>
+    
+
+    
+</style>
+<!-- Main content -->
+<i id="close-btn" class="fa-solid fa-xmark fa-xl close-btn" style="color: #e24b4b;"></i>
+<section class="content">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                    <!-- Search form -->
+            </div>
+        </div>
+
+      {% if bus_number %}
+      <!-- Display bus number -->
+      <h4>Bus Number: {{ coach.bus_number }}</h4>
+      {% endif %}
+      <p>Coach Number: {{ coach.coachnumber }}</p>
+      <div class="row">
+        <div class="bus-column col-lg-6 col-md-5 col-12">
+            <div class="row w-100 pb-4">
+                <div class="col-2"></div>
+                <div class="col-6 d-flex">
+                    <div class="col-4"></div>
+                    <div class="col-4">
+        
+                    </div>
+                    
+                </div>
+            </div>
+            <ul>
+                {% if seat_type_1_count > 0 and seat_type_2_count == 0 and seat_type_3_count == 0 %}
+                    <div class="row w-100">
+                        <div class="col-6 d-flex mb-3">
+                            <div class="col-4"></div>
+                            
+                            <div class="col-4"></div>
+                            <div class="col-4 seat-number">
+                                <img class="wheel ms-2" src={% static "img/wheel.png" %} alt="" style="width: 35px; height: 35px;">
+                            </div>
+                        </div>
+            
+                    </div>
+                    {% for index, row_num in rows_seat_type_1 %}
+                        
+                        <div class="row w-100 seat-row">
+                            <div class="col-6 d-flex">
+                                <div class="col-4 seat-number">
+                                    <div class="seat">
+                                        {% if row_num|add:'1' in booked_seats %}
+                                            <i class="fa-solid fa-couch seat-booked fa-lg seat-color booked-seat"></i>
+                                        {% else %}
+                                            <i id="{{row_num}}1" class="fa-solid fa-couch seat-select fa-lg seat-color"></i>
+                                        {% endif %}
+                                        <div class="d-flex justify-content-center seat-label-div">
+                                            <span class="seat-label">{{row_num}}1</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-4 seat-number">
+                                    {% if extra_seat == 1 and index == rows_seat_type_1_len %}
+                                        <div class="seat">
+                                            {% if row_num|add:'0' in booked_seats %}
+                                                <i class="fa-solid fa-couch seat-booked fa-lg seat-color booked-seat"></i>
+                                            {% else %}
+                                                <i id="{{row_num}}0" class="fa-solid fa-couch seat-select fa-lg seat-color"></i>
+                                            {% endif %}
+                                            <div class="d-flex justify-content-center seat-label-div">
+                                                <span class="seat-label">{{row_num}}0</span>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-4 seat-number">
+                                    <div class="seat">
+                                        {% if row_num|add:'2' in booked_seats %}
+                                            <i class="fa-solid fa-couch seat-booked fa-lg seat-color booked-seat"></i>
+                                        {% else %}
+                                            <i id="{{row_num}}2" class="fa-solid fa-couch seat-select fa-lg seat-color"></i>
+                                        {% endif %}
+                                        <div class="d-flex justify-content-center seat-label-div">
+                                            <span class="seat-label">{{row_num}}2</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                
+                        </div>
+                    {% endfor %}
+                
+                    {% elif seat_type_1_count == 0 and seat_type_2_count > 0 and seat_type_3_count == 0 %}
+                    <div class="row w-100">
+                        <div class="col-6 d-flex mb-3">
+                            <div class="col-4"></div>
+                            <div class="col-4"></div>
+                            <div class="col-4"></div>
+                            <div class="col-4 seat-number">
+                                <img class="wheel ms-2" src={% static "img/wheel.png" %} alt="" style="width: 35px; height: 35px;">
+                            </div>
+                        </div>
+                    </div>
+
+                    {% for index, row_num in rows_seat_type_2 %}
+                        <div class="row w-100 seat-row">
+                            <div class="col-6 d-flex">
+                                <div class="col-4 seat-number">
+                                    <div class="seat">
+                                        {% if row_num|add:'1' in booked_seats %}
+                                            <i class="fa-solid fa-couch seat-booked fa-lg seat-color booked-seat"></i>
+                                        {% else %}
+                                            <i id="{{row_num}}1" class="fa-solid fa-couch seat-select fa-lg seat-color"></i>
+                                        {% endif %}
+                                        <div class="d-flex justify-content-center seat-label-div">
+                                            <span class="seat-label">{{row_num}}1</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-4 seat-number">
+                                    {% if extra_seat == 1 and index == rows_seat_type_2_len %}
+                                        <div class="seat">
+                                            {% if row_num|add:'0' in booked_seats %}
+                                                <i class="fa-solid fa-couch seat-booked fa-lg seat-color booked-seat"></i>
+                                            {% else %}
+                                                <i id="{{row_num}}0" class="fa-solid fa-couch seat-select fa-lg seat-color"></i>
+                                            {% endif %}
+                                            <div class="d-flex justify-content-center seat-label-div">
+                                                <span class="seat-label">{{row_num}}0</span>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-4 seat-number">
+                                    <div class="seat">
+                                        {% if row_num|add:'2' in booked_seats %}
+                                            <i class="fa-solid fa-couch seat-booked fa-lg seat-color booked-seat"></i>
+                                        {% else %}
+                                            <i id="{{row_num}}2" class="fa-solid fa-couch seat-select fa-lg seat-color"></i>
+                                        {% endif %}
+                                        <div class="d-flex justify-content-center seat-label-div">
+                                            <span class="seat-label">{{row_num}}2</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-4 seat-number">
+                                    <div class="seat">
+                                        {% if row_num|add:'3' in booked_seats %}
+                                            <i class="fa-solid fa-couch seat-booked fa-lg seat-color booked-seat"></i>
+                                        {% else %}
+                                            <i id="{{row_num}}3" class="fa-solid fa-couch seat-select fa-lg seat-color"></i>
+                                        {% endif %}
+                                        <div class="d-flex justify-content-center seat-label-div">
+                                            <span class="seat-label">{{row_num}}3</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+               {% endfor %}
+
+                {% elif seat_type_1_count == 0 and seat_type_2_count == 0 and seat_type_3_count > 0 %}
+                    <div class="row w-100">
+                        <div class="col-6 d-flex mb-3">
+                            <div class="col-4"></div>
+                            <div class="col-4"></div>
+                            <div class="col-4"></div>
+                            <div class="col-4"></div>
+                            <div class="col-4 seat-number">
+                                <img class="wheel ms-2" src={% static "img/wheel.png" %} alt="" style="width: 35px; height: 35px;">
+                            </div>
+                        </div>
+                    </div>
+                    {% for index, row_num in rows_seat_type_3 %}
+                        <div class="row w-100 seat-row">
+                            <div class="col-6 d-flex">
+                                <div class="col-4 seat-number">
+                                    <div class="seat">
+                                        {% if row_num|add:'1' in booked_seats %}
+                                            <i class="fa-solid fa-couch seat-booked fa-lg seat-color booked-seat"></i>
+                                        {% else %}
+                                        <i id="{{row_num}}1" class="fa-solid fa-couch seat-select fa-lg seat-color"></i>
+                                        {% endif %}
+                                        <div class="d-flex justify-content-center seat-label-div">
+                                            <span class="seat-label">{{row_num}}1</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-4 seat-number " >
+                                    <div class="seat">
+                                        {% if row_num|add:'2' in booked_seats %}
+                                            <i class="fa-solid fa-couch seat-booked fa-lg seat-color booked-seat"></i>
+                                        {% else %}
+                                        <i id="{{row_num}}2" class="fa-solid fa-couch seat-select fa-lg seat-color"></i>
+                                        {% endif %}
+                                        <div class="d-flex justify-content-center seat-label-div">
+                                            <span class="seat-label">{{row_num}}2</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-4 seat-number">
+                                    {% if extra_seat == 1 and index == rows_seat_type_3_len %}
+                                        <div class="seat">
+                                            {% if row_num|add:'0' in booked_seats %}
+                                                <i class="fa-solid fa-couch seat-booked fa-lg seat-color booked-seat"></i>
+                                            {% else %}
+                                                <i id="{{row_num}}0" class="fa-solid fa-couch seat-select fa-lg seat-color"></i>
+                                            {% endif %}
+                                            <div class="d-flex justify-content-center seat-label-div">
+                                                <span class="seat-label">{{row_num}}0</span>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-4 seat-number">
+                                    <div class="seat">
+                                        {% if row_num|add:'3' in booked_seats %}
+                                            <i class="fa-solid fa-couch seat-booked fa-lg seat-color booked-seat"></i>
+                                        {% else %}
+                                            <i id="{{row_num}}3" class="fa-solid fa-couch seat-select fa-lg seat-color"></i>
+                                        {% endif %}
+                                        <div class="d-flex justify-content-center seat-label-div">
+                                            <span class="seat-label">{{row_num}}3</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-4 seat-number">
+                                    <div class="seat">
+                                        {% if row_num|add:'4' in booked_seats %}
+                                            <i class="fa-solid fa-couch seat-booked fa-lg seat-color booked-seat"></i>
+                                        {% else %}
+                                            <i id="{{row_num}}4" class="fa-solid fa-couch seat-select fa-lg seat-color"></i>
+                                        {% endif %}
+                                        <div class="d-flex justify-content-center seat-label-div">
+                                            <span class="seat-label">{{row_num}}4</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                {% else %}
+                    <div class="row w-100">
+                        <div class="col-6 d-flex mb-3">
+                            <div class="col-4"></div>
+                            <div class="col-4"></div>
+                            <div class="col-4"></div>
+                            <div class="col-4"></div>
+                            <div class="col-4 seat-number">
+                                <img class="wheel ms-2" src={% static "img/wheel.png" %} alt="" style="width: 35px; height: 35px;">
+                            </div>
+                        </div>
+                    </div>
+                    {% for seat_type in seat_types %}
+                        {% if seat_type.type == '2:2' %}
+                        
+                            <!-- Render 2:2 seat type -->
+                            {% for index, row_num in seat_type.rows %}
+                                <div class="row w-100 seat-row">
+                                    <div class="col-6 d-flex">
+                                        <div class="col-4 seat-number">
+                                            <div class="seat">
+                                                {% if row_num|add:'1' in booked_seats %}
+                                                    <i class="fa-solid fa-couch seat-booked fa-lg seat-color booked-seat"></i>
+                                                {% else %}
+                                                <i id="{{row_num}}1" class="fa-solid fa-couch seat-select fa-lg seat-color"></i>
+                                                {% endif %}
+                                                <div class="d-flex justify-content-center seat-label-div">
+                                                    <span class="seat-label">{{row_num}}1</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-4 seat-number">
+                                            <div class="seat">
+                                                {% if row_num|add:'2' in booked_seats %}
+                                                    <i class="fa-solid fa-couch seat-booked fa-lg seat-color booked-seat"></i>
+                                                {% else %}
+                                                <i id="{{row_num}}2" class="fa-solid fa-couch seat-select fa-lg seat-color"></i>
+                                                {% endif %}
+                                                <div class="d-flex justify-content-center seat-label-div">
+                                                    <span class="seat-label">{{row_num}}2</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-4 seat-number">
+                                            {% if seat_type_1_count >= 0 and seat_type_2_count >= 0 and seat_type_3_count > 0 %}
+                                                {% if extra_seat == 1 and index == seat_type.type_3_row_len %}
+                                                    <div class="seat">
+                                                        {% if row_num|add:'0' in booked_seats %}
+                                                            <i class="fa-solid fa-couch seat-booked fa-lg seat-color booked-seat"></i>
+                                                        {% else %}
+                                                            <i id="{{row_num}}0" class="fa-solid fa-couch seat-select fa-lg seat-color"></i>
+                                                        {% endif %}
+                                                        <div class="d-flex justify-content-center seat-label-div">
+                                                            <span class="seat-label">{{row_num}}0</span>
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                            {% endif %}
+                                        </div>
+                                        <div class="col-4 seat-number">
+                                            <div class="seat">
+                                                {% if row_num|add:'3' in booked_seats %}
+                                                    <i class="fa-solid fa-couch seat-booked fa-lg seat-color booked-seat"></i>
+                                                {% else %}
+                                                    <i id="{{row_num}}3" class="fa-solid fa-couch seat-select fa-lg seat-color"></i>
+                                                {% endif %}
+                                                <div class="d-flex justify-content-center seat-label-div">
+                                                    <span class="seat-label">{{row_num}}3</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-4 seat-number">
+                                            <div class="seat">
+                                                {% if row_num|add:'4' in booked_seats %}
+                                                    <i class="fa-solid fa-couch seat-booked fa-lg seat-color booked-seat"></i>
+                                                {% else %}
+                                                    <i id="{{row_num}}4" class="fa-solid fa-couch seat-select fa-lg seat-color"></i>
+                                                {% endif %}
+                                                <div class="d-flex justify-content-center seat-label-div">
+                                                    <span class="seat-label">{{row_num}}4</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %} 
+
+                        {% elif seat_type.type == '1:2' %}
+                            <!-- Render 1:2 seat type -->
+                            {% for index, row_num in seat_type.rows %}
+                                <div class="row w-100 seat-row">
+                                    <div class="col-6 d-flex">
+                                        <div class="col-4 seat-number">
+                                            <div class="seat">
+                                                {% if row_num|add:'1' in booked_seats %}
+                                                    <i class="fa-solid fa-couch seat-booked fa-lg seat-color booked-seat"></i>
+                                                {% else %}
+                                                    <i id="{{row_num}}1" class="fa-solid fa-couch seat-select fa-lg seat-color"></i>
+                                                {% endif %}
+                                                <div class="d-flex justify-content-center seat-label-div">
+                                                    <span class="seat-label">{{row_num}}1</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% if seat_type_1_count >= 0 and seat_type_2_count >= 0 and seat_type_3_count > 0 %}
+                                            <div class="col-4 seat-number"></div>
+                                        {% endif %}
+                                        <div class="col-4 seat-number">
+                                            {% if seat_type_1_count > 0 and seat_type_2_count > 0 and seat_type_3_count == 0 %}
+                                                {% if extra_seat == 1 and index == seat_type.type_2_row_len %}
+                                                    <div class="seat">
+                                                        {% if row_num|add:'0' in booked_seats %}
+                                                            <i class="fa-solid fa-couch seat-booked fa-lg seat-color booked-seat"></i>
+                                                        {% else %}
+                                                            <i id="{{row_num}}0" class="fa-solid fa-couch seat-select fa-lg seat-color"></i>
+                                                        {% endif %}
+                                                        <div class="d-flex justify-content-center seat-label-div">
+                                                            <span class="seat-label">{{row_num}}0</span>
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                            {% endif %}
+                                        </div>
+                                        <div class="col-4 seat-number">
+                                            <div class="seat">
+                                                {% if row_num|add:'3' in booked_seats %}
+                                                    <i class="fa-solid fa-couch seat-booked fa-lg seat-color booked-seat"></i>
+                                                {% else %}
+                                                    <i id="{{row_num}}3" class="fa-solid fa-couch seat-select fa-lg seat-color"></i>
+                                                {% endif %}
+                                                <div class="d-flex justify-content-center seat-label-div">
+                                                    <span class="seat-label">{{row_num}}3</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-4 seat-number">
+                                            <div class="seat">
+                                                {% if row_num|add:'4' in booked_seats %}
+                                                    <i class="fa-solid fa-couch seat-booked fa-lg seat-color booked-seat"></i>
+                                                {% else %}
+                                                    <i id="{{row_num}}4" class="fa-solid fa-couch seat-select fa-lg seat-color"></i>
+                                                {% endif %}
+                                                <div class="d-flex justify-content-center seat-label-div">
+                                                    <span class="seat-label">{{row_num}}4</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+
+                        {% elif seat_type.type == '1:1' %}
+                            <!-- Render 1:1 seat type -->
+                            {% for index, row_num in seat_type.rows %}
+                                <div class="row w-100 seat-row">
+                                    <div class="col-6 d-flex">
+                                        <div class="col-4 seat-number">
+                                            <div class="seat">
+                                                {% if row_num|add:'1' in booked_seats %}
+                                                    <i class="fa-solid fa-couch seat-booked fa-lg seat-color booked-seat"></i>
+                                                {% else %}
+                                                    <i id="{{row_num}}1" class="fa-solid fa-couch seat-select fa-lg seat-color"></i>
+                                                {% endif %}
+                                                <div class="d-flex justify-content-center seat-label-div">
+                                                    <span class="seat-label">{{row_num}}1</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-4 seat-number"></div>
+                                        <div class="col-4 seat-number"></div>
+                                        {% if seat_type_1_count >= 0 and seat_type_2_count >= 0 and seat_type_3_count > 0 %}
+                                            <div class="col-4 seat-number"></div>
+                                        {% endif %}
+                                        <div class="col-4 seat-number">
+                                            <div class="seat">
+                                                {% if row_num|add:'4' in booked_seats %}
+                                                    <i class="fa-solid fa-couch seat-booked fa-lg seat-color booked-seat"></i>
+                                                {% else %}
+                                                    <i id="{{row_num}}4" class="fa-solid fa-couch seat-select fa-lg seat-color"></i>
+                                                {% endif %}
+                                                <div class="d-flex justify-content-center seat-label-div">
+                                                    <span class="seat-label">{{row_num}}4</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                        
+                                </div>
+                            {% endfor %}
+
+                      
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            </ul>
+        </div>
+    <div class="seat-view col-lg-5 col-md-7 col-12">
+        <div class="row">
+            <div class="tab-div col-4 d-flex">
+                <span
+                  ><i
+                      class="fa-solid fa-couch fa-sm"
+                      style="color: rgb(172, 164, 164)"
+                  ></i
+                ></span>
+                <p class="ms-3"><span>Available Seats</span></p>
+            </div>
+            <div class="tab-div col-4 d-flex">
+                <span
+                  ><i
+                      class="fa-solid fa-couch fa-sm"
+                      style="color: rgb(230, 94, 94)"
+                  ></i
+                ></span>
+                <p class="ms-3"><span>Booked Seats</span></p>
+            </div>
+            <div class="tab-div col-4 d-flex">
+                <span
+                  ><i
+                      class="fa-solid fa-couch fa-sm"
+                      style="color: rgb(22, 206, 53)"
+                  ></i
+                ></span>
+                <p class="ms-3"><span>Selected Seats</span></p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="table-responsive">
+                <table id="seat-view-table" class="table">
+                    <thead>
+                        <tr>
+                            <th class="col-4" scope="col">Seat</th>
+                            <th class="col-4 ps-2" scope="col">Fare (BDT)</th>
+                            <th class="col-4 ps-4" scope="col">Class</th>
+                        </tr>
+                    </thead>
+                    <tbody id="seat-view-table" class="w-100">
+                        <!-- Seat view table content goes here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-6">
+                <p><span>Total:</span></p>
+            </div>
+            <div class="col-6 d-flex justify-content-end">
+                <p>Tk <span id="total-fare">650.00</span></p>
+            </div>
+        </div>
+        <!-- Add this code inside the HTML template -->
+
+        <div class="row mt-3">
+            <select id="boardingpoint" name="boardingpoint" class="form-control">
+                <option value="0">-- Boarding points --</option>
+                {% for boarding_point in boarding_points %}
+                    <option value="{{ boarding_point.id }}">{{ boarding_point.point_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="row mt-4">
+            <div class="row mt-4">
+                <a id="booking-process" href="{% url 'booking' bus_number=coach.bus.bus_number coach_number=coach.coachnumber journey_date=journey_date_coach route_id=route_id route_part_id=route_part_id %}" class="btn btn-primary continue-btn col-6">Continue</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+{% comment %}
+<script
+  src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+  crossorigin="anonymous"
+></script>
+{% endcomment %}
+
+<!-- /.content -->
+
+ <script>
+    var popupClose = document.getElementById("close");
+    var popup = document.getElementById("myPopup")
+    console.log('popup check: ', popup)
+        popupClose.addEventListener("click", function () {
+        var popup = document.getElementById("myPopup");
+        popup.style.display = "none";
+        console.log('popup clicked')
+        });
+        
+ </script>
+  
+
+{% comment %} <script>
+  function updateSelectedSeats() {
+  var selectedSeats = [];
+
+  // Get the seat elements that are selected
+  var selectedSeatElements = document.getElementsByClassName('seat-selected');
+
+  // Iterate over the selected seat elements and retrieve the seat numbers
+  for (var i = 0; i < selectedSeatElements.length; i++) {
+    var seatNumber = selectedSeatElements[i].getAttribute('data-seat-number');
+    selectedSeats.push(seatNumber);
+  }
+
+  // Set the value of the selected seats input field
+  document.getElementById('selected-seats-input').value = selectedSeats.join(',');
+}
+
+// Add event listener to the seat elements for capturing selection
+var seatElements = document.getElementsByClassName('seat-select');
+for (var i = 0; i < seatElements.length; i++) {
+  seatElements[i].addEventListener('click', function(event) {
+    // Toggle the seat selection
+    this.classList.toggle('seat-selected');
+
+    // Update the selected seats
+    updateSelectedSeats();
+  });
+}
+</script> {% endcomment %}

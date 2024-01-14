@@ -1,0 +1,24 @@
+{% extends 'hod_template/base_template.html' %}
+{% load static %}
+
+{% block main_content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Delete Vehicle</h2>
+                </div>
+                <div class="card-body">
+                    <p>Are you sure you want to delete the vehicle "{{ vehicle.model_name }}" with registration number "{{ vehicle.regi_number }}"?</p>
+                    <form method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                        <a href="{% url 'vehicle_list' %}" class="btn btn-secondary">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock main_content %}

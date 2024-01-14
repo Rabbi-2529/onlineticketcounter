@@ -1,0 +1,100 @@
+{% extends 'hod_template/base_template.html' %}
+{% load static %}
+{% block custom_css %}
+    <link rel="stylesheet" href="{% static "dist/css/manage_facility.css" %}">
+    <link rel="stylesheet" href="{% static "dist/css/add_product.css" %}">
+{% endblock custom_css %}
+
+
+{% block main_content %}
+
+
+<div class="container-xl px-4 mt-4">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card card-primary">
+          <div class="card-header d-flex justify-content-center">
+            <h3 class="card-title">Manage Facilities</h3>
+          </div>
+
+          <form
+            method="GET"
+            action="{% url 'manage_facilities' %}"
+            class="search-form"
+          >
+            <div class="card-body row justify-content-between pb-0">
+              <div class="col-md-6 col-12">
+                <a href="{% url 'add_facilities' %}" class="save-btn">
+                  Add Facility
+                </a>
+              </div>
+              <div class="form-group mt-2 col-md-6 col-12">
+                <div class="input-group">
+                  <input
+                    type="text"
+                    name="search_query"
+                    id="search-input"
+                    class="form-control form-control-sm search-input"
+                    placeholder="Search by Type name"
+                    value="{{ search_query }}"
+                  />
+                  <div class="input-group-append">
+                    <button type="submit" class="btn btn-primary search-button">
+                      Search
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+
+          <div class="card-body">
+            {% if messages %}
+            <div class="messages">
+              {% for message in messages %}
+              <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+              {% endfor %}
+            </div>
+            {% endif %}
+
+            {% if facilities %}
+            <div class="table-container">
+              <table class="table table-bordered table-striped">
+                <thead>
+                  <tr>
+                    <th>Serial</th>
+                    <th>Name</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for facility in facilities %}
+                  <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ facility.name }}</td>
+                    <td>
+                      <a href="{% url 'edit_facility' facility.id %}" class="btn btn-primary btn-sm edit-btn mb-2">
+                        <i class="bi bi-pencil"></i>
+                      </a>
+                      <a href="{% url 'delete_facility' facility.id %}" class="btn btn-danger btn-sm delete-btn mb-2">
+                        <i class="bi bi-trash"></i>
+                      </a>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            {% else %}
+            <p>No facilities found.</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- /.content -->
+{% endblock main_content %}

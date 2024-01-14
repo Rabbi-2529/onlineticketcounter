@@ -1,0 +1,89 @@
+{% extends 'hod_template/base_template.html' %} {% block main_content %}
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-5 offset-md-3">
+        <!-- general form elements -->
+        <div class="card card-primary">
+          <div class="card-header">
+            <h3 class="card-title">Add/Edit FAQ</h3>
+          </div>
+          <!-- /.card-header -->
+          <!-- form start -->
+          <form role="form" action="{% url 'add_faq_save' %}" method="post">
+            {% csrf_token %}
+            <div class="card-body">
+              <div class="form-group">
+                <label>Category</label>
+                <select class="form-control" name="category">
+                  {% for category in category %}
+                  <option value="{{ category.pk }}">{{ category.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Question</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="question"
+                  placeholder="Enter Question"
+                />
+              </div>
+              <div class="form-group">
+                <label>Answer</label>
+                <textarea
+                  class="form-control"
+                  name="answer"
+                  rows="4"
+                  placeholder="Enter Answer"
+                ></textarea>
+              </div>
+            </div>
+            <!-- /.card-body -->
+
+            <div class="card-footer">
+              <button type="submit" class="btn btn-primary btn-block">
+                Save FAQ
+              </button>
+            </div>
+          </form>
+        </div>
+        <!-- /.card -->
+
+        <!-- FAQs -->
+        <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">FAQs</h3>
+            </div>
+            <div class="card-body">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>Question</th>
+                    <th>Answer</th>
+                    <th>Category</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for faq in faqs %}
+                  <tr>
+                    <td>{{ faq.question }}</td>
+                    <td>{{ faq.answer }}</td>
+                    <td>{{ faq.category.name }}</td>
+                    <td>
+                      <a href="{% url 'edit_faq' faq.pk %}" class="btn btn-sm btn-primary">Edit</a>
+                      <a href="{% url 'delete_faq' faq.pk %}" class="btn btn-sm btn-danger">Delete</a>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <!-- /.card -->
+        </div>
+      </div>
+</section>
+{% endblock main_content %}

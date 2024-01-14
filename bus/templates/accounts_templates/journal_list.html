@@ -1,0 +1,252 @@
+{% extends 'accounts_templates/accounts_base.html' %}
+{% load static %}
+
+{% block custom_css %}
+<link rel="stylesheet" href="{% static "dist/css/add_product.css" %}">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.9/dist/flatpickr.min.css">
+<style>
+    /* Custom status colors */
+    .custom-status-pending {
+        color: orange; /* Adjust the color as needed */
+    }
+
+    .custom-status-received {
+        color: green; /* Adjust the color as needed */
+    }
+
+    .custom-status-completed {
+        color: blue; /* Adjust the color as needed */
+    }
+
+    .custom-status-canceled {
+        color: red; /* Adjust the color as needed */
+    }
+    .make-payment-link,
+    .view-payment-link{
+        color: black !important;
+    }
+    .delete-purchase {
+        color: black !important;
+    }
+    .btn-btn-light {
+        border-color: black;
+      }
+      .btn-btn-light {
+        border-color: black;
+        color: black; /* Set the default text color */
+        transition: border-color 0.4s, color 0.4s; /* Add a smooth transition for the color change */
+      }
+      
+      .btn-btn-light:hover {
+        border-color: blue;
+        color: blue; /* Change the text color to blue on hover */
+      }
+      .text-black .dropdown-item {
+        color: black !important;
+    }
+    .text-black .dropdown-item:hover {
+        box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3); /* Add a black shadow on hover */
+    }
+    .text-black .clicked {
+        color: black;
+    }
+    .text-black {
+        color: black !important;
+    }
+    .modal {
+        display: none;
+        position: fixedre;
+        top: 0;
+        left: 0;
+        z-index: 1050;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+    .modal-body{
+        width: 670px;
+    }
+    .modal-content {
+        background-color: #fefefe;
+        margin: 26% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        
+        width: 690px;
+        position: relative;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    }
+    
+
+    
+    /* CSS */
+    .custom-btn {
+      background-color: #EA4C89 !important;
+      border-radius: 8px;
+      border-style: none;
+      box-sizing: border-box;
+      color: #FFFFFF !important;
+      cursor: pointer;
+      display: inline-block;
+      font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      height: 40px;
+      line-height: 20px;
+      list-style: none;
+      margin: 0;
+      outline: none;
+      padding: 10px 16px;
+      position: relative;
+      text-align: center;
+      text-decoration: none;
+      transition: color 100ms;
+      vertical-align: baseline;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+    }
+    
+    .custom-btn:hover,
+    .custom-btn:focus {
+        background-color: #F082AC !important;
+    }
+    
+</style>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap4.min.css">
+
+
+{% endblock custom_css %}
+
+{% block main_content %}
+<div class="container-xl px-4 mt-4">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header d-flex justify-content-center">
+                        <h3 class="card-title py-2">Journal List</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-container">
+                        
+                                <div class="form-row">
+                                    <div class="form-group col-md-4">
+                                        <label for="start_date">Start Date:</label>
+                                        <input type="text" id="start_date" class="form-control flatpickr" placeholder="Select start date">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="end_date">End Date</label>
+                                        <input type="text" id="end_date" name="end_date" class="form-control datepicker" required>
+                                    </div>
+                                    <div class="form-group col-md-4 "  style="margin-top: 10px;">
+                                        <button type="searchBtn" class="btn btn-primary" name="search_form" style="margin-top: 20px;">search</button>
+                                    </div>
+                                </div>
+                           
+                        </div>
+                        <div class="table-responsive">
+
+                       
+                            <table id="Journallist" class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Particular</th>
+                                        <th>Debit (Dr)</th>
+                                        <th>Credit (Cr)</th>
+                               
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for entry in journal_entries %}
+                                    <tr>
+                                        <td>{{ entry.date }}</td>
+                                        <td>{{ entry.particular }}</td>
+                                        <td>{% if entry.entry_type == 'dr' %}{{ entry.amount }}{% else %}-----{% endif %}</td>
+                                        <td>{% if entry.entry_type == 'cr' %}{{ entry.amount }}{% else %}-----{% endif %}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock main_content %}
+
+{% block custom_js %}
+<script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.9/dist/flatpickr.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        flatpickr("#start_date", {});
+        flatpickr("#end_date", {});
+
+        $('#Journallist').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'copy',
+                    text: 'Copy',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3] // Specify which columns to include
+                    }
+                },
+                {
+                    extend: 'csv',
+                    text: 'CSV',
+                    filename: 'Journal List', // Specify the filename
+                    extension: '.csv',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3] // Specify which columns to include
+                    },
+                    fieldSeparator: ',', // Specify the field separator (comma)
+                    fieldBoundary: '"' // Specify the field boundary character
+                },
+                {
+                    extend: 'excel',
+                    text: 'Excel',
+                    filename: 'Journal List', // Specify the filename
+                    extension: '.xlsx',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3] // Specify which columns to include
+                    }
+                },
+                {
+                    extend: 'pdf',
+                    text: 'PDF',
+                    filename: 'Journal List', // Specify the filename
+                    extension: '.pdf',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3] // Specify which columns to include
+                    }
+                },
+                'print'
+            ],
+            ajax: {
+                url: '{% url "journal_list" %}',
+                type: 'GET',
+                data: function (d) {
+                    d.start_date = $('#start_date').val();
+                    d.end_date = $('#end_date').val();
+                }
+            },
+            initComplete: function () {
+                console.log("DataTables initialized!"); // Debugging statement
+            }
+        });
+
+        // Search button event
+        $('#searchBtn').on('click', function () {
+            $('#Journallist').DataTable().ajax.reload();
+        });
+    });
+</script>
+{% endblock custom_js %}

@@ -1,0 +1,200 @@
+.card {
+    border-radius: 20px;
+    /* box-shadow: 0 0.15rem 1.75rem 0 rgb(33 40 50 / 15%); */
+    box-shadow: 12px 16px 22px 9px rgba(0,0,0,0.1);
+}
+
+.card-header{
+    border-top-left-radius: 20px !important;
+    border-top-right-radius: 20px !important;
+    background: rgb(62,7,75);
+    background: linear-gradient(180deg, rgba(62,7,75,1) 0%, rgba(40,10,69,1) 63%);
+}
+
+.table thead tr th {
+  font-weight: 500;
+  color: rgb(0, 0, 0);
+}
+
+.table tbody tr td  a{
+    font-size: 15px;
+    font-weight: 400;
+    color: black !important ; /* Set text color to black */
+  }
+
+.view-btn {
+  /* background: rgb(68,8,92); */
+  background: linear-gradient(
+    90deg,
+    rgba(68, 8, 92, 1) 0%,
+    rgba(54, 7, 62, 1) 65%
+  );
+  border: none !important;
+  transition: background-color 1s;
+}
+
+.view-btn:hover {
+  /* background: rgb(58,18,65); */
+  /* background: linear-gradient(90deg, rgba(58,18,65,1) 0%, rgba(97,10,130,1) 100%); */
+  background-color: #e91e63;
+}
+
+.edit-btn {
+  /* background: rgb(18,23,65); */
+  background: linear-gradient(
+    90deg,
+    rgba(18, 23, 65, 1) 0%,
+    rgba(0, 106, 143, 1) 100%
+  );
+  border: none !important;
+  transition: background-color 0.5s ease;
+}
+
+.edit-btn:hover {
+  /* background: rgb(0,106,143); */
+  background: linear-gradient(
+    90deg,
+    rgba(0, 106, 143, 1) 0%,
+    rgba(18, 23, 65, 1) 100%
+  );
+}
+
+.delete-btn {
+  /* background: rgb(212,0,0); */
+  background: linear-gradient(
+    90deg,
+    rgba(212, 0, 0, 1) 0%,
+    rgba(233, 46, 113, 1) 100%
+  );
+  border: none !important;
+  transition: background-color 0.5s ease;
+}
+
+.delete-btn:hover {
+  background: rgb(233, 46, 113);
+  background: linear-gradient(
+    90deg,
+    rgba(233, 46, 113, 1) 0%,
+    rgba(212, 0, 0, 1) 100%
+  );
+}
+
+.add-user {
+  width: auto !important;
+  border: none !important;
+  border-radius: 10px;
+  padding: 0.5em 1em;
+  background: linear-gradient(90deg, #5381ff, transparent) #00b8c5;
+  transition: background-color 0.3s;
+}
+
+.add-user:hover,
+.add-user:focus {
+  background-color: #031b46;
+}
+.container-xl {
+    max-width: 1600px;
+
+  }
+
+
+
+@media (max-width: 767px) {
+  .container-xl {
+    padding-left: 2px !important;
+    padding-right: 2px !important;
+  }
+  .staff-card {
+    padding-right: 2px;
+    padding-left: 2px;
+  }
+}
+.btn-action {
+    display: inline-block;
+    padding: 5px 10px; /* Add padding */
+    border: 1px solid #ccc; /* Add a border */
+    border-radius: 2px; /* Add rounded corners */
+    margin: 2px; /* Add margin between buttons */
+    text-decoration: none;
+    transition: opacity 0.3s;
+}
+
+.btn-action:hover {
+    opacity: 0.8;
+}
+
+/* Styles for icons inside buttons */
+.btn-action i {
+    margin-right: 2px;
+}
+
+/* Define unique classes and button colors */
+.btn-cancel {
+    background-color: #39ada4; /* Red */
+    color: #974b4b; /* White text */
+}
+
+.btn-payment {
+    background-color: #4d4fce; /* Blue */
+    color: #FFFFFF; /* White text */
+}
+
+.btn-invoice {
+    background-color: #22b335; /* Orange */
+    color: #FFFFFF; /* White text */
+}
+
+.btn-print {
+    background-color: #0c1214; /* Blue */
+    color: #FFFFFF; /* White text */
+}
+
+.btn-refund {
+    background-color: #9ca708; /* Blue */
+    color: #FFFFFF; /* White text */
+}    
+
+
+.list-group {
+  display: flex;
+  list-style: none; /* Remove list-style (bullets) */
+  padding: 0;
+}
+
+.list-group-item-check {
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out; /* Added a smoother transition for all properties */
+  padding: 10px 20px;
+ 
+  font-weight: bold;
+  text-transform: uppercase;
+  text-decoration: none !important;
+  color: #777;
+  background-color: #fff;
+  margin-right: 5px;
+  border-top: 5px solid transparent; /* Add an upper border to all items */
+}
+
+/* Style the active list item */
+.list-group-item-check.active {
+  border-bottom: 5px solid #4FBF87 !important; 
+  background-image: none !important;
+}
+
+/* Hover effect */
+.list-group-item-check:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Style the links inside list items */
+.list-group-item-check a {
+  text-decoration: none; /* Remove underlines from links */
+  color: inherit; /* Use the parent's text color */
+}
+
+/* Add a box shadow on hover for non-active items */
+.list-group-item-check:not(.active):hover {
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}

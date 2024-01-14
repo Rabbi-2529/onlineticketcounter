@@ -1,0 +1,136 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    {% load static %}
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title></title>
+<meta name="description" content>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0@beta1/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="{% static "plugins/jquery/jquery.min.js" %}"></script>
+<!-- jQuery UI 1.11.4 -->
+<script src="{% static "plugins/jquery-ui/jquery-ui.min.js" %}"></script>
+<link rel="stylesheet" href={% static "dist/css/posinvoice.css" %}>
+
+</head>
+<body>
+<div class="page-wrapper">
+<div class="invoice-card" id="PrintMe">
+<div class="invoice-head">
+<div class="item-info">
+<h5 class="item-title">Online Bus Ticket</h5>
+<p class="item-title">{{booking.route_part.start_point}} (<small>10:00 PM</small>) -  {{booking.route_part.end_point}} (<small>06:00 AM</small>)</p>
+<h5 class="item-title">Booking Id : {{booking.pnr}}</h5>
+<span class="item-title">
+Payment Status : {{payment_status}} </span>
+</div>
+<div class="date-info">
+<div class="row">
+<div class="col-sm-6 text-capitalize" align="left">
+Trip : {{booking.route.start_point}}- {{booking.route.end_point}}
+</div>
+<div class="col-sm-6" align="left">
+Pick Up Location : {{booking.coach.boarding_point}} (<small>10:00PM</small>)
+</div>
+<div class="col-sm-6" align="left">
+Drop Location :  {{booking.coach.boarding_point}} (<small>05:00AM</small>)
+</div>
+</div>
+</div>
+<div class="date-info">
+<div class="row">
+<div class="col-sm-6" align="left">
+Book Time :  {{booking.booking_date}} </div>
+<div class="col-sm-6" align="left">
+Journey Time :  {{ booking.journey_date }}
+</div>
+</div>
+<hr>
+</div>
+</div>
+<div class="invoice-details">
+<div class="invoice-list">
+<div class="invoice-data">
+<div class="row-data">
+<div class="item-info">
+<p class="item-title"><span class="bolder">Name :</span><span>{{ booking.customer.first_name }}</span></p>
+<p class="item-title"><span class="bolder">Mobile :</span><span>{{booking.customer.phone}} </span></p>
+<p class="item-title"><span class="bolder">Email :</span><span><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="e083d1a083ce838f8d">{{booking.customer.email}}</a></span></p>
+<p class="item-title"><span class="bolder">Facility :</span><span> {% for facility in booking.coach.facilities.all %}
+    {{ facility.name }}
+{% endfor %}</span></p>
+</div>
+</div>
+<div class="row-data">
+<div class="pack-info">
+<div class="item-title">
+<p class="bolder">Seat Number </p>
+<p>{{booking.seat_number}}</p>
+</div>
+<div class="item-title text-end">
+<p class="bolder">Amount </p>
+<p> {{booking.price}}</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="invoice-details">
+<div class="row-data">
+<div class="item-info">
+<h6 class="item-title">Discount</h6>
+</div>
+<div class>
+<h6 class="item-title">৳ 0</h6>
+</div>
+</div>
+<div class="row-data">
+<div class="item-info">
+<h6 class="item-title">Total Tax</h6>
+</div>
+<div class>
+<h6 class="item-title"> ৳{{tax_amount}}</h6>
+</div>
+</div>
+<div class="row-data">
+<div class="item-info">
+<h6 class="item-title">Grand Total</h6>
+</div>
+<div class>
+<h6 class="item-title">৳ {{selected_price}}</h6>
+</div>
+</div>
+<div class="row-data">
+<div class="item-info">
+<h6 class="item-title">Due</h6>
+</div>
+<div class>
+<h6 class="item-title">৳ {{payment.amount_paid}}</h6>
+</div>
+</div>
+</div>
+<div class="invoice-footer">
+<div class="row-data">
+<div class="item-info">
+<small>
+<br>
+** This is computer generated copy. No signature required.
+</small>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script></body>
+<script src="{% static "plugins/bootstrap/js/bootstrap.bundle.min.js" %}"></script>
+ <script type="text/javascript">
+
+        $(document).ready(function () {
+            window.print();
+        });
+
+   </script>
+</html>

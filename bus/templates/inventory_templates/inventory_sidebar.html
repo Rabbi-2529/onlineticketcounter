@@ -1,0 +1,754 @@
+{% load static %} {% load perm_tags %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+<link rel="stylesheet" href="{% static "dist/css/sidebar.css" %}">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <a
+    href=""
+    class="brand-link"
+    style="text-decoration: none; background-color: white"
+    >
+    
+    <span class="brand-text font-weight-light">
+        <img
+        src="{% static 'img/igl.jpg'%}"
+        alt=""
+        style="width: 200px; height: 60px"
+        />
+    </span>
+    </a>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+    <!-- Sidebar user panel (optional) -->
+    <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+        <div class="image">
+        {% if request.user.profile_picture %}
+        <img
+            src="{{ request.user.profile_picture.url }}"
+            class="img-circle elevation-2"
+            alt="User Image"
+        />
+        {% else %}
+        <img
+            src="{% static 'dist/img/user2-160x160.jpg' %}"
+            class="img-circle elevation-2"
+            alt="User Image"
+        />
+        {% endif %}
+        </div>
+        <div class="info">
+        <a href="{% url 'admin_profile' %}" class="d-block"
+            >{{ request.user.username }}</a
+        >
+        {% if request.user.is_online %}
+        <span class="online-indicator"></span
+        ><span class="ml-2 text-muted">Online</span>
+        {% endif %}
+        </div>
+    </div>
+    <!-- Sidebar Menu -->
+    <nav class="mt-2 sidebar-nav">
+        <ul
+        class="nav nav-pills nav-sidebar flex-column"
+        data-widget="treeview"
+        role="menu"
+        data-accordion="false"
+        >
+    
+        <li class="nav-item nav-item-link">
+            <a href="{% url 'dashboard_inventory' %}"
+                class="nav-link {% if request.path == '/dashboard_inventory' %} active {% endif %}">
+                <i class="fa-solid fa-house fa-lg"></i>
+                <p>Dashboard</p>
+            </a>
+        </li>
+
+
+      
+        <li class="nav-item nav-item-link">
+            <div class="iocn-link">
+                <a
+                    class="nav-link {% if request.path == '/add_counter/' or request.path == '/manage_counters/' %} active {% endif %} counter-btn sidebar-dropdown-link"
+                    href="#"
+                    id="counter-dropdown"
+                    role="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                >
+                <i class="fa-solid fa-money-bill-transfer fa-sm"></i>
+                    <p>warehouse</p>
+                    <i class="fa-solid fa-angle-down angle-icon"></i>
+                </a>
+            </div>
+            <ul class="sub-menu counter-show sidebar-dropdown-show">
+                <li class="nav-item-dropdown">
+                    {% url 'warehouse_list' as warehouse_list %}
+                    <a
+                        href="{{ warehouse_list }}"
+                        class="dropdown-item {% if request.path == warehouse_list %} active {% endif %}"
+                    >
+                        <i class="fa-solid fa-circle-dot"></i> Warehouse
+                    </a>
+                </li>
+              
+            </ul>
+        </li>
+
+        
+    
+       
+            <li class="nav-item nav-item-link">
+                <div class="iocn-link">
+                    <a
+                        class="nav-link {% if request.path == '/add_item/' or request.path == '/product_list/' %} active {% endif %} counter-manager-btn sidebar-dropdown-link"
+                        href="#"
+                        id="counter-manager-dropdown"
+                        role="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                    >
+                    <i class="fa fa-envelope-open-text  mr-5"></i>
+                        <p>Products</p>
+                        <i class="fa-solid fa-angle-down angle-icon"></i>
+                    </a>
+                </div>
+                <ul class="sub-menu counter-manager-show sidebar-dropdown-show">
+                  
+                    <li class="nav-item-dropdown">
+                        {% url 'add_item' as add_item %}
+                        <a
+                            href="{{ add_item }}"
+                            class="dropdown-item {% if request.path == add_item %} active {% endif %}"
+                            ><i class="fa-solid fa-circle-dot"></i>Add Product</a>
+
+                    </li>
+                
+               
+                    <li class="nav-item-dropdown">
+                        {% url 'product_list' as product_list %}
+                        <a
+                            href="{{ product_list }}"
+                            class="dropdown-item {% if request.path == product_list %} active {% endif %}"
+                            ><i class="fa-solid fa-circle-dot"></i>Product List</a
+                        >
+                    </li>
+        
+
+                    <li class="nav-item-dropdown">
+                        {% url 'add_subcategory' as add_subcategory %}
+                        <a
+                            href="{{ add_subcategory }}"
+                            class="dropdown-item {% if request.path == add_subcategory %} active {% endif %}"
+                            ><i class="fa-solid fa-circle-dot"></i>Category</a
+                        >
+                    </li>
+           
+       
+                    <li class="nav-item-dropdown">
+                        {% url 'list_brands' as list_brands %}
+                        <a
+                            href="{{ list_brands }}"
+                            class="dropdown-item {% if request.path == list_brands %} active {% endif %}"
+                            ><i class="fa-solid fa-circle-dot"></i>Brand</a
+                        >
+                    </li>
+                   
+                    <li class="nav-item-dropdown">
+                        {% url 'list_unit' as list_unit %}
+                        <a
+                            href="{{ list_unit }}"
+                            class="dropdown-item {% if request.path == list_unit %} active {% endif %}"
+                            ><i class="fa-solid fa-circle-dot"></i>Unit</a
+                        >
+                    </li>
+                 
+
+                    <li class="nav-item-dropdown">
+                        {% url 'add_inventory_adjustment' as add_inventory_adjustment %}
+                        <a
+                            href="{{ add_inventory_adjustment }}"
+                            class="dropdown-item {% if request.path == add_inventory_adjustment %} active {% endif %}"
+                            ><i class="fa-solid fa-circle-dot"></i>Add Adjustment</a
+                        >
+                    </li>
+      
+                    
+                    <li class="nav-item-dropdown">
+                        {% url 'adjustment_list' as adjustment_list %}
+                        <a
+                            href="{{ adjustment_list }}"
+                            class="dropdown-item {% if request.path == adjustment_list %} active {% endif %}"
+                            ><i class="fa-solid fa-circle-dot"></i>Adjustment</a
+                        >
+                    </li>
+
+                    <li class="nav-item-dropdown">
+                        {% url 'products_usage_list' as products_usage_list %}
+                        <a
+                            href="{{ products_usage_list }}"
+                            class="dropdown-item {% if request.path == products_usage_list %} active {% endif %}"
+                            ><i class="fa-solid fa-circle-dot"></i>Products usage</a
+                        >
+                    </li>
+             
+                </ul>
+            </li>
+        
+        <li class="nav-item nav-item-link">
+            <div class="iocn-link">
+                <a class="nav-link coach-btn sidebar-dropdown-link" href="#" id="coach-dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa-solid fa-sack-dollar fa-sm"></i>
+                    <p>Trading</p>
+                    <i class="fa-solid fa-angle-down angle-icon"></i>
+                </a>
+                
+            </div>
+            
+            <ul class="sub-menu coach-show sidebar-dropdown-show">
+                <li class="second-nav-item-link">
+                    <div class="iocn-link">
+                        <a class="nav-link coach-btn second-sidebar-dropdown-link" href="#" id="coach-dropdown-fleet" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Purchase
+                            <i class="fa-solid fa-angle-down second-angle-icon"></i>
+                        </a>
+                    </div>
+                    <ul class="sub-menu coach-show second-sidebar-dropdown-show">
+                        <li class="second-nav-item-dropdown">
+                            <ul class="sub-menu coach-show second-sidebar-dropdown-show">
+                                <li class="second-nav-item-dropdown">
+                                    <a href="{% url 'add_purchase' %}" class="dropdown-item {% if request.path == '/add_purchase/' %} active {% endif %}">
+                                        <i class="fa-solid fa-circle-dot"></i>Add Purchase
+                                    </a>
+                                </li>
+                                <li class="second-nav-item-dropdown"> 
+                                    <a href="{% url 'purchase_list' %}" class="dropdown-item {% if request.path == '/purchase_list/' %} active {% endif %}">
+                                        <i class="fa-solid fa-circle-dot"></i>Manage Purchase
+                                    </a>
+                                </li>
+                                <li class="second-nav-item-dropdown"> 
+                                    <a href="{% url 'purchase_return_list' %}" class="dropdown-item {% if request.path == '/purchase_return_list/' %} active {% endif %}">
+                                        <i class="fa-solid fa-circle-dot"></i>Purchase Returns
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                
+                {% comment %} <li class="second-nav-item-link">
+                    <div class="iocn-link">
+                        <a class="nav-link coach-btn second-sidebar-dropdown-link" href="#" id="coach-dropdown-location" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Fitness
+                            <i class="fa-solid fa-angle-down second-angle-icon"></i>
+                        </a>
+                    </div>
+                    <ul class="sub-menu coach-show second-sidebar-dropdown-show">
+                        <li class="second-nav-item-dropdown">
+                        <a href="{% url 'fitness_list' %}" class="dropdown-item {% if request.path == 'fitness_list' %} active {% endif %}">
+                            <i class="fa-solid fa-circle-dot"></i>Fitness List
+                        </a>
+                        </li>
+                    </ul>
+                </li> {% endcomment %}
+            </ul>
+
+            <ul class="sub-menu coach-show sidebar-dropdown-show">
+                <li class="second-nav-item-link">
+                    <div class="iocn-link">
+                        <a class="nav-link coach-btn second-sidebar-dropdown-link" href="#" id="coach-dropdown-fleet" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Invoice
+                            <i class="fa-solid fa-angle-down second-angle-icon"></i>
+                        </a>
+                    </div>
+                    <ul class="sub-menu coach-show second-sidebar-dropdown-show">
+                        <li class="second-nav-item-dropdown">
+                            <ul class="sub-menu coach-show second-sidebar-dropdown-show">
+                                <li class="second-nav-item-dropdown">
+                                    <a href="{% url 'purchase_invoice' %}" class="dropdown-item {% if request.path == '/add_purchase/' %} active {% endif %}">
+                                        <i class="fa-solid fa-circle-dot"></i>Purchase Invoice
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+
+
+        {% comment %} <li class="nav-item nav-item-link">
+            <div class="iocn-link">
+                <a
+                    class="nav-link {% if request.path == '/staff-types/' or request.path == '/manage_assigned_staff/' %} active {% endif %} coach-btn sidebar-dropdown-link"
+                    href="#"
+                    id="coach-dropdown"
+                    role="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                >
+                    <i class="fa-solid fa-users fa-lg"></i>
+                    <p>Employee</p>
+                    <i class="fa-solid fa-angle-down angle-icon"></i>
+                </a>
+
+            </div>
+            <ul class="sub-menu coach-show sidebar-dropdown-show">
+            
+                <li class="nav-item-dropdown">
+                    {% url 'staff_type_list' as staff_type_list%}
+                    <a href="{{ staff_type_list }}"
+                        class="dropdown-item {% if request.path == staff_type_list %} active {% endif %}"
+                    ><i class="fa-solid fa-circle-dot"></i>Employee Type List</a>
+                </li>
+            
+            
+                <li class="nav-item-dropdown"i>
+                    {% url 'manage_assigned_staff' as manage_assigned_staff %}
+                    <a href="{{ manage_assigned_staff }}"
+                        class="dropdown-item {% if request.path == manage_assigned_staff %} active {% endif %}"
+                    ><i class="fa-solid fa-circle-dot"></i>Employee List</a>
+                </li>
+            
+            </ul>
+        </li> {% endcomment %}
+
+
+  
+        <li class="nav-item nav-item-link">
+            <div class="iocn-link">
+                <a
+                    class="nav-link {% if request.path == '/add_counter/' or request.path == '/manage_counters/' %} active {% endif %} counter-btn sidebar-dropdown-link"
+                    href="#"
+                    id="counter-dropdown"
+                    role="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                >
+                <i class="fa-solid fa-credit-card fa-sm"></i>
+                    <p>Expense</p>
+                    <i class="fa-solid fa-angle-down angle-icon"></i>
+                </a>
+            </div>
+            <ul class="sub-menu counter-show sidebar-dropdown-show">
+                <li class="nav-item-dropdown">
+                    {% url 'add_expense' as add_expense %}
+                    <a
+                        href="{{ add_expense }}"
+                        class="dropdown-item {% if request.path == add_expense %} active {% endif %}"
+                    >
+                        <i class="fa-solid fa-circle-dot"></i> Add Expense
+                    </a>
+                </li>
+                <li class="nav-item-dropdown">
+                    {% url 'expense_list' as expense_list %}
+                    <a
+                        href="{{ expense_list }}"
+                        class="dropdown-item {% if request.path == expense_list %} active {% endif %}"
+                    >
+                        <i class="fa-solid fa-circle-dot"></i> Expense List 
+                    </a>
+                </li>
+                <li class="nav-item-dropdown">
+                    {% url 'add_subcategory_expense' as add_subcategory_expense %}
+                    <a
+                        href="{{ add_subcategory_expense }}"
+                        class="dropdown-item {% if request.path == add_subcategory_expense %} active {% endif %}"
+                    >
+                        <i class="fa-solid fa-circle-dot"></i> Expense Catrgory
+                    </a>
+                </li>
+                <li class="nav-item-dropdown">
+                    {% url 'add_payment_expense' as add_payment_expense %}
+                    <a
+                        href="{{ add_payment_expense }}"
+                        class="dropdown-item {% if request.path == add_payment_expense %} active {% endif %}"
+                    >
+                        <i class="fa-solid fa-circle-dot"></i> Payment Expense
+                    </a>
+                </li>
+              
+            </ul>
+        </li>
+       
+            <li class="nav-item nav-item-link">
+                <div class="iocn-link">
+                    <a
+                        class="nav-link {% if request.path == '/add_route/' or request.path == '/manage_routes/' %} active {% endif %} routes-btn sidebar-dropdown-link"
+                        href="#"
+                        id="routes-dropdown"
+                        role="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                    >
+                    <i class="fas fa-users fa-sm"></i>
+                        <p>People</p>
+                        <i class="fa-solid fa-angle-down angle-icon"></i>
+                    </a>
+                    
+                </div>
+                <ul class="sub-menu routes-show sidebar-dropdown-show">
+               
+                        <li class="nav-item-dropdown">
+                            {% url 'add_supplier' as add_supplier %}
+                            <a
+                                href="{{ add_supplier }}"
+                                class="dropdown-item {% if request.path == add_supplier %} active {% endif %}"
+                                ><i class="fa-solid fa-circle-dot"></i>Add Supplier</a
+                            >
+                        </li>
+              
+                   
+                        <li class="nav-item-dropdown">
+                            {% url 'supplier_list' as supplier_list %}
+                            <a
+                                href="{{ supplier_list }}"
+                                class="dropdown-item {% if request.path == supplier_list %} active {% endif %}"
+                                ><i class="fa-solid fa-circle-dot"></i>Supplier List</a
+                            >
+                        </li>
+                 
+                    <li class="nav-item-dropdown">
+                        {% url 'add_biller' as add_biller %}
+                        <a
+                            href="{{ add_biller }}"
+                            class="dropdown-item {% if request.path == add_biller %} active {% endif %}"
+                            ><i class="fa-solid fa-circle-dot"></i>Add Biller</a
+                        >
+                    </li>
+                    <li class="nav-item-dropdown">
+                        {% url 'biller_list' as biller_list %}
+                        <a
+                            href="{{ biller_list }}"
+                            class="dropdown-item {% if request.path == biller_list %} active {% endif %}"
+                            ><i class="fa-solid fa-circle-dot"></i>Biller List</a
+                        >
+                    </li>
+                </ul>
+            </li>
+       
+    
+            <li class="nav-item nav-item-link">
+                <div class="iocn-link">
+                    <a
+                        class="nav-link {% if request.path == '/add_route/' or request.path == '/manage_routes/' %} active {% endif %} routes-btn sidebar-dropdown-link"
+                        href="#"
+                        id="routes-dropdown"
+                        role="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                    >
+                    <i class="fas fa-file fa-sm"></i>
+                        <p>Report</p>
+                        <i class="fa-solid fa-angle-down angle-icon"></i>
+                    </a>
+                    
+                </div>
+                <ul class="sub-menu routes-show sidebar-dropdown-show">
+               
+                        <li class="nav-item-dropdown">
+                            {% url 'generate_purchase_report' as generate_purchase_report %}
+                            <a
+                                href="{{ generate_purchase_report }}"
+                                class="dropdown-item {% if request.path == generate_purchase_report %} active {% endif %}"
+                                ><i class="fa-solid fa-circle-dot"></i>Purchase Report</a
+                            >
+                        </li>
+              
+                   
+                        <li class="nav-item-dropdown">
+                            {% url 'generate_payment_report' as generate_payment_report %}
+                            <a
+                                href="{{ generate_payment_report }}"
+                                class="dropdown-item {% if request.path == generate_payment_report %} active {% endif %}"
+                                ><i class="fa-solid fa-circle-dot"></i>Payment Report</a
+                            >
+                        </li>
+                 
+                    <li class="nav-item-dropdown">
+                        {% url 'generate_product_report' as generate_product_report %}
+                        <a
+                            href="{{ generate_product_report }}"
+                            class="dropdown-item {% if request.path == generate_product_report %} active {% endif %}"
+                            ><i class="fa-solid fa-circle-dot"></i>Product Report</a
+                        >
+                    </li>
+                    <li class="nav-item-dropdown">
+                        {% url 'generate_warehouse_report' as generate_warehouse_report %}
+                        <a
+                            href="{{ generate_warehouse_report }}"
+                            class="dropdown-item {% if request.path == generate_warehouse_report %} active {% endif %}"
+                            ><i class="fa-solid fa-circle-dot"></i>Warehouse Report</a
+                        >
+                    </li>
+
+                    <li class="nav-item-dropdown">
+                        {% url 'generate_supplier_report' as generate_supplier_report %}
+                        <a
+                            href="{{ generate_supplier_report }}"
+                            class="dropdown-item {% if request.path == generate_supplier_report %} active {% endif %}"
+                            ><i class="fa-solid fa-circle-dot"></i>Supplier Report</a
+                        >
+                    </li>
+                </ul>
+            </li>
+       
+
+        
+
+
+
+        
+    
+
+        <li class="nav-item nav-item-link">
+            <div class="iocn-link">
+                <a
+                    class="nav-link {% if request.path == '/add_transfer/' or request.path == '/transferlist/' %} active {% endif %} counter-btn sidebar-dropdown-link"
+                    href="#"
+                    id="counter-dropdown"
+                    role="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                >
+                <i class="fa-solid fa-money-bill-transfer fa-sm"></i>
+                    <p>Transfer</p>
+                    <i class="fa-solid fa-angle-down angle-icon"></i>
+                </a>
+            </div>
+            <ul class="sub-menu counter-show sidebar-dropdown-show">
+                <li class="nav-item-dropdown">
+                    {% url 'add_transfer' as add_transfer %}
+                    <a
+                        href="{{ add_transfer }}"
+                        class="dropdown-item {% if request.path == add_transfer %} active {% endif %}"
+                    >
+                        <i class="fa-solid fa-circle-dot"></i> Add Transfer
+                    </a>
+                </li>
+                <li class="nav-item-dropdown">
+                    {% url 'transferlist' as transferlist %}
+                    <a
+                        href="{{ transferlist }}"
+                        class="dropdown-item {% if request.path == transferlist %} active {% endif %}"
+                    >
+                        <i class="fa-solid fa-circle-dot"></i> Transfer List
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+
+
+
+      
+
+        {% comment %} {% if request.user|has_perm:'bus.add_ticketbooking' or request.user|has_perm:'bus.view_ticketbooking' or request.user|has_perm:'bus.change_ticketbooking' or request.user|has_perm:'bus.delete_ticketbooking' %}
+        <li class="nav-item">
+            <div class="iocn-link">
+                <a
+                class="nav-link dropdown-toggle ticket-btn"
+                href="#"
+                id="ticket-dropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                >
+                <i class="fa-solid fa-ticket fa-lg"></i>
+                <p>Ticket Booking</p>
+                </a>
+                <i class="bx bxs-chevron-down arrow"></i>
+            </div>
+            <ul class="sub-menu ticket-show">
+                {% if request.user|has_perm:'bus.add_ticketbooking' %}
+                <li>
+                {% url 'search_form' as search_form %}
+                <a href="{{ search_form }}"
+                    class="dropdown-item {% if request.path == search_form %} active {% endif %}"
+                >Book Ticket</a>
+                </li>
+                {% endif %}
+                {% if request.user|has_perm:'bus.view_ticketbooking' or request.user|has_perm:'bus.change_ticketooking' or request.user|has_perm:'bus.delete_ticketbooking' %}
+                <li>
+                {% url 'booking_list' as booking_list %}
+                <a href="{{ booking_list }}"
+                    class="nav-link {% if request.path == booking_list %} active {% endif %}"
+                >
+                    <p>Ticket List</p>
+                </a>
+                </li>
+                {% endif %}
+            </ul>
+        </li>
+        {% endif %} {% endcomment %}
+
+
+
+       
+
+        </ul>
+    </nav>
+    <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+</aside>
+
+{% block custom_js %}
+{% comment %} <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function () {
+    $(".counter-manager-btn").click(function () {
+      $(".sidebar-nav ul .counter-manager-show").toggleClass("show");
+      console.log("clicked");
+    });
+
+    $(".routes-btn").click(function () {
+      $(".sidebar-nav ul .routes-show").toggleClass("show");
+      console.log("clicked");
+    });
+
+    $(".counter-btn").click(function () {
+      $(".sidebar-nav ul .counter-show").toggleClass("show");
+      console.log("clicked");
+    });
+
+    $(".coach-btn").click(function () {
+      $(".sidebar-nav ul .coach-show").toggleClass("show");
+      console.log("clicked");
+    });
+
+    $(".pages-btn").click(function () {
+      $(".sidebar-nav ul .pages-show").toggleClass("show");
+      console.log("clicked");
+    });
+
+    // Check if a submenu link is active on page load
+    $(".sub-menu a").each(function () {
+      var linkHref = $(this).attr("href");
+      if (linkHref === window.location.pathname) {
+        $(this).closest(".sub-menu").addClass("show");
+      }
+    });
+  }); {% endcomment %}
+
+
+<script>
+    $(document).ready(function () {
+        /*$(".counter-manager-btn").click(function () {
+            $(".sidebar-nav ul .counter-manager-show").toggleClass("show");
+            console.log("clicked");
+        });
+
+        $(".routes-btn").click(function () {
+            $(".sidebar-nav ul .routes-show").toggleClass("show");
+            console.log("clicked");
+        });
+
+        $(".counter-btn").click(function () {
+            $(".sidebar-nav ul .counter-show").toggleClass("show");
+            console.log("clicked");
+        });
+
+        $(".coach-btn").click(function () {
+            $(".sidebar-nav ul .coach-show").toggleClass("show");
+            console.log("clicked");
+        });
+
+        $(".pages-btn").click(function () {
+            $(".sidebar-nav ul .pages-show").toggleClass("show");
+            console.log("clicked");
+        });*/
+
+        // Check if a submenu link is active on page load
+        $(".sub-menu a").each(function () {
+            var linkHref = $(this).attr("href");
+            if (linkHref === window.location.pathname) {
+                var firstParent = $(this).closest(".sub-menu")
+                var secondParent = firstParent.closest(".sidebar-dropdown-show")
+                firstParent.addClass("show");
+                secondParent.addClass("show");
+                console.log('firstParent: ', firstParent)
+                console.log('secondParent: ', secondParent)
+            }
+        });
+
+        $(".sidebar-dropdown-link").on("click", function(e) {
+            e.preventDefault();
+        
+            var $this = $(this);
+        
+            // Find the closest ancestor that contains both the link and the sub-menu
+            var parentContainer = $this.closest(".nav-item-link");
+            
+            // Find the sub-menu element within the parent container
+            var subMenu = parentContainer.find(".sidebar-dropdown-show");
+            var angleIcon = $(this).find('.angle-icon')
+            
+            console.log('submenu: ', subMenu);
+            //subMenu.toggleClass("show")
+        
+            // Check if the clicked sub-menu is already shown
+            if (!subMenu.hasClass("show")) {
+                // Hide all other sub-menus
+                $(".sidebar-dropdown-show").removeClass("show");
+                $('.angle-icon').removeClass("rotate");
+                // Check if a submenu link is active on page load
+                $(".sub-menu a").each(function () {
+                    var linkHref = $(this).attr("href");
+                    if (linkHref === window.location.pathname) {
+                        $(this).closest(".sub-menu").addClass("show");
+                    }
+                });
+                subMenu.addClass("show");
+                angleIcon.addClass("rotate");
+            }
+
+            else {
+                // Hide the clicked sub-menu
+                subMenu.removeClass("show");
+                angleIcon.removeClass("rotate");
+            }
+        });
+
+        $('.second-sidebar-dropdown-link').on('click', function(e){
+            e.preventDefault();
+
+            var parentContainer = $(this).closest(".second-nav-item-link");
+            var secondSubMenu = parentContainer.find(".second-sidebar-dropdown-show");
+            var secondAngleIcon = $(this).find('.second-angle-icon')
+
+            console.log('submenu: ', secondSubMenu);
+            //subMenu.toggleClass("show")
+        
+            // Check if the clicked sub-menu is already shown
+            if (!secondSubMenu.hasClass("show")) {
+                // Hide all other sub-menus
+                $(".second-sidebar-dropdown-show").removeClass("show");
+                $('.second-angle-icon').removeClass("rotate");
+                // Check if a submenu link is active on page load
+                $(".sub-menu a").each(function () {
+                    var linkHref = $(this).attr("href");
+                    if (linkHref === window.location.pathname) {
+                        $(this).closest(".sub-menu").closest(".sub-menu").addClass("show");
+                    }
+                });
+                secondSubMenu.addClass("show");
+                secondAngleIcon.addClass("rotate");
+            }
+            else {
+                // Hide the clicked sub-menu
+                secondSubMenu.removeClass("show");
+                secondAngleIcon.removeClass("rotate");
+            }
+
+        })
+
+    });
+
+</script>
+{% endblock custom_js %}

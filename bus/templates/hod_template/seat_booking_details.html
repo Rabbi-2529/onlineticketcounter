@@ -1,0 +1,57 @@
+{% extends 'hod_template/base_template.html' %} {% block main_content %}
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">
+              Booking Seats for {{ journey_date.journey_date|date:"d F Y" }}
+            </h3>
+          </div>
+          <div class="card-body">
+            <form method="get" class="form-inline float-right">
+              <div class="form-group">
+                <input
+                  type="text"
+                  name="search"
+                  class="form-control"
+                  placeholder="Search by booking ID or username"
+                />
+              </div>
+              <button type="submit" class="btn btn-primary ml-2">Search</button>
+            </form>
+
+            {% if seat_bookings %}
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Booking ID</th>
+                  <th>User</th>
+                  <th>Seat Number</th>
+                  <th>Price</th>
+                  <th>PNR</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for booking in seat_bookings %}
+                <tr>
+                  <td>{{ booking.id }}</td>
+                  <td>{{ booking.user.username }}</td>
+                  <td>{{ booking.seat_number }}</td>
+                  <td>{{ booking.price }}</td>
+                  <td>{{ booking.pnr }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            {% else %}
+            <p>No bookings found for this journey date.</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock main_content %}

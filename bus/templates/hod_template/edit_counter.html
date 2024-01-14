@@ -1,0 +1,154 @@
+{% extends 'hod_template/base_template.html' %}
+{% load static %}
+
+{% block page_title %}Edit Bus Fitness{% endblock page_title %}
+
+{% block custom_css %}
+<!-- Include your custom CSS styles here -->
+<style>
+    /* Center the form on the page */
+    .center-form {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        
+    }
+    {% comment %} .card {
+        border-radius: 20px;
+        /* box-shadow: 0 0.15rem 1.75rem 0 rgb(33 40 50 / 15%); */
+        box-shadow: 12px 16px 22px 9px rgba(0,0,0,0.1);
+    } {% endcomment %}
+    
+    .card-header {
+        background: linear-gradient(180deg, rgba(62,7,75,1) 0%, rgba(40,10,69,1) 63%);
+    }
+    
+    /* Styling for table headers */
+    .table thead tr th {
+        font-weight: 500;
+        color: rgb(0, 0, 0);
+    }
+    
+    /* Styling for table data cells */
+    .table tbody tr td {
+        font-size: 15px;
+        font-weight: 400;
+        color: rgb(41, 41, 41);
+    }
+    
+    
+    /* Style the card containing the form */
+    .card {
+        max-width: 500px;
+        width: 100%;
+        padding: 20px;
+        border: 1px solid #e0e0e0;
+        border-radius: 20px;
+        /* box-shadow: 0 0.15rem 1.75rem 0 rgb(33 40 50 / 15%); */
+        box-shadow: 12px 16px 22px 9px rgba(0,0,0,0.1);
+        
+        background-color: #fff;
+    }
+    
+    /* Style form labels */
+    label {
+        font-weight: bold;
+        margin-bottom: 5px;
+        display: block;
+    }
+    
+    /* Style form input fields */
+    input[type="text"],
+    input[type="date"],
+    input[type="number"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-bottom: 15px;
+    }
+    
+    /* Style submit button */
+    button[type="submit"] {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+    
+    button[type="submit"]:hover {
+        background-color: #0056b3;
+    }
+    .update {
+        background: linear-gradient(90deg, rgba(24,65,41,1) 0%, rgba(27,105,24,1) 93%);
+        border: none !important;
+    }
+    
+    .update:hover {
+        background: linear-gradient(90deg, rgba(24,65,41,1) 0%, rgba(13,134,88,1) 93%);
+    }
+</style>
+{% endblock custom_css %}
+
+{% block main_content %}
+<div class="container-xl px-4 mt-4">
+ <div class="container-fluid">
+    <div class="row justify-content-center align-items-center min-vh-200">
+        <div class="col-md-6"> <!-- Adjust the column width as needed -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Edit Counter</h3>
+                </div>
+                <div class="card-body">
+                    <form action="">
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="name">Counter Name</label>
+                                <input type="text" class="form-control" id="name" name="name" value="{{ counter.name }}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="manager">Manager Name</label>
+                                <select class="form-control" id="manager" name="manager">
+                                    <option value="" selected disabled>Choose manager</option>
+                                    {% for staff in staff_members %}
+                                        <option value="{{ staff.id }}" {% if counter.staff_id == staff.id %}selected{% endif %}>{{ staff.admin.username }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="district">District</label>
+                                <input type="text" class="form-control" id="district" name="district" value="{{ counter.district }}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="union">Thana</label>
+                                <input type="text" class="form-control" id="union" name="union" value="{{ counter.thana}}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="address">Address</label>
+                                <textarea class="form-control" id="address" name="address" rows="3" required>{{ counter.address }}</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone_numbers">Phone Numbers</label>
+                                <input type="text" class="form-control" id="phone_numbers" name="phone_numbers" value="{{ counter.phone_numbers }}" required>
+                            </div>
+                        </div>
+
+                     
+                            <button type="submit" class="update">Save Changes</button>
+                        
+                    </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock main_content %}
+
+{% block custom_js %}
+<!-- Include your custom JavaScript here -->
+{% endblock custom_js %}

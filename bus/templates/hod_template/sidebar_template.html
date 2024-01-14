@@ -1,0 +1,822 @@
+{% load static %} {% load perm_tags %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+<link rel="stylesheet" href="{% static "dist/css/sidebar.css" %}"> 
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <a
+    href=""
+    class="brand-link"
+    style="text-decoration: none; background-color: white"
+    >
+    
+    <span class="brand-text font-weight-light">
+        <img
+        src="{% static 'img/igl.jpg'%}"
+        alt=""
+        style="width: 200px; height: 60px"
+        />
+    </span>
+    </a>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+    <!-- Sidebar user panel (optional) -->
+    <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+        <div class="image">
+        {% if request.user.profile_picture %}
+        <img
+            src="{{ request.user.profile_picture.url }}"
+            class="img-circle elevation-2"
+            alt="User Image"
+        />
+        {% else %}
+        <img
+            src="{% static 'dist/img/user2-160x160.jpg' %}"
+            class="img-circle elevation-2"
+            alt="User Image"
+        />
+        {% endif %}
+        </div>
+        <div class="info">
+        <a href="{% url 'admin_profile' %}" class="d-block"
+            >{{ request.user.username }}</a
+        >
+        {% if request.user.is_online %}
+        <span class="online-indicator"></span
+        ><span class="ml-2 text-muted">Online</span>
+        {% endif %}
+        </div>
+    </div>
+    <!-- Sidebar Menu -->
+    <nav class="mt-2 sidebar-nav">
+        <ul
+        class="nav nav-pills nav-sidebar flex-column"
+        data-widget="treeview"
+        role="menu"
+        data-accordion="false"
+        >
+    
+        <li class="nav-item nav-item-link">
+            <a href="{% url 'admin_home' %}"
+                class="nav-link {% if request.path == '/admin_home' %} active {% endif %}">
+                <i class="fa-solid fa-house fa-lg"></i>
+                <p>Home</p>
+            </a>
+        </li>
+
+
+        <li class="nav-item nav-item-link">
+            {% url 'user_list' as user_list%}
+            <a
+              href="{{ user_list }}"
+              class="nav-link {% if request.path == user_list %} active {% endif %}"
+            >
+            <i class="fa fa-user-plus fa-lg" aria-hidden="true"></i>
+                <p>User Registration</p>
+            </a>
+        </li>
+
+        
+    
+        {% if request.user|has_perm:'bus.add_staff' or request.user|has_perm:'bus.view_staff' or request.user|has_perm:'bus.change_staff' or request.user|has_perm:'bus.delete_staff' %}
+            <li class="nav-item nav-item-link">
+                <div class="iocn-link">
+                    <a
+                        class="nav-link {% if request.path == '/add_staff/' or request.path == '/manage_staff/' %} active {% endif %} counter-manager-btn sidebar-dropdown-link"
+                        href="#"
+                        id="counter-manager-dropdown"
+                        role="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                    >
+                        <i class="fa-solid fa-user fa-lg"></i>
+                        <p>Counter Manager</p>
+                        <i class="fa-solid fa-angle-down angle-icon"></i>
+                    </a>
+                </div>
+                <ul class="sub-menu counter-manager-show sidebar-dropdown-show">
+                    {% if request.user|has_perm:'bus.add_staff' %}
+                    <li class="nav-item-dropdown">
+                        {% url 'add_staff' as add_staff %}
+                        <a
+                            href="{{ add_staff }}"
+                            class="dropdown-item {% if request.path == add_staff %} active {% endif %}"
+                            ><i class="fa-solid fa-circle-dot"></i>Add Staff</a>
+
+                    </li>
+                    {% endif %}
+                    {% if request.user|has_perm:'bus.view_staff' or request.user|has_perm:'bus.change_staff' or request.user|has_perm:'bus.delete_staff' %}
+                    <li class="nav-item-dropdown">
+                        {% url 'manage_staff' as manage_staff %}
+                        <a
+                            href="{{ manage_staff }}"
+                            class="dropdown-item {% if request.path == manage_staff %} active {% endif %}"
+                            ><i class="fa-solid fa-circle-dot"></i>Manage Staff</a
+                        >
+                    </li>
+                    {% endif %}
+                </ul>
+            </li>
+        {% endif %}
+
+        {% comment %} <li class="nav-item nav-item-link">
+            <div class="iocn-link">
+                <a
+                    class="nav-link {% if request.path == '/staff-types/' or request.path == '/manage_assigned_staff/' %} active {% endif %} coach-btn sidebar-dropdown-link"
+                    href="#"
+                    id="coach-dropdown"
+                    role="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                >
+                    <i class="fa-solid fa-users fa-lg"></i>
+                    <p>Employee</p>
+                    <i class="fa-solid fa-angle-down angle-icon"></i>
+                </a>
+
+            </div>
+            <ul class="sub-menu coach-show sidebar-dropdown-show">
+            
+                <li class="nav-item-dropdown">
+                    {% url 'staff_type_list' as staff_type_list%}
+                    <a href="{{ staff_type_list }}"
+                        class="dropdown-item {% if request.path == staff_type_list %} active {% endif %}"
+                    ><i class="fa-solid fa-circle-dot"></i>Employee Type List</a>
+                </li>
+            
+            
+                <li class="nav-item-dropdown"i>
+                    {% url 'manage_assigned_staff' as manage_assigned_staff %}
+                    <a href="{{ manage_assigned_staff }}"
+                        class="dropdown-item {% if request.path == manage_assigned_staff %} active {% endif %}"
+                    ><i class="fa-solid fa-circle-dot"></i>Employee List</a>
+                </li>
+            
+            </ul>
+        </li> {% endcomment %}
+
+
+        {% if request.user|has_perm:'bus.add_counter' or request.user|has_perm:'bus.view_counter' or request.user|has_perm:'bus.change_counter' or request.user|has_perm:'bus.delete_counter' %}
+        <li class="nav-item nav-item-link">
+            <div class="iocn-link">
+                <a
+                    class="nav-link {% if request.path == '/add_counter/' or request.path == '/manage_counters/' %} active {% endif %} counter-btn sidebar-dropdown-link"
+                    href="#"
+                    id="counter-dropdown"
+                    role="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                >
+                    <i class="fa-solid fa-earth-asia fa-lg"></i>
+                    <p>Counter</p>
+                    <i class="fa-solid fa-angle-down angle-icon"></i>
+                </a>
+                
+            </div>
+            <ul class="sub-menu counter-show sidebar-dropdown-show">
+                {% if request.user|has_perm:'bus.add_counter' %}
+                    <li class="nav-item-dropdown">
+                    {% url 'add_counter' as add_counter %}
+                    <a
+                        href="{{ add_counter }}"
+                        class="dropdown-item {% if request.path == add_counter %} active {% endif %}"
+                        ><i class="fa-solid fa-circle-dot"></i>Add Counter</a
+                    >
+                    </li>
+                {% endif %}
+                {% if request.user|has_perm:'bus.view_counter' or request.user|has_perm:'bus.change_counter' or request.user|has_perm:'bus.delete_counter' %}
+                    <li class="nav-item-dropdown">
+                    {% url 'manage_counters' as manage_counters %}
+                    <a
+                        href="{{ manage_counters }}"
+                        class="dropdown-item {% if request.path == manage_counters %} active {% endif %}"
+                        ><i class="fa-solid fa-circle-dot"></i>Manage Counter</a
+                    >
+                    </li>
+                {% endif %}
+            </ul>
+        </li>
+    {% endif %}
+
+
+        {% if request.user|has_perm:'bus.add_route' or request.user|has_perm:'bus.view_route' or request.user|has_perm:'bus.change_route' or request.user|has_perm:'bus.delete_route' %}
+            <li class="nav-item nav-item-link">
+                <div class="iocn-link">
+                    <a
+                        class="nav-link {% if request.path == '/add_route/' or request.path == '/manage_routes/' %} active {% endif %} routes-btn sidebar-dropdown-link"
+                        href="#"
+                        id="routes-dropdown"
+                        role="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                    >
+                        <i class="fa-solid fa-route fa-lg"></i>
+                        <p>Routes</p>
+                        <i class="fa-solid fa-angle-down angle-icon"></i>
+                    </a>
+                    
+                </div>
+                <ul class="sub-menu routes-show sidebar-dropdown-show">
+                    {% if request.user|has_perm:'bus.add_route' %}
+                        <li class="nav-item-dropdown">
+                            {% url 'add_route' as add_route %}
+                            <a
+                                href="{{ add_route }}"
+                                class="dropdown-item {% if request.path == add_route %} active {% endif %}"
+                                ><i class="fa-solid fa-circle-dot"></i>Add Routes</a
+                            >
+                        </li>
+                    {% endif %}
+                    {% if request.user|has_perm:'bus.view_route' or request.user|has_perm:'bus.change_route' or request.user|has_perm:'bus.delete_route' %}
+                        <li class="nav-item-dropdown">
+                            {% url 'manage_routes' as manage_routes %}
+                            <a
+                                href="{{ manage_routes }}"
+                                class="dropdown-item {% if request.path == manage_routes %} active {% endif %}"
+                                ><i class="fa-solid fa-circle-dot"></i>Manage Routes</a
+                            >
+                        </li>
+                    {% endif %}
+                </ul>
+            </li>
+        {% endif %}
+
+        <li class="nav-item nav-item-link">
+            <div class="iocn-link">
+                <a
+                    class="nav-link {% if request.path == '/busregi/' or request.path == '/bus_list/' %} active {% endif %} counter-btn sidebar-dropdown-link"
+                    href="#"
+                    id="counter-dropdown"
+                    role="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                >
+                <i class="fas fa-bus"></i>
+                    <p>Bus</p>
+                    <i class="fa-solid fa-angle-down angle-icon"></i>
+                </a>
+                
+            </div>
+            <ul class="sub-menu counter-show sidebar-dropdown-show">
+                {% comment %} {% if request.user|has_perm:'bus.add_counter' %} {% endcomment %}
+                    <li class="nav-item-dropdown">
+                    {% url 'busregi' as busregi %}
+                    <a
+                        href="{{ busregi }}"
+                        class="dropdown-item {% if request.path == busregi %} active {% endif %}"
+                        ><i class="fa-solid fa-circle-dot"></i>Add Bus</a
+                    >
+                    </li>
+                {% comment %} {% endif %} {% endcomment %}
+                {% comment %} {% if request.user|has_perm:'bus.view_counter' or request.user|has_perm:'bus.change_counter' or request.user|has_perm:'bus.delete_counter' %} {% endcomment %}
+                    <li class="nav-item-dropdown">
+                    {% url 'bus_list' as bus_list %}
+                    <a
+                        href="{{ bus_list }}"
+                        class="dropdown-item {% if request.path == bus_list %} active {% endif %}"
+                        ><i class="fa-solid fa-circle-dot"></i>Bus List</a
+                    >
+                    </li>
+                {% comment %} {% endif %} {% endcomment %}
+            </ul>
+        </li>
+
+        
+        {% if request.user|has_perm:'bus.add_coach' or request.user|has_perm:'bus.view_coach' or request.user|has_perm:'bus.change_coach' or request.user|has_perm:'bus.delete_coach' %}
+            <li class="nav-item nav-item-link">
+                <div class="iocn-link">
+                    <a
+                        class="nav-link {% if request.path == '/add-coach/' or request.path == '/manage-coach/' %} active {% endif %} coach-btn sidebar-dropdown-link"
+                        href="#"
+                        id="coach-dropdown"
+                        role="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                    >
+                        <i class="fa-solid fa-couch fa-lg"></i>
+                        <p>Coach</p>
+                        <i class="fa-solid fa-angle-down angle-icon"></i>
+                    </a>
+                    
+                </div>
+                <ul class="sub-menu coach-show sidebar-dropdown-show">
+                    {% if request.user|has_perm:'bus.add_coach' %}
+                        <li class="nav-item-dropdown">
+                            {% url 'add_coach' as add_coach %}
+                            <a
+                                href="{{ add_coach }}"
+                                class="dropdown-item {% if request.path == add_coach %} active {% endif %}"
+                                ><i class="fa-solid fa-circle-dot"></i>Add Coach
+                            </a>
+                        </li>
+                        {% endif %}
+                    {% if request.user|has_perm:'bus.view_coach' or request.user|has_perm:'bus.change_coach' or request.user|has_perm:'bus.delete_coach' %}
+                        <li class="nav-item-dropdown">
+                            {% url 'manage_coach' as manage_coach %}
+                            <a
+                                href="{{ manage_coach }}"
+                                class="dropdown-item {% if request.path == manage_coach %} active {% endif %}"
+                                ><i class="fa-solid fa-circle-dot"></i>Manage Coach
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </li>
+        {% endif %}
+
+
+
+        
+    
+
+        <li class="nav-item nav-item-link">
+            <div class="iocn-link">
+                <a
+                    class="nav-link {% if request.path == '/add_counter/' or request.path == '/manage_counters/' %} active {% endif %} counter-btn sidebar-dropdown-link"
+                    href="#"
+                    id="counter-dropdown"
+                    role="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                >
+                    <i class="fa-solid fa-earth-asia fa-lg"></i>
+                    <p>Passenger</p>
+                    <i class="fa-solid fa-angle-down angle-icon"></i>
+                </a>
+            </div>
+            <ul class="sub-menu counter-show sidebar-dropdown-show">
+                <li class="nav-item-dropdown">
+                    {% url 'customer_list' as customer_list_url %}
+                    <a
+                        href="{{ customer_list_url }}"
+                        class="dropdown-item {% if request.path == customer_list_url %} active {% endif %}"
+                    >
+                        <i class="fa-solid fa-circle-dot"></i> Passenger List
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+
+
+      
+
+        {% comment %} {% if request.user|has_perm:'bus.add_ticketbooking' or request.user|has_perm:'bus.view_ticketbooking' or request.user|has_perm:'bus.change_ticketbooking' or request.user|has_perm:'bus.delete_ticketbooking' %}
+        <li class="nav-item">
+            <div class="iocn-link">
+                <a
+                class="nav-link dropdown-toggle ticket-btn"
+                href="#"
+                id="ticket-dropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                >
+                <i class="fa-solid fa-ticket fa-lg"></i>
+                <p>Ticket Booking</p>
+                </a>
+                <i class="bx bxs-chevron-down arrow"></i>
+            </div>
+            <ul class="sub-menu ticket-show">
+                {% if request.user|has_perm:'bus.add_ticketbooking' %}
+                <li>
+                {% url 'search_form' as search_form %}
+                <a href="{{ search_form }}"
+                    class="dropdown-item {% if request.path == search_form %} active {% endif %}"
+                >Book Ticket</a>
+                </li>
+                {% endif %}
+                {% if request.user|has_perm:'bus.view_ticketbooking' or request.user|has_perm:'bus.change_ticketooking' or request.user|has_perm:'bus.delete_ticketbooking' %}
+                <li>
+                {% url 'booking_list' as booking_list %}
+                <a href="{{ booking_list }}"
+                    class="nav-link {% if request.path == booking_list %} active {% endif %}"
+                >
+                    <p>Ticket List</p>
+                </a>
+                </li>
+                {% endif %}
+            </ul>
+        </li>
+        {% endif %} {% endcomment %}
+
+        <li class="nav-item nav-item-link">
+            <div class="iocn-link">
+                <a
+                    class="nav-link {% if request.path == '/search_form/' or request.path == '/bookings/' or request.path == '/cancelticket_hod/' or request.path == '/booking_popup_time/' %} active {% endif %} coach-btn sidebar-dropdown-link"
+                    href="#"
+                    id="coach-dropdown"
+                    role="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                >
+                    <i class="fa-solid fa-ticket fa-lg"></i>
+                    <p>Ticket Booking</p>
+                    <i class="fa-solid fa-angle-down angle-icon"></i>
+                </a>
+                
+            </div>
+            <ul class="sub-menu coach-show sidebar-dropdown-show">
+                <li class="nav-item-dropdown">
+                    {% url 'search_form' as search_form %}
+                    <a
+                        href="{{ search_form }}"
+                        class="dropdown-item {% if request.path == search_form %} active {% endif %}"
+                        ><i class="fa-solid fa-circle-dot"></i>Book Ticket</a>
+                </li>
+                <li class="nav-item-dropdown">
+                    {% url 'booking_list' as booking_list %}
+                    <a
+                        href="{{ booking_list }}"
+                        class="dropdown-item {% if request.path == booking_list %} active {% endif %}"
+                    ><i class="fa-solid fa-circle-dot"></i>Total Ticket</a>
+                </li>
+                <li class="nav-item-dropdown">
+                    {% url 'all_bookings' as all_bookings %}
+                    <a
+                        href="{{ all_bookings }}"
+                        class="dropdown-item {% if request.path == all_bookings %} active {% endif %}"
+                    ><i class="fa-solid fa-circle-dot"></i>Ticket List</a>
+                </li>
+                <li class="nav-item-dropdown">
+                    {% url 'cancelticket_hod' as cancelticket_hod %}
+                    <a
+                        href="{{ cancelticket_hod }}"
+                        class="dropdown-item {% if request.path == cancelticket_hod %} active {% endif %}"
+                    ><i class="fa-solid fa-circle-dot"></i> Cancellation Request</a>
+                </li>
+                <li class="nav-item-dropdown">
+                    {% url 'approved_cancel_tickets' as approved_cancel_tickets %}
+                    <a
+                        href="{{ approved_cancel_tickets }}"
+                        class="dropdown-item {% if request.path == approved_cancel_tickets %} active {% endif %}"
+                    ><i class="fa-solid fa-circle-dot"></i> Cancel List</a>
+                </li>
+                <li class="nav-item-dropdown">
+                    {% url 'refund_list' as refund_list %}
+                    <a
+                        href="{{ refund_list }}"
+                        class="dropdown-item {% if request.path == refund_list %} active {% endif %}"
+                    ><i class="fa-solid fa-circle-dot"></i> Refund List</a>
+                </li>
+                <li class="nav-item-dropdown">
+                    {% url 'booking_popup_time' as booking_popup_time %}
+                    <a
+                        href="{{ booking_popup_time }}"
+                        class="dropdown-item {% if request.path == booking_popup_time %} active {% endif %}"
+                    ><i class="fa-solid fa-circle-dot"></i>Book Time</a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="nav-item nav-item-link">
+            <div class="iocn-link">
+                <a class="nav-link coach-btn sidebar-dropdown-link" href="#" id="coach-dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-cog fs-lg" aria-hidden="true"></i>
+                    <p>Software Settings</p>
+                    <i class="fa-solid fa-angle-down angle-icon"></i>
+                </a>
+                
+            </div>
+            
+            <ul class="sub-menu coach-show sidebar-dropdown-show">
+                <li class="second-nav-item-link">
+                    <div class="iocn-link">
+                        <a class="nav-link coach-btn second-sidebar-dropdown-link" href="#" id="coach-dropdown-fleet" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Fleet
+                            <i class="fa-solid fa-angle-down second-angle-icon"></i>
+                        </a>
+                    </div>
+                    <ul class="sub-menu coach-show second-sidebar-dropdown-show">
+                        <li class="second-nav-item-dropdown">
+                            <a href="{% url 'vehicle_list' %}" class="dropdown-item {% if request.path == '/vehicle_list/' %} active {% endif %}">
+                                <i class="fa-solid fa-circle-dot"></i>Vehicle List
+                            </a>
+                        </li>
+                    </ul>
+                    
+                </li>
+
+                <li class="second-nav-item-link">
+                    <div class="iocn-link">
+                        <a class="nav-link coach-btn second-sidebar-dropdown-link" href="#" id="coach-dropdown-location" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Fitness
+                            <i class="fa-solid fa-angle-down second-angle-icon"></i>
+                        </a>
+                    </div>
+                    <ul class="sub-menu coach-show second-sidebar-dropdown-show">
+                        <li class="second-nav-item-dropdown">
+                        <a href="{% url 'fitness_list' %}" class="dropdown-item {% if request.path == 'fitness_list' %} active {% endif %}">
+                            <i class="fa-solid fa-circle-dot"></i>Fitness List
+                        </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="second-nav-item-link">
+                    <div class="iocn-link">
+                        <a class="nav-link coach-btn second-sidebar-dropdown-link" href="#" id="coach-dropdown-location" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Location
+                            <i class="fa-solid fa-angle-down second-angle-icon"></i>
+                        </a>
+                    </div>
+                    <ul class="sub-menu coach-show second-sidebar-dropdown-show">
+                        <li class="second-nav-item-dropdown">
+                        <a href="{% url 'bus_stop_list' %}" class="dropdown-item {% if request.path == 'bus_stop_list' %} active {% endif %}">
+                            <i class="fa-solid fa-circle-dot"></i>Location List
+                        </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="second-nav-item-link">
+                    <div class="iocn-link">
+                        <a class="nav-link coach-btn second-sidebar-dropdown-link" href="#" id="coach-dropdown-tax" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Tax
+                        <i class="fa-solid fa-angle-down second-angle-icon"></i>
+                        </a>
+                    </div>
+                    <ul class="sub-menu coach-show second-sidebar-dropdown-show">
+                        <li class="second-nav-item-dropdown">
+                            <a href="{% url 'tax_list' %}" class="dropdown-item {% if request.path == '/tax_list/' %} active {% endif %}">
+                                <i class="fa-solid fa-circle-dot"></i>Tax List
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="second-nav-item-link">
+                    <div class="iocn-link">
+                        <a class="nav-link coach-btn second-sidebar-dropdown-link" href="#" id="coach-dropdown-payment" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Payment Method
+                            <i class="fa-solid fa-angle-down second-angle-icon"></i>
+                        </a>
+                    </div>
+                    <ul class="sub-menu coach-show second-sidebar-dropdown-show">
+                        <li class="second-nav-item-dropdown">
+                            <a href="{% url 'payment_method_list' %}" class="dropdown-item {% if request.path == 'payment_method_list' %} active {% endif %}">
+                                <i class="fa-solid fa-circle-dot"></i>Payment List
+                            </a>
+                        </li>
+                        <li class="second-nav-item-dropdown"> 
+                        <a href="{% url 'payment_method_list' %}" class="dropdown-item {% if request.path == 'payment_method_list' %} active {% endif %}">
+                            <i class="fa-solid fa-circle-dot"></i>Payment Gateway List
+                        </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+
+
+        {% if request.user|has_perm:'bus.add_coach' %}
+            <li class="nav-item nav-item-link">
+            {% url 'coach_detail' as coach_detail %}
+            <a
+                href="{{ coach_detail }}"
+                class="nav-link {% if request.path == coach_detail %} active {% endif %}"
+            >
+                <i class="fa-regular fa-calendar fa-lg"></i>
+                <p>Bus Schedule</p>
+            </a>
+            </li>
+        {% endif %}
+
+        {% if request.user|has_perm:'bus.view_feedback' %}
+            <li class="nav-item nav-item-link">
+            {% url 'feedback_list' as feedback_list%}
+            <a
+                href="{{ feedback_list }}"
+                class="nav-link {% if request.path == feedback_list %} active {% endif %}"
+            >
+                <i class="fa-solid fa-comments fa-lg"></i>
+                <p>Customer Feedback</p>
+            </a>
+            </li>
+        {% endif %}
+
+        {% if request.user|has_perm:'bus.view_facility' or request.user|has_perm:'bus.add_category' or request.user|has_perm:'bus.add_faq' %}
+        <li class="nav-item nav-item-link">
+            <div class="iocn-link">
+                <a
+                    class="nav-link {% if request.path == '/booking-activity/' or request.path == '/manage_facilities/' %} active {% endif %} pages-btn sidebar-dropdown-link"
+                    href="#"
+                    id="pages-dropdown"
+                    role="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                >
+                    <i class="fa-regular fa-file-lines fa-lg"></i>
+                    <p>Website Page</p>
+                    <i class="fa-solid fa-angle-down angle-icon"></i>
+                </a>
+                
+            </div>
+            <ul class="sub-menu pages-show sidebar-dropdown-show">
+                <li class="nav-item-dropdown">
+                {% url 'booking_activity' as booking_activity %}
+                <a
+                    href="{{ booking_activity }}"
+                    class="dropdown-item {% if request.path == booking_activity %} active {% endif %}"
+                    ><i class="fa-solid fa-circle-dot"></i>Customer</a>
+        </li>
+
+        {% if request.user|has_perm:'bus.view_facility' %}
+        <li class="nav-item-dropdown">
+            {% url 'manage_facilities' as manage_facilities %}
+            <a
+                href="{{ manage_facilities }}"
+                class="dropdown-item {% if request.path == manage_facilities %} active {% endif %}"
+                ><i class="fa-solid fa-circle-dot"></i>Facility</a
+            >
+        </li>
+        {% endif %}
+        {% if request.user|has_perm:'bus.add_category' %}
+        <li class="nav-item-dropdown">
+            {% url 'add_category' as add_category %}
+            <a
+                href="{{ add_category }}"
+                class="dropdown-item {% if request.path == manage_facilities %} active {% endif %}"
+            ><i class="fa-solid fa-circle-dot"></i>Add category
+            </a>
+        </li>
+    {% endif %}
+    {% if request.user|has_perm:'bus.add_faq' %}
+    <li class="nav-item-dropdown">
+        {% url 'add_faq' as add_faq %}
+        <a
+            href="{{ add_faq }}"
+            class="dropdown-item {% if request.path == manage_facilities %} active {% endif %}"
+        ><i class="fa-solid fa-circle-dot"></i>Add FAQ
+        </a>
+    </li>
+    {% endif %}
+    </li>
+    {% endif %}
+
+        </ul>
+    </nav>
+    <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+</aside>
+
+{% block custom_js %}
+{% comment %} <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function () {
+    $(".counter-manager-btn").click(function () {
+      $(".sidebar-nav ul .counter-manager-show").toggleClass("show");
+      console.log("clicked");
+    });
+
+    $(".routes-btn").click(function () {
+      $(".sidebar-nav ul .routes-show").toggleClass("show");
+      console.log("clicked");
+    });
+
+    $(".counter-btn").click(function () {
+      $(".sidebar-nav ul .counter-show").toggleClass("show");
+      console.log("clicked");
+    });
+
+    $(".coach-btn").click(function () {
+      $(".sidebar-nav ul .coach-show").toggleClass("show");
+      console.log("clicked");
+    });
+
+    $(".pages-btn").click(function () {
+      $(".sidebar-nav ul .pages-show").toggleClass("show");
+      console.log("clicked");
+    });
+
+    // Check if a submenu link is active on page load
+    $(".sub-menu a").each(function () {
+      var linkHref = $(this).attr("href");
+      if (linkHref === window.location.pathname) {
+        $(this).closest(".sub-menu").addClass("show");
+      }
+    });
+  }); {% endcomment %}
+
+
+<script>
+    $(document).ready(function () {
+        /*$(".counter-manager-btn").click(function () {
+            $(".sidebar-nav ul .counter-manager-show").toggleClass("show");
+            console.log("clicked");
+        });
+
+        $(".routes-btn").click(function () {
+            $(".sidebar-nav ul .routes-show").toggleClass("show");
+            console.log("clicked");
+        });
+
+        $(".counter-btn").click(function () {
+            $(".sidebar-nav ul .counter-show").toggleClass("show");
+            console.log("clicked");
+        });
+
+        $(".coach-btn").click(function () {
+            $(".sidebar-nav ul .coach-show").toggleClass("show");
+            console.log("clicked");
+        });
+
+        $(".pages-btn").click(function () {
+            $(".sidebar-nav ul .pages-show").toggleClass("show");
+            console.log("clicked");
+        });*/
+
+        // Check if a submenu link is active on page load
+        $(".sub-menu a").each(function () {
+            var linkHref = $(this).attr("href");
+            if (linkHref === window.location.pathname) {
+                var firstParent = $(this).closest(".sub-menu")
+                var secondParent = firstParent.closest(".sidebar-dropdown-show")
+                firstParent.addClass("show");
+                secondParent.addClass("show");
+                console.log('firstParent: ', firstParent)
+                console.log('secondParent: ', secondParent)
+            }
+        });
+
+        $(".sidebar-dropdown-link").on("click", function(e) {
+            e.preventDefault();
+        
+            var $this = $(this);
+        
+            // Find the closest ancestor that contains both the link and the sub-menu
+            var parentContainer = $this.closest(".nav-item-link");
+            
+            // Find the sub-menu element within the parent container
+            var subMenu = parentContainer.find(".sidebar-dropdown-show");
+            var angleIcon = $(this).find('.angle-icon')
+            
+            console.log('submenu: ', subMenu);
+            //subMenu.toggleClass("show")
+        
+            // Check if the clicked sub-menu is already shown
+            if (!subMenu.hasClass("show")) {
+                // Hide all other sub-menus
+                $(".sidebar-dropdown-show").removeClass("show");
+                $('.angle-icon').removeClass("rotate");
+                // Check if a submenu link is active on page load
+                $(".sub-menu a").each(function () {
+                    var linkHref = $(this).attr("href");
+                    if (linkHref === window.location.pathname) {
+                        $(this).closest(".sub-menu").addClass("show");
+                    }
+                });
+                subMenu.addClass("show");
+                angleIcon.addClass("rotate");
+            }
+
+            else {
+                // Hide the clicked sub-menu
+                subMenu.removeClass("show");
+                angleIcon.removeClass("rotate");
+            }
+        });
+
+        $('.second-sidebar-dropdown-link').on('click', function(e){
+            e.preventDefault();
+
+            var parentContainer = $(this).closest(".second-nav-item-link");
+            var secondSubMenu = parentContainer.find(".second-sidebar-dropdown-show");
+            var secondAngleIcon = $(this).find('.second-angle-icon')
+
+            console.log('submenu: ', secondSubMenu);
+            //subMenu.toggleClass("show")
+        
+            // Check if the clicked sub-menu is already shown
+            if (!secondSubMenu.hasClass("show")) {
+                // Hide all other sub-menus
+                $(".second-sidebar-dropdown-show").removeClass("show");
+                $('.second-angle-icon').removeClass("rotate");
+                // Check if a submenu link is active on page load
+                $(".sub-menu a").each(function () {
+                    var linkHref = $(this).attr("href");
+                    if (linkHref === window.location.pathname) {
+                        $(this).closest(".sub-menu").closest(".sub-menu").addClass("show");
+                    }
+                });
+                secondSubMenu.addClass("show");
+                secondAngleIcon.addClass("rotate");
+            }
+            else {
+                // Hide the clicked sub-menu
+                secondSubMenu.removeClass("show");
+                secondAngleIcon.removeClass("rotate");
+            }
+
+        })
+
+    });
+
+</script>
+{% endblock custom_js %}

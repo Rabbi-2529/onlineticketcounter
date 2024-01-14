@@ -1,0 +1,298 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Online Ticket Counter</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{% static "plugins/fontawesome-free/css/all.min.css" %}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/brands.min.css" integrity="sha512-9YHSK59/rjvhtDcY/b+4rdnl0V4LPDWdkKceBl8ZLF5TB6745ml1AfluEU6dFWqwDw9lPvnauxFgpKvJqp7jiQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/fontawesome.min.css" integrity="sha512-SgaqKKxJDQ/tAUAAXzvxZz33rmn7leYDYfBP+YoMRSENhf3zJyx3SBASt/OfeQwBHA1nxMis7mM3EV/oYT6Fdw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0@beta1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+      <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Bootstrap JS (Optional, needed for dropdown functionality) -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Tempusdominus Bbootstrap 4 -->
+    <link rel="stylesheet" href="{% static "plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css" %}">
+    <!-- iCheck -->
+    <link rel="stylesheet" href="{% static "plugins/icheck-bootstrap/icheck-bootstrap.min.css" %}">
+    <!-- JQVMap -->
+    <link rel="stylesheet" href="{% static "plugins/jqvmap/jqvmap.min.css" %}">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{% static "dist/css/adminlte.min.css" %}">
+    <!-- overlayScrollbars -->
+    <link rel="stylesheet" href="{% static "plugins/overlayScrollbars/css/OverlayScrollbars.min.css" %}">
+    <!-- Daterange picker -->
+    <link rel="stylesheet" href="{% static "plugins/daterangepicker/daterangepicker.css" %}">
+    <!-- summernote -->
+    <link rel="stylesheet" href="{% static "plugins/summernote/summernote-bs4.css" %}">
+    
+    <!-- Google Font: Source Sans Pro -->
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static "dist/css/base.css" %}">
+    <style>
+      
+        .clock-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1; /* Take up available horizontal space */
+        }
+      </style>
+        {% block custom_css %}{% endblock custom_css %}
+</head>
+<body class="hold-transition sidebar-mini layout-fixed">
+    <div class="wrapper">
+
+        <!-- Navbar -->
+        <nav class="main-header navbar navbar-expand-md custom-top-navbar">
+            <!-- Left navbar links -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="pushmenu" href="#">
+                    <i class="fas fa-bars"></i>
+                    </a>
+                </li>
+            </ul>
+          
+            <!-- Centered Title -->
+            <h4 class="navbar-brand text-center mb-0">Admin Login</h4>
+          
+            <!-- Centered Clock -->
+            <div class="clock-container">
+              <h4 class="navbar-brand text-center mb-0" id="clock"></h4>
+            </div>
+          
+            <!-- Right navbar links -->
+            <ul class="navbar-nav ml-auto">
+                <!-- Full Screen Button -->
+                <li class="nav-item">
+                    <a class="nav-link" id="fullscreen-button">
+                        <i class="fas fa-expand-arrows-alt"></i>
+                    </a>
+                </li>
+                
+                <!-- User account Dropdown Menu -->
+                <li class="nav-item dropdown user-menu">
+                    <a class="nav-link user-profile-settings-show" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-solid fa-user user-account-icon"></i>
+                    </a>
+
+                    <div id="user-account-dropdown" class="user-account-dropdown">
+                        <div class="dropdown-header d-flex">
+                            <a href class="header-arrow"><i class="icon ion-md-arrow-back"></i></a>
+                        </div>
+                        {% if request.user.is_authenticated %}
+                            <div class="row user-header justify-content-center">
+                                <div class="img-user col-12 d-flex justify-content-center mb-3">
+                                    {% if user.profile_picture %}
+                                        <img src="{{ user.profile_picture.url }}" alt="">
+                                    {% else %}
+                                        <img src="http://bootdey.com/img/Content/avatar/avatar1.png" alt="">
+                                    {% endif %}
+                                </div>
+                                <div class="d-flex justify-content-center user-name-heading" style="height: 35px;">
+                                    <h6>{{user.first_name}} {{user.last_name}}</h6>
+                                </div>
+                                
+                                
+                            </div>
+                            <div class="mt-3">
+                                <a href="{% url 'user_account_settings' %}" class="dropdown-item">
+                                    <i class="fa-solid fa-gear pe-3"></i>
+                                    Account Settings
+                                </a>
+                                <a href={% url  'logout' %} class="dropdown-item">
+                                    <i class="fa-solid fa-right-from-bracket pe-3"></i>
+                                    Sign Out
+                                </a>
+                            </div>
+                        {% else %}
+                            <div class="row user-header justify-content-center">
+                                <div class="d-flex justify-content-center user-name-heading" style="height: 35px;">
+                                    <h6>login</h6>
+                                </div>
+                                
+                                
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                </li>
+            </ul>
+        </nav>
+        <!-- /.navbar -->
+
+        <!-- Main Sidebar Container -->
+          {% include 'root_template/sidebar.html' with user=user id=id %}
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper mt-5">
+            <!-- Content Header (Page header) -->
+            {% comment %} <div class="content-header d-flex">
+                <div class="container-fluid mx-2">
+                    <div class="row mb-2">
+                        <div class="page-header p-2 d-flex justify-content-center">
+                            <h1 class="m-0 text-dark">
+                                    {% block page_title %}
+                                    {% endblock page_title %}
+                            </h1>
+                        </div><!-- /.col -->
+                        
+                    </div><!-- /.row -->
+                </div><!-- /.container-fluid -->
+            </div> {% endcomment %}
+            <!-- /.content-header -->
+            {% block main_content %}
+
+            
+            
+            {% endblock main_content %}
+
+        </div>
+        <!-- /.content-wrapper -->
+          {% include 'hod_template/footer.html' %}
+
+    </div>
+    <!-- ./wrapper -->
+
+    <!-- jQuery -->
+    <script src="{% static "plugins/jquery/jquery.min.js" %}"></script>
+    <!-- jQuery UI 1.11.4 -->
+    <script src="{% static "plugins/jquery-ui/jquery-ui.min.js" %}"></script>
+    <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+    <script>
+      $.widget.bridge('uibutton', $.ui.button)
+    </script>
+    <!-- Bootstrap 4 -->
+    <script src="{% static "plugins/bootstrap/js/bootstrap.bundle.min.js" %}"></script>
+    <!-- ChartJS -->
+    <script src="{% static "plugins/chart.js/Chart.min.js" %}"></script>
+    <!-- Sparkline -->
+    <script src="{% static "plugins/sparklines/sparkline.js" %}"></script>
+    <!-- JQVMap -->
+    <script src="{% static "plugins/jqvmap/jquery.vmap.min.js" %}"></script>
+    <script src="{% static "plugins/jqvmap/maps/jquery.vmap.usa.js" %}"></script>
+    <!-- jQuery Knob Chart -->
+    <script src="{% static "plugins/jquery-knob/jquery.knob.min.js" %}"></script>
+    <!-- daterangepicker -->
+    <script src="{% static "plugins/moment/moment.min.js" %}"></script>
+    <script src="{% static "plugins/daterangepicker/daterangepicker.js" %}"></script>
+    <!-- Tempusdominus Bootstrap 4 -->
+    <script src="{% static "plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js" %}"></script>
+    <!-- Summernote -->
+    <script src="{% static "plugins/summernote/summernote-bs4.min.js" %}"></script>
+    <!-- overlayScrollbars -->
+    <script src="{% static "plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js" %}"></script>
+    <!-- AdminLTE App -->
+    <script src="{% static "dist/js/adminlte.js" %}"></script>
+    <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+    <script src="{% static "dist/js/pages/dashboard.js" %}"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="{% static "dist/js/demo.js" %}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+    <script>
+        // Clock
+        function updateClock() {
+            const now = new Date();
+            const clockElement = document.getElementById("clock");
+            clockElement.textContent = now.toLocaleTimeString();
+        }
+        setInterval(updateClock, 1000);
+
+        // Full Screen Button
+        const fullscreenButton = document.getElementById("fullscreen-button");
+        let isFullscreen = false; // Track fullscreen state
+
+        fullscreenButton.addEventListener("click", () => {
+            if (!isFullscreen) {
+                enterFullscreen();
+            } else {
+                exitFullscreen();
+            }
+        });
+
+        function enterFullscreen() {
+            const docElem = document.documentElement;
+            if (docElem.requestFullscreen) {
+                docElem.requestFullscreen();
+            } else if (docElem.mozRequestFullScreen) {
+                docElem.mozRequestFullScreen();
+            } else if (docElem.webkitRequestFullscreen) {
+                docElem.webkitRequestFullscreen();
+            } else if (docElem.msRequestFullscreen) {
+                docElem.msRequestFullscreen();
+            }
+            isFullscreen = true;
+        }
+
+        function exitFullscreen() {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            }
+            isFullscreen = false;
+        }
+    </script>
+
+    <script>
+        $(".user-profile-settings-show").click(function(event) {
+            event.preventDefault();
+            $("#user-account-dropdown").toggleClass("transform");
+        });
+    </script>
+    <script>
+        const userHeader = document.querySelector('.user-header');
+        const accountSettingsLink = document.getElementById('account-settings-link');
+        const logoutLink = document.getElementById('logout-link');
+
+        accountSettingsLink.addEventListener('click', (event) => {
+            event.preventDefault();
+            // Logic to show account settings
+            userHeader.style.display = 'block'; // Show user header
+        });
+
+        logoutLink.addEventListener('click', (event) => {
+            event.preventDefault();
+            // Logic to perform logout
+            userHeader.style.display = 'none'; // Hide user header
+        });
+    </script>
+    {% block custom_js %}
+    {% endblock custom_js %}
+</body>
+</html>

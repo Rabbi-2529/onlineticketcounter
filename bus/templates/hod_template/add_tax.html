@@ -1,0 +1,56 @@
+{% extends 'hod_template/base_template.html' %}
+{% load static %}
+{% block custom_css %}
+    <link rel="stylesheet" href="{% static "dist/css/staff_type.css" %}">
+    <link rel="stylesheet" href="{% static "dist/css/add_product.css" %}">
+{% endblock custom_css %}
+{% block main_content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Add Tax</h2>
+                </div>
+                <div class="card-body">
+                    {% if messages %}
+                        <ul class="messages">
+                            {% for message in messages %}
+                                <li{% if message.tags %} class="alert {{ message.tags }}"{% endif %}>{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="tax_name">Tax Name:</label>
+                            <input type="text" name="tax_name" id="tax_name" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="tax_value">Tax Value (%):</label>
+                            <input type="number" name="tax_value" id="tax_value" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="tax_number">Tax Number:</label>
+                            <input type="text" name="tax_number" id="tax_number" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Status:</label>
+                            <div class="form-check">
+                                <input type="radio" name="status" id="status_active" value="1" class="form-check-input">
+                                <label for="status_active" class="form-check-label">Active</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="radio" name="status" id="status_disable" value="0" class="form-check-input">
+                                <label for="status_disable" class="form-check-label">Disable</label>
+                            </div>
+                        </div>
+                        <button type="submit" class="save-btn">Add</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock main_content %}

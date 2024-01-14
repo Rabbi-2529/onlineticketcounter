@@ -1,0 +1,84 @@
+{% extends 'accounts_templates/accounts_base.html' %}
+{% load static %}
+
+{% block custom_css %}
+<link rel="stylesheet" href="{% static "dist/css/add_product.css" %}">
+<link rel="stylesheet" href="{% static "dist/css/transection.css" %}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.9/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock custom_css %}
+
+{% block main_content %}
+<div class="main-part">
+    <div class="cpanel">
+        <div class="icon-part">
+            <i class="fa-solid fa-credit-card"></i><br>
+        
+            <small>Total Payment</small>
+            <p>{{ total_bus_payment_amount }}</p>
+        </div>
+    </div>
+
+    <div class="cpanel cpanel-green">
+        <div class="icon-part">
+            <i class="fa-solid fa-credit-card"></i><br>
+            <small>Total Bill</small>
+            <p>{{ total_bill_amount }}</p>
+        </div>
+    </div>
+
+    <div class="cpanel cpanel-orange">
+        <div class="icon-part">
+            <i class="fa-solid fa-credit-card"></i><br>
+            <small>Total Expense</small>
+            <p>{{ total_expense }}</p>
+        </div>
+    </div>
+ 
+</div>
+
+
+<div class="transaction-table">
+    <table class="table">
+        <thead>
+            <tr>
+                <td>Income Source</td>
+                <td>January</td>
+                <td>February</td>
+                <td>March</td>
+                <td>April</td>
+                <td>May</td>
+                <td>June</td>
+                <td>July</td>
+                <td>August</td>
+                <td>September</td>
+                <td>October</td>
+                <td>November</td>
+                <td>December</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Ticket Sale</td>
+                <td>{{ january_amount }}</td>
+                <td>{{ february_amount }}</td>
+                <td>{{ march_amount }}</td>
+                <td>{{ april_amount }}</td>
+                <td>{{ may_amount }}</td>
+                <td>{{ june_amount }}</td>
+                <td>{{ july_amount }}</td>
+                <td>{{ august_amount }}</td>
+                <td>{{ september_amount }}</td>
+                <td>{{ october_amount }}</td>
+                <td>{{ november_amount }}</td>
+                <td>{{ december_amount }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
+
+
+
+
+{% endblock main_content %}

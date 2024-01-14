@@ -1,0 +1,951 @@
+{% extends 'hod_template/base_template.html' %}
+{% load static %}
+{% block custom_css %}
+    <link rel="stylesheet" href="{% static "dist/css/busregi.css" %}">
+{% endblock custom_css %}
+ {% block main_content %}
+
+<div class="container-xl px-4 mt-4">
+    <div class="container-fluid" style="padding-left: 30px">
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <!-- general form elements -->
+                <div class="card card-primary">
+                    <div class="card-header d-flex justify-content-center">
+                        <h3 class="card-title">Add Bus</h3>
+                    </div>
+                    {% if form.errors %}
+                        <p class="error-message">{{ form.errors }}</p>
+                    {% endif %}
+                
+                    <div class="row justify-content-center pb-2">
+                        <div class="bus-save-message">
+                            <h4>{{ success_message }}</h4>
+                        </div>
+                    </div>
+                    <form id="bus-seat-form" method="POST" action="{% url 'busregi' %}">
+                        <div class="row">
+                            <div class="col-md-6 p-5">
+                                
+                                {% csrf_token %}
+
+                                <div class="form-group">
+                                    <label for="{{ form.bus_type.id_for_label }}">Bus Type:</label>
+                                    <div class="bus-type">
+                                        {% for value, label in form.bus_type.field.choices %}
+                                            {% if value != '' %}
+                                                <button type="button" class="btn btn-primary bus-type-button chair-btn chair-btn-{{label}} mb-2" data-value="{{ value }}">
+                                                    {{ label }}
+                                                </button>
+                                            {% endif %}
+                                        {% endfor %}
+                                        <input type="hidden" id="id_bus_type" name="{{ form.bus_type.html_name }}" value="{{ form.bus_type.value }}" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="{{ form.bus_number.id_for_label }}">Bus Number:</label>
+                                        {{ form.bus_number }}
+                                    <span id="busNumberError" class="error-message text-danger"></span>
+                                </div>
+
+                                <div class="additional-fields" style="display: none;">
+                                    <div class="form-group">
+                                        <label for="{{ form.number_or_column.id_for_label }}">Number of Columns:</label>
+                                        <div class="number-column">
+                                            {% for choice in form.number_or_column.field.choices %}
+                                                {% if choice.0 %}
+                                                    <button type="button" class="btn btn-primary number-column-button" data-value="{{ choice.0 }}">
+                                                        {{ choice.0 }}
+                                                    </button>
+                                                {% endif %}
+                                            {% endfor %}
+                                            <input type="hidden" id="id_number_or_column" name="{{ form.number_or_column.html_name }}" value="{{ form.number_or_column.value }}" />
+                                        </div>
+                                    </div>
+                                
+                                    <!--<div class="form-group">
+                                        <label for="{{ form.class_type.id_for_label }}">{{ form.class_type.label }}</label>
+                                        {{ form.class_type }}
+                                    </div>-->
+
+                                    <!--Class type radio buttons start-->
+                                    <div class="form-group col-12 d-flex px-0">
+                                        <label for="{{ form.class_type.id_for_label }}" class="me-4">{{ form.class_type.label }}</label>
+                                        {% for choice in form.class_type %}
+                                            <div class="radio-option px-4">
+                                                {{ choice.tag }}
+                                                <label for="{{ choice.id_for_label }}">{{ choice.choice_label }}</label>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                    <!--Class type radio buttons end-->
+
+                                    <div class="form-group">
+                                        <label for="{{ form.seat_type_1.id_for_label }}">Seat Type 1:1 </label>
+                                        {{ form.seat_type_1 }}
+                                        <label class="checkbox-inline">
+                                            <input class="form-check-input" type="checkbox" id="seatType1Checkbox" />
+                                            All
+                                        </label>
+                                    </div>
+                                
+                                    <div class="form-group">
+                                        <label for="{{ form.seat_type_2.id_for_label }}">Seat Type 1:2 </label>
+                                        {{ form.seat_type_2 }}
+                                        <label class="checkbox-inline">
+                                            <input class="form-check-input" type="checkbox" id="seatType2Checkbox" />
+                                            All
+                                        </label>
+                                    </div>
+                                
+                                    <div class="form-group">
+                                        <label for="{{ form.seat_type_3.id_for_label }}">Seat Type 2:2 </label>
+                                        {{ form.seat_type_3 }}
+                                        <label class="checkbox-inline">
+                                            <input class="form-check-input" type="checkbox" id="seatType3Checkbox" />
+                                            All
+                                        </label>
+                                    </div>
+                                    
+                                
+                                    <div class="form-group">
+                                        <label for="{{ form.extra_seat.id_for_label }}">Extra 1 Seat:</label>
+                                        <div class="toggle-switch">
+                                            <input type="checkbox" id="{{ form.extra_seat.id_for_label }}" name="{{ form.extra_seat.name }}" value="1" {% if form.extra_seat.value %}checked{% endif %} class="toggle-switch-checkbox" />
+                                            <label for="{{ form.extra_seat.id_for_label }}" class="toggle-switch-label">
+                                                <span class="toggle-switch-inner"></span>
+                                                <span class="toggle-switch-switch"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                
+                                    <div class="form-group">
+                                        <label for="{{ form.total_seats.id_for_label }}">Total Seats:</label>
+                                        <input type="number" name="{{ form.total_seats.name }}" id="{{ form.total_seats.id_for_label }}" readonly />
+                                    </div>
+                                </div>
+
+                                
+                                
+                            </div>
+                            <br>
+                            <div class="col-md-6 p-5">
+                    
+                                {% comment %} <section class="content">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="row">
+                                                <div class="bus-column col-lg-3 col-md-5 col-12">
+                                                    <h3>Seat Plan</h3>
+                                                    <div class="seatPlanContainer">
+                                                        <!-- Default 2:2 seat plan -->
+                                                        {% for row_num in "ABCDEFGH" %}
+                                                        <div class="row w-100">
+                                                            <div class="col-6 d-flex">
+                                                                <div class="col-4">
+                                                                    <div class="seat">
+                                                                        <i
+                                                                            id="{{ row_num }}1"
+                                                                            class="fa-solid fa-couch seat-select fa-lg seat-color"
+                                                                        ></i>
+                                                                        <div class="d-flex justify-content-center seat-label-div">
+                                                                            <span class="seat-label">{{ row_num }}1</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            <div class="col-2"></div>
+                                                            <div class="col-4">
+                                                                <div class="seat">
+                                                                    <i
+                                                                        id="{{ row_num }}2"
+                                                                        class="fa-solid fa-couch seat-select fa-lg seat-color"
+                                                                    ></i>
+                                                                    <div class="d-flex justify-content-center seat-label-div">
+                                                                        <span class="seat-label">{{ row_num }}2</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-2"></div>
+                                                            <div class="col-2"></div>
+                                                            <div class="col-4">
+                                                                <div class="seat">
+                                                                    <i
+                                                                        id="{{ row_num }}3"
+                                                                        class="fa-solid fa-couch seat-select fa-lg seat-color"
+                                                                    ></i>
+                                                                    <div class="d-flex justify-content-center seat-label-div">
+                                                                        <span class="seat-label">{{ row_num }}3</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-2"></div>
+                                                            <div class="col-4">
+                                                                <div class="seat">
+                                                                    <i
+                                                                        id="{{ row_num }}4"
+                                                                        class="fa-solid fa-couch seat-select fa-lg seat-color"
+                                                                    ></i>
+                                                                    <div class="d-flex justify-content-center seat-label-div">
+                                                                        <span class="seat-label">{{ row_num }}4</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            </div>
+                                                        </div>
+                                                        {% endfor %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section> {% endcomment %}
+                                <div id="seatPlanContainer"></div>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center mb-4">
+                            <button type="submit" class="btn btn-primary save-btn">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
+<script>
+    $(document).ready(function() {
+        $("input[type='text']").addClass("form-control");
+        function handleSeatPlanUpdate() {
+        updateSeatPlan();
+        }
+
+        function bindEventHandlers() {
+            $(document).on('click', '.bus-type-button', function() {
+                var busType = $(this).data('value');
+                $('#id_bus_type').val(busType);
+                $("input[type='number']").addClass("form-control");
+                handleSeatPlanUpdate();
+            });
+
+            $(document).on('click', '.number-column-button', function() {
+                var numColumns = $(this).data('value');
+                $('#id_number_or_column').val(numColumns);
+                handleSeatPlanUpdate();
+            });
+
+            $('#seatType1Checkbox').change(function() {
+                var checked = $(this).prop('checked');
+                $('input[name="{{ form.seat_type_1.html_name }}"]').prop('checked', checked);
+                if (checked) {
+                    $('#seatType2Checkbox').prop('checked', false);
+                    $('#seatType3Checkbox').prop('checked', false);
+                }
+                handleSeatPlanUpdate();
+            });
+
+            $('#seatType2Checkbox').change(function() {
+                var checked = $(this).prop('checked');
+                $('input[name="{{ form.seat_type_2.html_name }}"]').prop('checked', checked);
+                if (checked) {
+                    $('#seatType1Checkbox').prop('checked', false);
+                    $('#seatType3Checkbox').prop('checked', false);
+                }
+                handleSeatPlanUpdate();
+            });
+
+            $('#seatType3Checkbox').change(function() {
+                var checked = $(this).prop('checked');
+                $('input[name="{{ form.seat_type_3.html_name }}"]').prop('checked', checked);
+                if (checked) {
+                    $('#seatType1Checkbox').prop('checked', false);
+                    $('#seatType2Checkbox').prop('checked', false);
+                }
+                handleSeatPlanUpdate();
+            });
+
+            $('.seatTypeCheckbox').on('input', function() {
+                handleSeatPlanUpdate();
+            });
+
+            $('.additional-fields input, .additional-fields select').on('input change', function() {
+                handleSeatPlanUpdate();
+            });
+
+            $(document).on('change', '#id_bus_type', function() {
+                handleSeatPlanUpdate();
+            });
+
+            $(document).on('change', '#id_number_or_column', function() {
+                handleSeatPlanUpdate();
+            });
+
+            $(document).on('change', '.seat-input', function() {
+                handleSeatPlanUpdate();
+            });
+        }
+
+        function updateSeatPlan() {
+            var totalSeats = parseInt($('#id_total_seats').val());
+            var numColumns = parseInt($('#id_number_or_column').val());
+            
+            var seatTypes = {
+                '1:1': parseInt($('input[name="{{ form.seat_type_1.html_name }}"]').val()),
+                '1:2': parseInt($('input[name="{{ form.seat_type_2.html_name }}"]').val()),
+                '2:2': parseInt($('input[name="{{ form.seat_type_3.html_name }}"]').val())
+            };
+        
+            var seatPlanHtml = '';
+            var seatTypeList = [];
+            var rowLabels = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T'];
+            var currentRowLabelIndex = 0;
+
+            seatPlanHtml += '<div class="seat-row">';
+            seatPlanHtml += '<div class="row-label"></div>'
+            seatPlanHtml += '<div class="col d-flex justify-content-center">1</div>'; // Add an empty column
+            seatPlanHtml += '<div class="col d-flex justify-content-center">2</div>'; // Add an empty column
+            seatPlanHtml += '<div class="col d-flex justify-content-center"></div>';
+            seatPlanHtml += '<div class="col d-flex justify-content-center">3</div>'; // Add an empty column
+            seatPlanHtml += '<div class="col d-flex justify-content-center">4</div>'; // Add an empty column
+            seatPlanHtml += '</div>';
+
+
+            for (var seatType in seatTypes) {
+                var numRows = seatTypes[seatType];
+            
+                for (var i = 0; i < numRows; i++) {
+                    var row_num = i + 1;
+                    //var rowLabel = rowLabels[i];
+                    var rowLabel = rowLabels[currentRowLabelIndex];
+                    currentRowLabelIndex = (currentRowLabelIndex + 1) % rowLabels.length; // Increment the row label index and loop back to 0 if needed
+                    
+                
+                    seatPlanHtml += '<div class="seat-row">';
+                    seatPlanHtml += '<div class="row-label">' + rowLabel + '</div>';
+                
+                    if (seatType === '1:1') {
+                        // Generate seats for 1:1 seat type
+                        seatPlanHtml += generateSeatHtml(row_num, 1);
+                        seatPlanHtml += '<div class="col"></div>'; // Add an empty column
+                        seatPlanHtml += '<div class="col"></div>'; // Add an empty column
+                        seatPlanHtml += '<div class="col"></div>'; // Add an empty column
+                        seatPlanHtml += generateSeatHtml(row_num, 2);
+                        
+                    } else if (seatType === '1:2') {
+                        // Generate seats for 1:2 seat type
+                        seatPlanHtml += generateSeatHtml(row_num, 1);
+                        seatPlanHtml += '<div class="col"></div>'; // Add an empty column
+                        seatPlanHtml += '<div class="col"></div>'; // Add an empty column
+                        seatPlanHtml += generateSeatHtml(row_num, 2);
+                        seatPlanHtml += generateSeatHtml(row_num, 3);
+                        
+                    } else if (seatType === '2:2') {
+                        // Generate seats for 2:2 seat type
+                        seatPlanHtml += generateSeatHtml(row_num, 1);
+                        seatPlanHtml += generateSeatHtml(row_num, 2);
+                        seatPlanHtml += '<div class="col"></div>'; // Add an empty column
+                        seatPlanHtml += generateSeatHtml(row_num, 3);
+                        seatPlanHtml += generateSeatHtml(row_num, 4);
+                        
+                    } else {
+                        // Default seat type: Generate seats for 2:2 seat type
+                        seatPlanHtml += generateSeatHtml(row_num, 1);
+                        seatPlanHtml += generateSeatHtml(row_num, 2);
+                        seatPlanHtml += generateSeatHtml(row_num, 3);
+                        seatPlanHtml += generateSeatHtml(row_num, 4);
+                        
+                    }
+        
+                    seatPlanHtml += '</div>'; // Close the row div
+                }
+            }
+            $('#seatPlanContainer').html(seatPlanHtml);
+            // Check if extra seat checkbox is checked and add the extra seat in the last row's middle position
+            if ($('#{{ form.extra_seat.id_for_label }}').is(':checked')) {
+                /*var lastRowNum = Object.values(seatTypes).reduce((acc, val) => acc + val, 0);
+                seatPlanHtml += '<div class="row w-50">';
+                seatPlanHtml += generateSeatHtml(lastRowNum + 1, Math.ceil(numColumns / 2));
+                seatPlanHtml += '</div>'; // Close the row div*/
+
+                var lastRow = $('#seatPlanContainer').children(":last-child");
+
+                // third Child of the '<div class="row w-50">' 
+                var fourthChild = lastRow.children().eq(3)
+                var newDiv = $(`<div class="seat">
+                                    <i class="fa-solid fa-couch seat-icon seat-color"></i>
+                                </div>`);
+                // append new div after the second child
+                fourthChild.append(newDiv);
+
+
+                /*thirdChild.remove();
+                
+
+                var allChildren = $('#seatPlanContainer').children();
+                console.log('lastRow prev: ', lastRow.prev());
+                console.log('Child length: ', allChildren.length)
+
+                seatPlanHtml += lastRow[0].outerHTML;
+                lastRow.prev().remove();
+                console.log('Child length2: ', $('#seatPlanContainer').children().length)
+                
+                var secondLastChildElement = lastRow.prev()
+                
+                secondLastChildElement.remove();*/
+                
+            }
+            else{
+                var allChildren = $('#seatPlanContainer').children();
+                console.log('secondLastChild length: ', allChildren.length)
+            }
+            //$('#seatPlanContainer').html(seatPlanHtml);
+        }
+
+        function generateSeatHtml(row_num, col_num) {
+            return '<div class="col">' +
+                '<div class="seat">' +
+                '<i class="fa-solid fa-couch seat-icon seat-color"></i>' + // Add the seat icon
+                '</div>' +
+                '</div>';
+        }
+
+        bindEventHandlers();
+        updateSeatPlan();
+    });
+</script>
+
+
+
+<script>
+    $(document).ready(function() {
+        $('.bus-type-button').click(function() {
+            $('.bus-type-button').removeClass('active');
+            $(this).addClass('active');
+
+            var selectedBusType = $(this).data('value');
+            $('#id_bus_type').val(selectedBusType);
+            $('#selectedBusType').text(selectedBusType);
+
+            // Check if the selected bus type is 'CC' (Custom Configuration)
+            if (selectedBusType === 'CC') {
+                $('.additional-fields').show();
+            } else {
+                $('.additional-fields').hide();
+            }
+
+            // Check if the selected bus type is 'SIP' (Semi-Sleeper)
+            if (selectedBusType === 'SIP') {
+                $('#sipFields').show();
+            } else {
+                $('#sipFields').hide();
+            }
+
+            // Check if the selected bus type is 'DD' (Double Decker)
+            if (selectedBusType === 'DD') {
+                $('.upper-deck-fields').show();
+            } else {
+                $('.upper-deck-fields').hide();
+            }
+
+            updateTotalSeats();
+        });
+
+        //
+        $('.number-column-button').click(function() {
+            var selectedColumns = $(this).data('value');
+            $('#id_number_or_column').val(selectedColumns);
+
+            updateTotalSeats();
+        });
+
+        function updateTotalSeats() {
+            var busType = $('#id_bus_type').val();
+            var numberColumns = $('#id_number_or_column').val();
+
+            if (busType === 'CC' && numberColumns && numberColumns !== 'None') {
+                var seatType1 = $('select[name="seat_type_1"]').val();
+                var seatType2 = $('select[name="seat_type_2"]').val();
+                var seatType3 = $('select[name="seat_type_3"]').val();
+
+                var totalSeats = (parseInt(seatType1) || 0) + (parseInt(seatType2) || 0) + (parseInt(seatType3) || 0);
+                $('#id_total_seats').val(totalSeats);
+            } 
+            else {
+                $('#id_total_seats').val('');
+            }
+        }
+
+        $('select[name="seat_type_1"], select[name="seat_type_2"], select[name="seat_type_3"]').change(function() {
+            updateTotalSeats();
+        });
+
+
+    });
+</script>
+
+
+<script>
+    const radioInput = document.querySelectorAll('input[type="radio"]');
+    for( var i = 0; i < radioInput.length; i++){
+        radioInput[i].classList.add('form-check-input')
+    }
+    function calculateTotalSeats() {
+
+        /*var allFields = document.querySelectorAll('#id_seat_type_1, #id_seat_type_2, #id_seat_type_3');
+        var count = 0;
+        for(var i=0; i<allFields.length; i++) {
+            if(allFields[i].disabled){
+                allFields[i].disabled = true;
+                count += 1;
+                console.log('disabled: ' + allFields[i])
+            }
+        }
+        console.log('count: ', count);*/
+
+        // disabling input fields according to number
+        var numberOrColumns = parseInt(document.getElementById("id_number_or_column").value) || 0;
+        //console.log('disable test row number: ', numberOrColumns)
+      
+        var seatType1Checkbox = document.getElementById("seatType1Checkbox");
+        var seatType2Checkbox = document.getElementById("seatType2Checkbox");
+        var seatType3Checkbox = document.getElementById("seatType3Checkbox");
+      
+        var seatType1Input = document.getElementById("id_seat_type_1");
+        var seatType2Input = document.getElementById("id_seat_type_2");
+        var seatType3Input = document.getElementById("id_seat_type_3");
+      
+        // Active button of row numbers that is selected
+        var selectedButton = document.querySelector(".number-column-button.active");
+        if (selectedButton) {
+            var selectedValue = parseInt(selectedButton.getAttribute("data-value")) || 0;
+        }
+
+        function validateAndMoveToNext(inputField, maxValue) {
+            var seatType1InputValue = parseInt(seatType1Input.value) || 0
+            var seatType2InputValue = parseInt(seatType2Input.value) || 0
+            var seatType3InputValue = parseInt(seatType3Input.value) || 0
+            totalValue = seatType1InputValue + seatType2InputValue + seatType3InputValue
+            //console.log('Total:', seatType1InputValue + seatType2InputValue + seatType3InputValue)
+            var inputFields = document.querySelectorAll('#id_seat_type_1, #id_seat_type_2, #id_seat_type_3');
+            var value = inputField.value;
+            // if the value of the input field is greater than the value of the active button of the row number it slices the last digit of the value
+            if (totalValue > maxValue) {
+
+                // slices the last digit of the value
+                value = value.slice(0, -1);
+                inputField.value = value;
+                alert('The value must be less than or equal to ' + maxValue + '.');
+            }     
+            else if (parseInt(value) === maxValue) {
+                // Disable other input fields
+                for (var i = 0; i < inputFields.length; i++) {
+                    if (inputFields[i] !== inputField && inputFields[i].value == "") {
+                        inputFields[i].disabled = true;
+                        inputField.value = value;
+                    }
+                }
+            }
+            else if(seatType1Input.value && seatType2Input.value && seatType3InputValue==""){
+                seatType3Input.value = maxValue - (seatType1InputValue + seatType2InputValue);        
+            }
+            else if(seatType2Input.value && seatType3Input.value && seatType1InputValue==""){
+                seatType1Input.value = maxValue - (seatType2InputValue + seatType3InputValue);           
+            }
+            else if(seatType3Input.value && seatType3Input.value && seatType2InputValue==""){
+                seatType2Input.value = maxValue - (seatType1InputValue + seatType3InputValue);           
+            }
+            else{
+                value = inputField.value;
+                //console.log('Field vlaue: ', value);
+                //console.log("value: ", totalValue);
+                for (var i = 0; i < inputFields.length; i++) {
+                    inputFields[i].disabled = false;
+                }
+            }
+            /*var lastRow = $('#seatPlanContainer .row.w-50:last-child');
+                //var newDiv = $('<div class="col"><div class="seat"><i class="fa-solid fa-couch seat-icon seat-color"></i></div></div>');
+                //lastRow.append(newDiv);
+                console.log('lastRow: ', lastRow.children());*/
+            
+        }
+
+        // input fields of the row number take only integer numbers
+        seatType1Input.type = 'number';
+        seatType2Input.type = 'number';
+        seatType3Input.type = 'number';
+
+        seatType1Input.addEventListener('input', function () {
+            // on every input in the input field, get the value of the number of rows
+            var buttonSelected = document.querySelector(".number-column-button.active");
+            selectedButtonValue(buttonSelected, seatType1Input)
+            totalRows()
+
+            /*var seatType1InputValue = parseInt(seatType1Input.value)
+            seatGenerate1(seatType1InputValue)*/
+            // erase the number on backspace key press
+            if (event.inputType === 'deleteContentBackward') {
+                seatType1Input.value = "";
+                totalRows();
+            }
+        });
+
+        seatType2Input.addEventListener('input', function () {
+            var buttonSelected = document.querySelector(".number-column-button.active");
+            selectedButtonValue(buttonSelected, seatType2Input)
+            totalRows()
+            /*var seatType2InputValue = parseInt(seatType2Input.value)
+            seatGenerate2(seatType2InputValue)*/
+
+            // erase the number on backspace key press
+            if (event.inputType === 'deleteContentBackward') {
+                seatType2Input.value = "";
+                totalRows();
+            }
+        });
+
+        seatType3Input.addEventListener('input', function () {
+            var buttonSelected = document.querySelector(".number-column-button.active");
+            selectedButtonValue(buttonSelected, seatType3Input)
+            totalRows()
+
+            // erase the number on backspace key press
+            if (event.inputType === 'deleteContentBackward') {
+                seatType3Input.value = "";
+                totalRows();
+            }
+        });
+
+        /*function seatGenerate1(seatValue1){
+            var totalSeats = parseInt($('#id_total_seats').val());
+            var numColumns = parseInt($('#id_number_or_column').val());
+            var busSeat = $('#seatPlanContainer');
+            //console.log('1:1 Input: ', parseInt(seatValue1))
+            var seatPlanHtml = '';
+            var seatTypeList = [];   
+                
+            //$('#seatPlanContainer').empty();
+
+            for(var i = 0; i < parseInt(seatValue1); i++){
+                var newDiv = '<div class="row w-50">' +
+                    '<div class="col">' +
+                      '<div class="seat">' +
+                        '<i class="fa-solid fa-couch seat-icon seat-color"></i>' +
+                      '</div>' +
+                    '</div>' +
+                    '<div class="col"></div>' +
+                    '<div class="col"></div>' +
+                    '<div class="col"></div>' +
+                    '<div class="col">' +
+                      '<div class="seat">' +
+                        '<i class="fa-solid fa-couch seat-icon seat-color"></i>' +
+                      '</div>' +
+                    '</div>' +
+                  '</div>'
+            
+                $('#seatPlanContainer').append(newDiv);
+                seatPlanHtml = $('#seatPlanContainer').html();
+            }
+            console.log('Main div: ', $('#seatPlanContainer').children().length)
+        }
+
+        function seatGenerate2(seatValue2){
+            var totalSeats = parseInt($('#id_total_seats').val());
+            var numColumns = parseInt($('#id_number_or_column').val());
+            var busSeat = $('#seatPlanContainer');
+            //console.log('1:2 Input: ', parseInt(seatValue2))
+            var seatPlanHtml = '';
+            var seatTypeList = [];   
+                
+            //$('#seatPlanContainer').empty();
+
+            for(var i = 0; i < parseInt(seatValue2); i++){
+                var newDiv = $(`<div class="row w-50">
+                                    <div class="col">
+                                        <div class="seat">
+                                            <i class="fa-solid fa-couch seat-icon seat-color"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col"></div>
+                                    <div class="col"></div>
+                                    <div class="col">
+                                        <div class="seat">
+                                            <i class="fa-solid fa-couch seat-icon seat-color"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="seat">
+                                            <i class="fa-solid fa-couch seat-icon seat-color"></i>
+                                        </div>
+                                    </div>
+
+                                </div>`)
+            
+                $('#seatPlanContainer').append(newDiv);
+                seatPlanHtml = $('#seatPlanContainer').html();
+            }
+            console.log('Main div: ', $('#seatPlanContainer').children().length)
+        }*/
+
+        // for getting the value of number of rows
+        function selectedButtonValue(selectedRow, seatTypeInput){
+            if (selectedRow) {
+
+                // get the number of rows value from selected button
+                var selectedValue = parseInt(selectedRow.getAttribute("data-value")) || 0;
+                //console.log('Selected value: ', selectedValue);
+                validateAndMoveToNext(seatTypeInput, selectedValue);
+                //console.log('valueMax: ', selectedValue);
+                
+            }
+        }
+        
+
+        // disabling input fields according to number
+        console.log('numberOrColumns: ', numberOrColumns)
+        if (seatType1Checkbox.checked) {
+            seatType2Checkbox.checked = false;
+            seatType3Checkbox.checked = false;
+            seatType2Input.value = "";
+            seatType3Input.value = "";
+        
+            seatType2Input.disabled = true;
+            seatType3Input.disabled = true;
+            console.log('numberOrColumns1: ', numberOrColumns)
+            seatType1Input.value = numberOrColumns;
+        }
+        
+        else if (seatType2Checkbox.checked) {
+            seatType1Checkbox.checked = false;
+            seatType3Checkbox.checked = false;
+            seatType1Input.value = "";
+            seatType3Input.value = "";
+        
+            seatType1Input.disabled = true;
+            seatType3Input.disabled = true;
+        
+            seatType2Input.value = numberOrColumns;
+        } 
+        else if (seatType3Checkbox.checked) {
+            seatType1Checkbox.checked = false;
+            seatType2Checkbox.checked = false;
+            seatType1Input.value = "";
+            seatType2Input.value = "";
+        
+            seatType1Input.disabled = true;
+            seatType2Input.disabled = true;
+        
+            seatType3Input.value = numberOrColumns;
+        } 
+        else {
+            seatType1Input.disabled = false;
+            seatType2Input.disabled = false;
+            seatType3Input.disabled = false;
+        }
+
+        if(seatType1Input.disabled){
+            seatType1Input.disabled  = true;
+        }
+
+        
+
+
+        function totalRows(){
+            var seatType1 = parseInt(seatType1Input.value) || 0;
+            var seatType2 = parseInt(seatType2Input.value) || 0;
+            var seatType3 = parseInt(seatType3Input.value) || 0;
+            //var extraSeat = document.getElementById("id_extra_seat").checked;
+        
+            var seatType1LeftSeats = seatType1;
+            console.log('1:1: ', seatType1)
+            var seatType1RightSeats = seatType1;
+            var seatType2LeftSeats = seatType2;
+            var seatType2RightSeats = seatType2 * 2;
+            var seatType3LeftSeats = seatType3 * 2;
+            var seatType3RightSeats = seatType3 * 2;
+        
+            var totalSeats =
+                seatType1LeftSeats +
+                seatType1RightSeats +
+                seatType2LeftSeats +
+                seatType2RightSeats +
+                seatType3LeftSeats +
+                seatType3RightSeats;
+
+            document.getElementById("id_total_seats").value = totalSeats
+        }
+      
+        var seatType1 = parseInt(seatType1Input.value) || 0;
+        var seatType2 = parseInt(seatType2Input.value) || 0;
+        var seatType3 = parseInt(seatType3Input.value) || 0;
+        var extraSeat = document.getElementById("id_extra_seat").checked;
+      
+        var seatType1LeftSeats = seatType1;
+        console.log('1:1: ', seatType1)
+        var seatType1RightSeats = seatType1;
+        var seatType2LeftSeats = seatType2;
+        var seatType2RightSeats = seatType2 * 2;
+        var seatType3LeftSeats = seatType3 * 2;
+        var seatType3RightSeats = seatType3 * 2;
+      
+        var totalSeats =
+            seatType1LeftSeats +
+            seatType1RightSeats +
+            seatType2LeftSeats +
+            seatType2RightSeats +
+            seatType3LeftSeats +
+            seatType3RightSeats;
+        
+        if (extraSeat) {
+            totalSeats += 1;
+        }
+
+        document.getElementById("id_total_seats").value = totalSeats;
+
+        
+    }
+    
+    calculateTotalSeats();
+
+    //var inputs = document.querySelectorAll("#id_seat_type_1, #id_seat_type_2, #id_seat_type_3, #id_extra_seat");
+
+    var inputs = document.querySelectorAll("#id_extra_seat");
+    inputs.forEach(function (input) {
+        //input.addEventListener("change", calculateTotalSeats);
+        input.addEventListener("change", function() {
+            calculateTotalSeats();
+            //disableInputFields();
+        });
+        
+    });
+
+    /*function disableInputFields() {
+        var seatType1Input = document.getElementById("id_seat_type_1");
+        var seatType2Input = document.getElementById("id_seat_type_2");
+        var seatType3Input = document.getElementById("id_seat_type_3");
+
+        var seatType1InputValue = parseInt(seatType1Input.value) || 0
+        var seatType2InputValue = parseInt(seatType2Input.value) || 0
+        var seatType3InputValue = parseInt(seatType3Input.value) || 0
+
+        totalValue = seatType1InputValue + seatType2InputValue + seatType3InputValue
+
+        var selectedButton = document.querySelector(".number-column-button.active");
+        if (selectedButton) {
+            var selectedValue = parseInt(selectedButton.getAttribute("data-value")) || 0;
+        }
+
+        var inputFields = document.querySelectorAll('#id_seat_type_1, #id_seat_type_2, #id_seat_type_3');
+        
+        // if the value of the input field is greater than the value of the active button of the row number it slices the last digit of the value
+  
+        if (parseInt(value) === maxValue) {
+            // Disable other input fields
+            for (var i = 0; i < inputFields.length; i++) {
+                var value = inputFields[i].value;
+                if (inputFields[i] !== inputField && inputFields[i].value == "") {
+                    inputFields[i].disabled = true;
+                    inputField.value = value;
+                }
+            }
+        }
+        else if(seatType1Input.value && seatType2Input.value && seatType3InputValue==""){
+            seatType3Input.value = maxValue - (seatType1InputValue + seatType2InputValue);        
+        }
+        else if(seatType2Input.value && seatType3Input.value && seatType1InputValue==""){
+            seatType1Input.value = maxValue - (seatType2InputValue + seatType3InputValue);           
+        }
+        else if(seatType3Input.value && seatType3Input.value && seatType2InputValue==""){
+            seatType2Input.value = maxValue - (seatType1InputValue + seatType3InputValue);           
+        }
+        else{
+            value = inputField.value;
+            console.log('Field vlaue: ', value);
+            console.log("value: ", totalValue);
+            for (var i = 0; i < inputFields.length; i++) {
+                inputFields[i].disabled = false;
+            }
+        }
+    }*/
+
+    // this keeps the input field disabled 
+    /*var rowInputs = document.querySelectorAll('#id_seat_type_1, #id_seat_type_2, #id_seat_type_3');
+    rowInputs.forEach(function(input) {
+        input.addEventListener('click', function() {
+            // Do not enable the input field if it is already disabled
+            if (!input.disabled) {
+                return;
+            }
+            
+            // Enable the input field
+            input.disabled = false;
+        });
+    });*/
+    
+    
+    var seatType1Checkbox = document.getElementById("seatType1Checkbox");
+    var seatType2Checkbox = document.getElementById("seatType2Checkbox");
+    var seatType3Checkbox = document.getElementById("seatType3Checkbox");
+    
+    function resetCheckboxes() {
+        seatType1Checkbox.checked = false;
+        seatType2Checkbox.checked = false;
+        seatType3Checkbox.checked = false;
+    }
+    
+    seatType1Checkbox.addEventListener("change", function () {
+      if (seatType1Checkbox.checked) {
+          resetCheckboxes();
+          seatType1Checkbox.checked = true;
+      }
+      calculateTotalSeats();
+    });
+    
+    seatType2Checkbox.addEventListener("change", function () {
+        if (seatType2Checkbox.checked) {
+            resetCheckboxes();
+            seatType2Checkbox.checked = true;
+        }
+        calculateTotalSeats();
+    });
+    
+    seatType3Checkbox.addEventListener("change", function () {
+        if (seatType3Checkbox.checked) {
+            resetCheckboxes();
+            seatType3Checkbox.checked = true;
+        }
+        calculateTotalSeats();
+    });
+    
+    function handleNumberColumnButtonClick(button) {
+        var buttons = document.querySelectorAll(".number-column-button");
+        buttons.forEach(function (btn) {
+            btn.classList.remove("active");
+        });
+        /*var busForm = document.getElementById("bus-seat-form");
+        busForm.reset();*/
+
+        var inputFields = document.querySelectorAll('#id_seat_type_1, #id_seat_type_2, #id_seat_type_3');
+        for (var i = 0; i < inputFields.length; i++) {
+            inputFields[i].value = "";
+        }
+      
+        button.classList.add("active");
+      
+        calculateTotalSeats();
+    }
+    
+    var numberColumnButtons = document.querySelectorAll(".number-column-button");
+    numberColumnButtons.forEach(function (button) {
+        button.addEventListener("click", function () {
+            handleNumberColumnButtonClick(button);
+      });
+    });
+  
+
+</script>
+
+{% endblock %}

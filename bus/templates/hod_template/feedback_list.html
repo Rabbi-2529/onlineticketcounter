@@ -1,0 +1,108 @@
+{% extends 'hod_template/base_template.html' %}
+{% load static %}
+
+{% block page_title %}Fitness List{% endblock page_title %}
+
+{% block custom_css %}
+<style>
+    /* Styling for the card header */
+    .card-header {
+        background: linear-gradient(180deg, rgba(62,7,75,1) 0%, rgba(40,10,69,1) 63%);
+    }
+    
+    /* Styling for table headers */
+    .table thead tr th {
+        font-weight: 500;
+        color: rgb(0, 0, 0);
+    }
+    
+    /* Styling for table data cells */
+    .table tbody tr td {
+        font-size: 15px;
+        font-weight: 400;
+        color: rgb(41, 41, 41);
+    }
+    
+    /* Styling for the "View" button */
+    .view-btn {
+        background: linear-gradient(90deg, rgba(68,8,92,1) 0%, rgba(54,7,62,1) 65%);
+        border: none !important;
+        transition: background-color 1s;
+    }
+    
+    .view-btn:hover {
+        background-color: #e91e63;
+    }
+    
+    /* Styling for the "Edit" button */
+    .edit-btn {
+        background: linear-gradient(90deg, rgba(18,23,65,1) 0%, rgba(0,106,143,1) 100%);
+        border: none !important;
+        transition: background-color 0.5s ease;
+    }
+    
+    .edit-btn:hover {
+        background: linear-gradient(90deg, rgba(0,106,143,1) 0%, rgba(18,23,65,1) 100%);
+    }
+    
+    /* Styling for the "Delete" button */
+    .delete-btn {
+        background: linear-gradient(90deg, rgba(212,0,0,1) 0%, rgba(233,46,113,1) 100%);
+        border: none !important;
+        transition: background-color 0.5s ease;
+    }
+    
+    .delete-btn:hover {
+        background: linear-gradient(90deg, rgba(233,46,113,1) 0%, rgba(212,0,0,1) 100%);
+    }
+    
+    /* Styling for the "Add Fitness" button */
+    .add-user {
+        background: linear-gradient(90deg, rgba(24,65,41,1) 0%, rgba(27,105,24,1) 93%);
+        border: none !important;
+    }
+    
+    .add-user:hover {
+        background: linear-gradient(90deg, rgba(24,65,41,1) 0%, rgba(13,134,88,1) 93%);
+    }
+    
+</style>
+{% endblock custom_css %}
+
+{% block main_content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Feedback List</h3>
+                    </div>
+                 
+            <div class="card-body">
+              {% for feedback in feedbacks %}
+              <div class="feedback">
+                <h2>{{ feedback.name }}</h2>
+                <p class="email">Email: {{ feedback.email }}</p>
+                <p class="mobile">Mobile: {{ feedback.mobile }}</p>
+                <p class="subject">Subject: {{ feedback.subject }}</p>
+                <p class="details">Details: {{ feedback.details }}</p>
+                <form action="{% url 'feedback_delete' feedback.id %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+              </div>
+              {% empty %}
+              <p>No feedbacks available.</p>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+{% endblock main_content %}
+
+{% block custom_js %}
+{% endblock custom_js %}

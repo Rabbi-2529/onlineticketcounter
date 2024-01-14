@@ -1,0 +1,224 @@
+{% extends 'inventory_templates/inventory_base.html' %}
+{% load static %}
+
+{% block custom_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.css">
+<link rel="stylesheet" href="{% static "dist/css/add_product.css" %}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.9/dist/flatpickr.min.css">
+<style>
+    /* Add custom CSS for spacing and form design */
+    .form-container {
+        margin-bottom: 20px; /* Add space between form and table */
+        padding: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .form-container .form-row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+</style>
+{% endblock custom_css %}
+
+{% block main_content %}
+<div class="container-xl px-4 mt-4">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header d-flex justify-content-center">
+                        <h3 class="card-title py-2">Warehouse Report</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-container">
+                            <!-- Add a form for generating the Warehouse Report -->
+                            <form method="GET" action="{% url 'generate_warehouse_report' %}">
+                                {% csrf_token %}
+                                <div class="form-row">
+                                    <div class="form-group col-md-4">
+                                        <label for="start_date">Start Date</label>
+                                        <input type="text" id="start_date" name="start_date" class="form-control datepicker" required>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="end_date">End Date</label>
+                                        <input type="text" id="end_date" name="end_date" class="form-control datepicker" required>
+                                    </div>
+                                    <div class="form-group col-md-4" style="margin-top: 10px;">
+                                        <button type="submit" class="btn btn-primary" name="generate_report" style="margin-top: 20px;">Generate Report</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Display all warehouses in a table -->
+                        <div class="table-responsive">
+                            <table id="warehousedetaillist" class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>SL</th>
+                                        <th>Name</th>
+                                        <th>Location</th>
+                                        <th>Phone</th>
+                                        <th>Email</th>
+                                        <th>Country</th>
+                                        <th>City</th>
+                                        <th>Postal Code</th>
+                                        <th>Created At</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for warehouse in all_warehouses %}
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td><span class="badge badge-primary">{{ warehouse.name }}</span></td>
+                                        <td><span class="badge badge-secondary">{{ warehouse.location }}</span></td>
+                                        <td><span class="badge badge-success">{{ warehouse.phone }}</span></td>
+                                        <td><span class="badge badge-warning">{{ warehouse.email }}</span></td>
+                                        <td><span class="badge badge-info">{{ warehouse.address_country }}</span></td>
+                                        <td><span class="badge badge-light">{{ warehouse.address_city }}</span></td>
+                                        <td><span class="badge badge-dark">{{ warehouse.address_postal_code }}</span></td>
+                                        <td><span class="badge badge-primary">{{ warehouse.created_at }}</span></td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock main_content %}
+
+{% block custom_js %}
+<script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.9/dist/flatpickr.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.js"></script>
+<script type="text/javascript" src="{% static "dist/js/select_dropdown.js" %}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Initialize flatpickr for date picker inputs
+        $('.datepicker').datepicker({
+            format: 'yyyy-mm-dd',
+            todayHighlight: true,
+            toggleActive: true
+        }).on('changeDate', function() {
+            // Hide the datepicker when a date is selected
+            $(this).datepicker('hide');
+        });
+
+
+       
+
+        // Function to update the warehouse table
+        function updateWarehouseTable() {
+            const startDate = document.getElementById("start_date").value;
+            const endDate = document.getElementById("end_date").value;
+
+            // Make an AJAX request to the filter_warehouse_report view
+            fetch(`/api/warehouses/?start_date=${startDate}&end_date=${endDate}`)
+                .then((response) => response.json())
+                .then((data) => {
+                    // Generate table rows and update the table
+                    let table = document.getElementById("warehousedetaillist");
+                    let tableBody = table.querySelector('tbody');
+                    tableBody.innerHTML = ''; // Clear the table
+
+                    data.forEach((warehouse) => {
+                        // Create a new row for each warehouse
+                        let row = document.createElement('tr');
+
+                        // Create table cells for each column
+                        let nameCell = document.createElement('td');
+                        nameCell.textContent = warehouse.name;
+                        row.appendChild(nameCell);
+
+                        let locationCell = document.createElement('td');
+                        locationCell.textContent = warehouse.location;
+                        row.appendChild(locationCell);
+
+                        let phoneCell = document.createElement('td');
+                        phoneCell.textContent = warehouse.phone;
+                        row.appendChild(phoneCell);
+
+                        let emailCell = document.createElement('td');
+                        emailCell.textContent = warehouse.email;
+                        row.appendChild(emailCell);
+
+                        let countryCell = document.createElement('td');
+                        countryCell.textContent = warehouse.address_country;
+                        row.appendChild(countryCell);
+
+                        let cityCell = document.createElement('td');
+                        cityCell.textContent = warehouse.address_city;
+                        row.appendChild(cityCell);
+
+                        let postalCodeCell = document.createElement('td');
+                        postalCodeCell.textContent = warehouse.address_postal_code;
+                        row.appendChild(postalCodeCell);
+
+                        let createdAtCell = document.createElement('td');
+                        createdAtCell.textContent = warehouse.created_at;
+                        row.appendChild(createdAtCell);
+
+                        // Add the row to the table
+                        tableBody.appendChild(row);
+                    });
+                });
+        }
+
+        // Initialize the table when the page loads
+        updateWarehouseTable();
+    });
+</script>
+
+<script>
+    $(document).ready(function() {
+        $('#warehousedetaillist').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'copy',
+                    text: 'Copy',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7] // Specify the correct number of columns
+                    }
+                },
+                {
+                    extend: 'csv',
+                    text: 'CSV',
+                    filename: 'warehouse report',
+                    extension: '.csv',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7] // Specify the correct number of columns
+                    }
+                },
+                {
+                    extend: 'excel',
+                    text: 'Excel',
+                    filename: 'warehouse report',
+                    extension: '.xlsx',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7] // Specify the correct number of columns
+                    }
+                },
+                {
+                    extend: 'pdf',
+                    text: 'PDF',
+                    filename: 'warehouse report',
+                    extension: '.pdf',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7] // Specify the correct number of columns
+                    }
+                },
+                'print'
+            ],
+            initComplete: function () {
+                console.log("DataTables initialized!");
+            }
+        });
+    });
+</script>
+{% endblock custom_js %}

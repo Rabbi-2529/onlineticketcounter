@@ -1,0 +1,149 @@
+
+{% extends 'hod_template/base_template.html' %}
+{% load static %}
+{% block custom_css %}
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <link rel="stylesheet" href="{% static "dist/css/add_counter.css" %}">
+{% endblock custom_css %}
+{% block main_content %}
+
+<div class="container-xl px-4 mt-4">
+    <div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+        <div class="card card-primary">
+            <div class="card-header">
+            <h3 class="card-title">Manage Routes</h3>
+            </div>
+            <form method="GET" action="{% url 'manage_routes' %}" class="search-form">
+                <div class="card-body row justify-content-between pb-0">
+                    <div class="add-staff-type-button col-md-6 col-12">
+                        <a href="{% url 'add_route' %}" class="btn btn-primary save-btn">Add Route</a>
+                    </div>
+                
+                    <div class="form-group mt-2 col-md-6 col-12">
+                        <div class="input-group">
+                            <input
+                            type="text"
+                            name="search_query"
+                            id="search-input"
+                            class="form-control form-control-sm search-input me-0"
+                            placeholder="Search by Route name"
+                            value="{{ search_query }}"
+                            />
+                            <div class="input-group-append">
+                            <button type="submit" class="btn btn-primary search-button">Search</button>
+                            </div>
+                        </div>
+                    </div>
+                
+                </div>
+            </form>
+            <div class="card-body">
+            {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% if routes %}
+            <div class="table-container">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                        <th>Start Point</th>
+                        <th>End Point</th>
+                        <th>Middle Point</th>
+                        <th>Distance</th>
+                        <th>Travel Time</th>
+                        <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for route in routes %}
+                        <tr>
+                        <td>{{ route.start_point }}</td>
+                        <td>{{ route.end_point }}</td>
+                        <td>
+                            {% for stop in route.intermediate_stops.all %}
+                            {{ stop.name }}{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td>{{ route.distance }} KM</td>
+                        <td>{{ route.travel_time }}</td>
+                        <td>
+                            <a
+                            href="{% url 'edit_route' route.id %}"
+                            class="btn btn-primary btn-sm edit-btn"
+                            >
+                            <i class="bi bi-pencil"></i>
+                            </a>
+                            <a
+                            href=""
+                            class="btn btn-danger btn-sm delete-route"  data-id="{{ route.id }}" data-toggle="modal" data-target="#deleterouteModal"
+                            ><i class="fas fa-trash-alt"></i> </a
+                        >
+                        </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    </table>
+                    {% else %}
+                    <p style="color:black !important">No routes found.</p>
+                    {% endif %}
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script>
+    $(document).ready(function() {
+        $('.delete-route').click(function() {
+            // Get the purchase ID from the data attribute
+            var routeId = $(this).data('id');
+            
+            // Display a SweetAlert2 confirmation dialog
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You won\'t be able to revert this!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Send an AJAX request to delete the purchase
+                    $.ajax({
+                        url: `/delete_route/${routeId}/`, // Replace with your URL
+                        type: 'POST',
+                        data: {
+                            csrfmiddlewaretoken: '{{ csrf_token }}' // Replace with your CSRF token
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                // Handle a successful delete action
+                                // For example, you can remove the deleted item from the list
+                                // No need for alert here, as SweetAlert2 provides a built-in success message
+                                location.reload(); // Reloading the page as an example
+                            } else {
+                                // Handle errors
+                                Swal.fire('Error', response.message, 'error');
+                            }
+                        },
+                        error: function() {
+                            // Handle AJAX errors
+                            Swal.fire('Error', 'An error occurred during the delete process.', 'error');
+                        }
+                    });
+                }
+            });
+        });
+    });
+</script>
+{% endblock main_content %}

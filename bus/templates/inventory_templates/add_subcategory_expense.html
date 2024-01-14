@@ -1,0 +1,171 @@
+{% extends 'inventory_templates/inventory_base.html' %}
+{% load static %}
+
+{% block custom_css %}
+<link rel="stylesheet" href="{% static "dist/css/trading.css" %}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.9/dist/flatpickr.min.css">
+<style>
+    .card {
+        border: 1px solid #d2d6de;
+    }
+
+    .card-header {
+        background-color: #007BFF;
+        color: #fff;
+    }
+
+    .form-group label {
+        font-weight: bold;
+    }
+
+    .table {
+        margin-top: 20px;
+    }
+    .icon_select_mate {
+        position: absolute;
+        top: 6px;
+        right: 2%;
+        font-size: 16px;
+        height: 22px;
+        transition: all 275ms;
+    }
+    .custom-btn {
+        background-color: #EA4C89 !important;
+        border-radius: 8px;
+        border-style: none;
+        box-sizing: border-box;
+        color: #FFFFFF !important;
+        cursor: pointer;
+        display: inline-block;
+        font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        height: 40px;
+        line-height: 20px;
+        list-style: none;
+        margin: 0;
+        outline: none;
+        padding: 10px 16px;
+        position: relative;
+        text-align: center;
+        text-decoration: none;
+        transition: color 100ms;
+        vertical-align: baseline;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+      }
+      
+      .custom-btn:hover,
+      .custom-btn:focus {
+        background-color: #F082AC !important;
+      }
+
+
+</style>
+{% endblock custom_css %}
+
+{% block page_title %}Seat Views{% endblock page_title %}
+
+{% block main_content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-4">
+                <!-- Left Column: Add Subcategory -->
+                <div class="card card-primary">
+                  
+                    <div class="card-body">
+                       {% if messages %}
+                        <div class="alert alert-success">
+                            {% for message in messages %}
+                            {{ message }}
+                            {% endfor %}
+                        </div>
+                        {% endif %} 
+                        <form action="" method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="subcategory_name">Sub-Category:</label>
+                                <input type="text" class="form-control" id="subcategory_name" name="subcategory_name" required>
+                            </div>
+
+
+
+                            <div class="form-group">
+                                <label for="parent_category">Main Category</label>
+                                <!--customselect-->
+                                <div class="select_mate" data-mate-select="dropdown-active" >
+                                    <select name="parent_category" required onchange="" onclick="return false;" id="parent_category">
+                                        <option value="" disabled selected>Select a Category</option>
+                                        {% for category in categories_expense %}
+                                        <option value="{{ category.0 }}">{{ category.1 }}</option>
+                                        {% endfor %}
+                                    </select>
+
+                                    {% comment %} <select class="form-control" id="parent_category" name="parent_category" required>
+                                        <option value="" disabled selected>Select a Category</option>
+                                        {% for category in categories %}
+                                        <option value="{{ category.0 }}">{{ category.1 }}</option>
+                                        {% endfor %}
+                                    </select> {% endcomment %}
+
+                                    <p class="selecionado_opcion"  onclick="open_select(this)" ></p><span onclick="open_select(this)" class="icon_select_mate" ><svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z"/>
+                                        <path d="M0-.75h24v24H0z" fill="none"/>
+                                    </svg></span>
+                                    <div class="cont_list_select_mate">
+                                    <ul class="cont_select_int">  </ul> 
+                                    </div>
+                                </div>
+                                <!--customselect-->
+                            </div>
+                            <div class="form-group">
+                             
+                            </div>
+                            <br><br>
+                            <button type="submit" class="custom-btn">Create Category</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+             
+                <div class="card card-primary">
+                    
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Mark</th> <!-- Add this column for the checkbox -->
+                                    <th>Name</th>
+                                    <th>Sub-Category</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for category in categories_expense %}
+                                <tr>
+                                    <td>
+                                        <input type="checkbox"> <!-- Add a checkbox in the first column -->
+                                    </td>
+                                    <td>{{ category.1 }}</td>
+                                    <td>
+                                        <ul>
+                                            {% for subcategory in subcategories_expense %}
+                                            {% if subcategory.category.pk == category.0 %}
+                                            <li>{{ subcategory.name }}</li>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </ul>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+               
+            </div>
+        </div>
+    </div>
+</section>
+<script type="text/javascript" src="{% static "dist/js/select_dropdown.js" %}"></script>
+{% endblock main_content %}

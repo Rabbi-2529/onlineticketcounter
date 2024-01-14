@@ -1,0 +1,487 @@
+{% extends 'hod_template/base_template.html' %}
+{% load static %}
+{% block custom_css %}
+    <link rel="stylesheet" href="{% static "dist/css/add_coach.css" %}">
+{% endblock custom_css %}
+
+{% block page_title %}{% endblock page_title %}
+
+{% block main_content %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<div class="container-xl px-4 mt-4">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10 col-12">
+                <div class="card card-primary">
+                    <div class="card-header d-flex justify-content-center">
+                        <h3 class="card-title">Add Coach</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="success-error-message" class="alert" style="margin-top: 10px">
+                            
+                        </div>
+                        <form id="add-coach-form" method="POST">
+                            {% csrf_token %}
+
+                            {% if messages %}
+                              {% for message in messages %}
+                                  <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">{{ message }}</div>
+                              {% endfor %}
+                            {% endif %}
+
+                            <div class="d-flex justify-content-center">
+                                <div class="form-group col-md-6 col-12">
+                                    <label for="coachmodelname">Model Name:</label>
+                                    <input type="text" class="form-control" id="coachmodelname" name="coachmodelname" required>
+                                </div>
+    
+                                <div class="form-group col-md-6 col-12">
+                                    <label for="coachnumber">Coach Number:</label>
+                                    <input type="text" class="form-control" id="coachnumber" name="coachnumber" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label  style=" margin-right: 20px;">Type:</label>
+                                <div class="form-check" style="display: inline-block; margin-right: 20px;">
+                                    <input class="form-check-input" type="radio" name="coachtype" id="acType" value="AC" required>
+                                    <label class="form-check-label" for="acType">AC</label>
+                                </div>
+                                <div class="form-check" style="display: inline-block;">
+                                    <input class="form-check-input" type="radio" name="coachtype" id="nonAcType" value="Non-AC" required>
+                                    <label class="form-check-label" for="nonAcType">Non-AC</label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="arrivaltime">Arrival Time:</label>
+                                <input type="time" class="form-control" id="arrivaltime" name="arrivaltime" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="cancellation_policy">Cancellation Policy:</label>
+                                <textarea class="form-control" id="cancellation_policy" name="cancellation_policy" required>{% if default_cancellation_policy %}{{ default_cancellation_policy }}{% endif %}</textarea>
+                            </div>
+                            
+                            <!--Facilities starts-->
+                            <div class="form-group">
+                                <label for="facilities">Facilities:</label>
+                            <div class="form-group form-group-box" id="facilitiesBox" onclick="toggleFacilitiesMenu()">
+                                <label for="facilities" id="selectedFacilitiesLabel">Select Facilities:</label>
+                                <span class="caret-icon" id="caret-icon">&#9662;</span>
+                                <div class="dropdown-menu-box" aria-labelledby="facilities">
+                                    {% for facility in facilities %}
+                                        <label class="dropdown-item">
+                                            <input type="checkbox" name="facilities" value="{{ facility.id }}" onchange="updateSelectedFacilities()">
+                                            {{ facility.name }}
+                                        </label>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <!--Facilities ends-->
+
+                            <div class="form-group">
+                                <label for="bus_id">Bus:</label>
+                                <select class="form-control py-1" id="bus_id" name="bus_id" required>
+                                    <option value="">Select Bus</option>
+                                    {% for bus in buses %}
+                                        <option value="{{ bus.id }}" {% if bus.id == selected_bus_id %}selected="selected"{% endif %}>{{ bus.bus_number }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="route_ids">Selected Routes:</label>
+                                <div id="selected_routes_box" class="selected-routes-box"></div>
+                                <select name="route_ids" multiple class="form-control" id="route_ids">
+                                    {% for route in routes %}
+                                      <option value="{{ route.id }}">{{ route.start_point }} - {{ route.end_point }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div id="route-price" class="row route-price">
+                                <div class="route-price-heading">
+                                    <p><span><b>Price</b></span></p>
+                                </div>
+
+                                <div id="route-price-section" class="route-price-section py-2">
+                                    <div id="price-section" class="row price-section">
+                                        <!--<div class="col-lg-4 col-md-6">
+                                            <label for="price1">Dhaka-Cumilla</label>
+                                            <input type="number" name="price" class="form-control col-11" id="price1">
+                                        </div>
+
+                                        <div class="col-lg-4 col-md-6">
+                                            <label for="price1">Dhaka-Cumilla</label>
+                                            <input type="number" name="price" class="form-control col-11" id="price1">
+                                        </div>
+
+                                        <div class="col-lg-4 col-md-6">
+                                            <label for="price1">Dhaka-Cumilla</label>
+                                            <input type="number" name="price" class="form-control col-11" id="price1">
+                                        </div>-->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="boarding_points_container">
+                                {% for route in routes %}
+                                    <div id="boarding_points_{{ route.id }}" class="boarding-points" style="display: none;">
+                                        <label for="boarding_points_{{ route.id }}">Boarding Points:</label>
+                                        <div id="selected_points_{{ route.id }}" class="selected-points-container"></div>
+                                        <select name="boarding_points_{{ route.id }}" multiple class="form-control">
+                                        {% for point in route.boarding_points.all %}
+                                            <option value="{{ point.id }}">{{ point.point_name }}</option>
+                                        {% endfor %}
+                                        </select>
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                            <div id="selected_routes_box" class="selected-routes-box"></div>
+                            <br>
+                            <div class="card-btn d-flex justify-content-center mb-3">
+                                <button type="submit" class="btn btn-primary submit-btn">Add Coach</button>
+                            </div>
+                            
+                        </form>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock main_content %}
+
+{% block custom_js %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!--Facilities script-->
+<script>
+    function toggleFacilitiesMenu() {
+        const dropdownMenu = document.querySelector('.dropdown-menu-box');
+        const selectedFacilities = document.querySelectorAll('input[name="facilities"]:checked');
+        const caretIcon = document.getElementById('caret-icon');
+  
+        if (dropdownMenu.style.display === 'block') {
+            dropdownMenu.style.display = 'none';
+            caretIcon.innerHTML = '&#9662;';
+        } else {
+            dropdownMenu.style.display = 'block';
+            caretIcon.innerHTML = '&#9660;';
+        }
+  
+        updateSelectedFacilities();
+    }
+  
+    function updateSelectedFacilities() {
+        //const selectedFacilitiesBox = document.getElementById('selectedFacilitiesBox');
+        const selectedFacilitiesLabel = document.getElementById('selectedFacilitiesLabel');
+        const selectedFacilities = document.querySelectorAll('input[name="facilities"]:checked');
+  
+        if (selectedFacilities.length > 0) {
+            selectedFacilitiesLabel.innerHTML = [...selectedFacilities].map(facility => facility.parentNode.textContent.trim()).join(', ');
+            //selectedFacilitiesBox.style.display = 'block';
+        }
+        else {
+            selectedFacilitiesLabel.innerHTML = 'Select Facilities:';
+            //selectedFacilitiesBox.style.display = 'none';
+        }
+    }
+  </script>
+
+<script>
+    $(document).ready(function() {
+        $('#route_ids').change(function() {
+            var selectedRoutes = [];
+            $('#route_ids option:selected').each(function() {
+                selectedRoutes.push({
+                    id: $(this).val(),
+                    text: $(this).text()
+                });
+            });
+            renderSelectedRoutes(selectedRoutes);
+        });
+
+        function renderSelectedRoutes(routes) {
+            var selectedRoutesBox = $('#selected_routes_box');
+            selectedRoutesBox.empty();
+
+            $.each(routes, function(index, route) {
+                var routeItem = $('<div class="selected-route-item">' + route.text + '<button class="remove-route-btn" data-id="' + route.id + '">&times;</button></div>');
+                routeItem.appendTo(selectedRoutesBox);
+            });
+
+            $('.remove-route-btn').click(function() {
+                var routeId = $(this).data('id');
+                $('#route_ids option[value="' + routeId + '"]').prop('selected', false);
+                $(this).parent().remove();
+            });
+        }
+    });
+</script>
+
+
+<script>
+    $(document).ready(function() {
+        // Handle the change event of boarding points dropdowns
+        $('select[name^="boarding_points_"]').change(function() {
+            var routeId = $(this).attr('name').split('_')[2];
+            var selectedPoints = [];
+            var selectedValues = [];
+        
+        $('select[name="boarding_points_' + routeId + '"] option:selected').each(function() {
+            var pointId = $(this).val();
+            var pointText = $(this).text();
+            
+            if (!selectedValues.includes(pointId)) {
+                selectedPoints.push({
+                id: pointId,
+                text: pointText
+                });
+                
+                selectedValues.push(pointId);
+            }
+        });
+        
+        addSelectedBoardingPoints(routeId, selectedPoints);
+    });
+  
+    function addSelectedBoardingPoints(routeId, points) {
+        var selectedPointsContainer = $('#selected_points_' + routeId);
+        
+        $.each(points, function(index, point) {
+            var existingPoint = selectedPointsContainer.find('.selected-point-item[data-id="' + point.id + '"]');
+            
+            if (existingPoint.length === 0) {
+                var pointItem = $('<div class="selected-point-item" data-id="' + point.id + '">' + point.text + '<button class="remove-point-btn" data-id="' + point.id + '">&times;</button></div>');
+                pointItem.appendTo(selectedPointsContainer);
+            }
+        });
+  
+        $('.remove-point-btn').click(function() {
+            var pointId = $(this).data('id');
+            $('select[name="boarding_points_' + routeId + '"] option[value="' + pointId + '"]').prop('selected', false);
+            $(this).parent().remove();
+        });
+        if (points.length > 0) {
+            selectedPointsContainer.addClass('show');
+        }
+        else {
+            selectedPointsContainer.removeClass('show');
+        }
+      }
+    });
+  </script>
+
+
+<script>
+    $(document).ready(function() {
+        $('.dropdown-item input[type="checkbox"]').on('click', function() {
+            var checkboxLabel = $(this).parent();
+            var labelText = checkboxLabel.text();
+            var checked = $(this).prop('checked');
+            if (checked) {
+                var selectedFacilitiesList = $('#selectedFacilitiesList');
+                selectedFacilitiesList.append('<li>' + labelText + '</li>');
+            } else {
+                var selectedFacilitiesList = $('#selectedFacilitiesList');
+                selectedFacilitiesList.find('li:contains("' + labelText + '")').remove();
+            }
+
+            // Show the selected facilities box if there are selected facilities
+            /*var selectedFacilitiesBox = $('#selectedFacilitiesBox');
+            if (selectedFacilitiesList.children().length > 0) {
+                selectedFacilitiesBox.show();
+            } else {
+                selectedFacilitiesBox.hide();
+            }*/
+        });
+    });
+</script>
+
+
+<script>
+    // Allow only 5-digit numbers in the input field
+    document.getElementById('coachnumber').addEventListener('input', function(event) {
+        var inputValue = event.target.value;
+        // Remove any non-digit characters
+        var sanitizedValue = inputValue.replace(/\D/g, '');
+        // Limit the input value to 5 digits
+        var limitedValue = sanitizedValue.slice(0, 5);
+        event.target.value = limitedValue;
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        // Listen for change event on route_ids select
+        $('#route_ids').change(function() {
+        // Hide all boarding points initially
+        $('.boarding-points').hide();
+        
+        // Show boarding points for selected routes
+        var selectedRoutes = $(this).val();
+        if (selectedRoutes) {
+            for (var i = 0; i < selectedRoutes.length; i++) {
+            var routeId = selectedRoutes[i];
+            $('#boarding_points_' + routeId).show();
+            }
+        }
+        });
+    });
+</script>
+
+<!--Price selection script-->
+<script>
+    $(document).ready(function(){
+        var routeData = [];
+        $('#route_ids').on('change', function() {
+            const routeIDList = $(this).val();
+            if(routeIDList.length == 1){
+                var routeID = routeIDList[0]
+                console.log('routeIDList: ', routeID);
+            }
+            
+            fetch('/get_coach_route_price/?route_id=' + routeID, {
+                method: 'GET',
+            })
+            .then(response => response.json())
+            .then(data => {
+                routeData = data;
+                console.log('routeData: ', routeData);
+                var priceSection = $('#price-section');
+                priceSection.empty();
+                var i = 0
+                data.forEach(function(route, index){
+                    var routeDiv = $('<div>').addClass('col-lg-4 col-md-6 mb-3');
+                    i = i + 1;
+                    var label = $('<label>').attr('for', 'price_' + i).text(route.start_point + ' \u2192 ' + route.end_point);
+                    var input = $('<input>').attr({
+                        type: 'number',
+                        name: 'price',
+                        class: 'form-control col-11',
+                        id: 'price_' + i,
+                        //value: route.price
+                    });
+
+                    routeDiv.append(label, input);
+                    priceSection.append(routeDiv);
+                })
+
+            })
+            .catch(error => {
+                console.error('Error fetching upazilas:', error);
+            });
+        });
+        
+        $('#add-coach-form').submit(function(event){
+            event.preventDefault();
+
+            /*var formData = new FormData(this);
+            var data = {};
+
+            formData.entries().forEach(function(value, key){
+                data[key] = value;
+            })*/
+
+            var formData = $(this).serializeArray();
+            var data = {};
+            route_part_list = [];
+            boarding_points_list = [];
+
+            formData.forEach(function (entry) {
+                if (entry.name === "facilities" || entry.name === "price"){
+                    if (!data[entry.name]) {
+                        data[entry.name] = []; // Initialize as an array
+                    }
+                    data[entry.name].push(entry.value); // Append the facility ID to the array
+                } else {
+                    data[entry.name] = entry.value;
+                }
+            });
+            console.log('form data: ', formData)
+
+            $("label[for^='price']").each(function() {
+                const labelText = $(this).text().trim();
+                var arrowIndex = labelText.indexOf(' \u2192 ');
+                if (arrowIndex !== -1) {
+                    var start_point = labelText.substring(0, arrowIndex).trim();
+                    var end_point = labelText.substring(arrowIndex + 3).trim(); // Skip the arrow symbol and space
+                }
+                console.log('start_point: ', start_point)
+                console.log('end_point: ', end_point)
+                console.log('labelText: ', labelText)
+                const inputId = $(this).attr("for");
+                const price = $("#" + inputId).val(); // Get the corresponding input value
+                console.log('price: ', price)
+                var route_part_data = {
+                    'start_point': start_point,
+                    'end_point': end_point,
+                    'price': price
+                }
+                route_part_list.push(route_part_data)
+                
+          
+                //formData[inputId] = { labelText, inputValue };
+            });
+
+            console.log("route_part_data outside function: ", route_part_list)
+            data['route_part_data'] = route_part_list
+
+            // get the values of the boarding points
+            $('.selected-point-item').each(function(){
+                var boardingPointId = $(this).data("id");
+                boarding_points_list.push(boardingPointId)
+            })
+            data['boarding_points'] = boarding_points_list
+            
+
+            fetch('/coach_save/', {
+                method: 'POST',
+                body: JSON.stringify(data),
+                headers: {
+                    'x-CSRFToken': '{{csrf_token}}',
+                    'Content-Type': 'application/json'
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Handle the response data, e.g., show a success message
+                console.log('data: ', data);
+                
+
+                if (data.error) {
+                    if($('#success-error-message').hasClass('alert-success')){
+                        $('#success-error-message').removeClass('alert-success');
+                        $('#success-error-message').addClass('alert-danger').text(data.error);
+                    }
+                    else{
+                        $('#success-error-message').addClass('alert-danger').text(data.error);
+                    }
+                }
+                else if (data.success) {
+                    if($('#success-error-message').hasClass('alert-danger')){
+                        $('#success-error-message').removeClass('alert-danger');
+                        $('#success-error-message').addClass('alert alert-success').text(data.success);
+                        console.log('removed error added success')
+                    }
+                    else{
+                        $('#success-error-message').addClass('alert-success').text(data.success);
+                    }
+                    
+}
+            })
+            .catch(error => {
+                // Handle errors, e.g., show an error message
+                console.error('Error:', error);
+            });
+        
+        })
+        
+    });
+</script>
+
+{% endblock custom_js %}

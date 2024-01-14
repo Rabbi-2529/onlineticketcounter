@@ -1,0 +1,121 @@
+<!-- hod_template/view_vehicle.html -->
+{% extends 'hod_template/base_template.html' %}
+{% load static %}
+{% block page_title %}
+Booking List
+{% endblock page_title %}
+{% block custom_css %}
+<link rel="stylesheet" href="{% static "dist/css/bookinglist.css" %}">
+<link rel="stylesheet" href="{% static "dist/css/inventory_sub.css" %}">
+
+{% endblock custom_css %}
+{% block main_content %}
+<section class="content">
+    <div class="container-fluid">
+
+        <br>
+      
+      <br>
+      <br>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Vehicle List</h3>
+                    </div>
+                    <div class="card-body">
+                        <table id="paydetaillist" class="table table-bordered">
+
+            <thead>
+                <tr>
+                    <th>Registration Number</th>
+                    <th>Type</th>
+                    <th>Engine Number</th>
+                    <th>Model Name</th> 
+                    <th>Chassis Number</th>
+                    <th>Driver Number</th>
+                   
+                </tr>
+            </thead>
+
+        <tbody>
+         
+            <tr>
+                <td>{{ vehicle.regi_number }}</td>
+                <td>{{ vehicle.fleet_type }}</td>
+                <td>{{ vehicle.eng_number }}</td>
+                <td>{{ vehicle.model_name }}</td>
+                <td>{{ vehicle.chassis_number }}</td>
+                <td>{{ vehicle.driver_number }}</td>
+               
+          
+   
+            
+
+            </tr>
+         
+        </tbody>
+        </table>
+        <a href="{% url 'vehicle_list' %}" class="btn btn-primary">Back to Vehicle List</a>
+    </div>
+    </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div></section>
+<script>
+    $(document).ready(function() {
+
+
+        $('#paydetaillist').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'copy',
+                    text: 'Copy',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7] // Specify which columns to include
+                    }
+                },
+                {
+                    extend: 'csv',
+                    text: 'CSV',
+                    filename: 'vehicle List', // Specify the filename
+                    extension: '.csv',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7] // Specify which columns to include
+                    },
+                    fieldSeparator: ',', // Specify the field separator (comma)
+                    fieldBoundary: '"' // Specify the field boundary character
+                },
+                {
+                    extend: 'excel',
+                    text: 'Excel',
+                    filename: 'vehicle List', // Specify the filename
+                    extension: '.xlsx',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7] // Specify which columns to include
+                    }
+                },
+                {
+                    extend: 'pdf',
+                    text: 'PDF',
+                    filename: 'vehicle List', // Specify the filename
+                    extension: '.pdf',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7] // Specify which columns to include
+                    }
+                },
+                'print'
+            ],
+            initComplete: function () {
+                console.log("DataTables initialized!"); // Debugging statement
+            }
+        });
+    });
+</script>
+{% endblock main_content %}

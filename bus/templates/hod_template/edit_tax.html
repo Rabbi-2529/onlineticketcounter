@@ -1,0 +1,53 @@
+{% extends 'hod_template/base_template.html' %}
+{% load static %}
+{% block custom_css %}
+    
+    <link rel="stylesheet" href="{% static "dist/css/add_product.css" %}">
+{% endblock custom_css %}
+
+{% block main_content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Edit Tax</h2>
+                </div>
+                <div class="card-body">
+                    {% if messages %}
+                    <div class="messages">
+                      {% for message in messages %}
+                      <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                      {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="tax_name">Tax Name:</label>
+                            <input type="text" name="tax_name" id="tax_name" class="form-control" value="{{ tax.tax_name }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="tax_value">Tax Value (%):</label>
+                            <input type="number" name="tax_value" id="tax_value" class="form-control" value="{{ tax.tax_value }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="tax_number">Tax Number:</label>
+                            <input type="text" name="tax_number" id="tax_number" class="form-control" value="{{ tax.tax_number }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="status">Status:</label>
+                            <select name="status" id="status" class="form-control" required>
+                                <option value="1" {% if tax.status == '1' %}selected{% endif %}>Active</option>
+                                <option value="0" {% if tax.status == '0' %}selected{% endif %}>Disabled</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="save-btn">Save Changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock main_content %}

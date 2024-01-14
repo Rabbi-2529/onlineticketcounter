@@ -1,0 +1,115 @@
+{% extends 'hod_template/base_template.html' %}
+{% load static %}
+{% block page_title %}
+Booking List
+{% endblock page_title %}
+{% block custom_css %}
+<link rel="stylesheet" href="{% static "dist/css/bookinglist.css" %}">
+
+{% endblock custom_css %}
+{% block main_content %}
+<section class="content">
+    <div class="container-fluid">
+    
+        <br>
+        <div>
+            <ul class="list-group d-flex flex-row">
+                {% for day in next_five_days %}
+                <li class="list-group-item-check btn btn-white btn-animated {% if day == journey_date %}active{% endif %}">
+                    <a href="{% url 'coach_details_by_date' day %}" class="text-decoration-none text-dark">{{ day }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+      <br>
+      <br>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Seat Availability</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Coach Number</th>
+                                    <th>Type</th>
+                                    <th>Model</th>
+                                    <th>Route</th> 
+                                    <th>Route Parts</th> 
+                                    <th>Arrival Time</th>
+                                    <th>Departure Time</th>
+                                 
+                                 
+                                    <th>Total Seats</th>
+                                    <th>Booked Seats</th>
+                                    <th>Remaining Seats</th>
+                                    <th>Seat Occupancy</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for coach_details in coach_details_list %}
+                                <tr>
+                                  <td>
+                                    {% if coach_details.coach.bus.bus_number and coach_details.coach.coachnumber and coach_details.journey_date %}
+                                      <a href="" 
+                                        target="_blank"
+                                        class="popup-seat-link">
+                                        {{ coach_details.coach.coachnumber }}
+                                      </a>
+                                    {% else %}
+                                      {{ coach_details.coach.coachnumber }}
+                                    {% endif %}
+                                  </td>
+                                    <td>{{ coach_details.coach.coachtype }}</td>
+                                    <td>{{ coach_details.coach.coachmodelname }}</td>
+                                    <td>{{ coach_details.coach.route_parts.first.route.start_point }} - {{ coach_details.coach.route_parts.last.route.end_point }}</td>
+                                    <td>
+                                        {% if coach_details.route_parts %}
+                                            {% for route_part in coach_details.route_parts %}
+                                                <a href="{% url 'seat_view' coach_details.coach.bus.bus_number coach_details.coach.coachnumber coach_details.journey_date|date:'Y-m-d' route_part.route.id route_part.start_point.name route_part.end_point.name %}"
+                                                   style="color: blue; text-decoration: underline;">
+                                                    {{ route_part.start_point.name }} - {{ route_part.end_point.name }}
+                                                </a><br>
+                                            {% endfor %}
+                                        {% else %}
+                                            No route parts available
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ coach_details.coach.arrivaltime }}</td>
+                                    <td>{{ coach_details.coach.depraturetime }}</td>
+                                   
+                              
+                       
+                                    <td>{{ coach_details.total_seats }}</td>
+                                    <td>{{ coach_details.booked_seats }}</td>
+                                    <td>{{ coach_details.remaining_seats }}</td>
+                                    <td>{{ coach_details.seat_occupancy }}%</td>
+                                    <td>{% if coach_details.upcoming_schedule %}Upcoming{% else %}Passed{% endif %}</td>
+
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+  // JavaScript code to handle click events and add "active" class to the clicked date
+  const dateLinks = document.querySelectorAll('.list-group-item');
+
+  dateLinks.forEach(link => {
+      link.addEventListener('click', () => {
+          // Remove the "active" class from all date links
+          dateLinks.forEach(item => item.classList.remove('active'));
+          // Add the "active" class to the clicked date link
+          link.classList.add('active');
+      });
+  });
+</script>
+{% endblock main_content %}

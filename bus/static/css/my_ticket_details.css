@@ -1,0 +1,152 @@
+.container-xl{
+    max-width: 1440px;
+}
+
+.container-fluid{
+    margin-top: 10px;
+}
+
+.card {
+    border-radius: 20px;
+    border: none !important;
+    /* box-shadow: 0 0.15rem 1.75rem 0 rgb(33 40 50 / 15%); */
+    box-shadow: 12px 16px 22px 9px rgba(0,0,0,0.1);
+}
+
+.card-header{
+    border-top-left-radius: 20px !important;
+    border-top-right-radius: 20px !important;
+    border: none !important;
+    /* background: rgb(62,7,75);
+    background: linear-gradient(180deg, rgba(62,7,75,1) 0%, rgba(40,10,69,1) 63%); */
+    /* background: rgb(121,143,17);
+    background: linear-gradient(180deg, rgba(121,143,17,1) 0%, rgba(163,166,36,0.8827906162464986) 100%); */
+    /* background: rgb(56,4,80);
+    background: linear-gradient(180deg, rgba(56,4,80,0.5) 0%, rgba(158,49,159,0.5) 100%); */
+    background: rgb(149,152,7);
+    background: radial-gradient(circle, rgba(149,152,7,1) 0%, rgba(43,85,6,1) 100%);
+
+}
+
+.card-header h3{
+    color: rgb(236, 236, 236);
+}
+
+.ticket-detail{
+    margin-bottom: 1.5rem;
+}
+
+.inner-card-heading-div{
+    border-bottom: 1px solid rgb(57, 6, 122);
+}
+
+.inner-card-header h4{
+    font-size: 1.3rem;
+    font-style: italic;
+    color: rgb(14, 3, 105);
+}
+
+.trip-info{
+    border-radius: 20px;
+    background: rgb(3,8,69);
+    background: linear-gradient(132deg, rgba(3,8,69,1) 0%, rgba(63,6,85,1) 72%);
+    /* background: rgb(14,66,9);
+    background: linear-gradient(132deg, rgba(14,66,9,1) 0%, rgba(55,74,1,1) 72%); */
+}
+
+.trip-info h4{
+    color: rgb(236, 236, 236);
+    /* color: rgb(236, 236, 236); */
+}
+
+.trip-info p .span-heading{
+    font-size: 0.9rem;
+    color: rgb(212, 212, 212);
+    border-bottom: 1px solid rgb(173, 173, 173);
+
+    /* color: rgb(212, 212, 212);
+    border-bottom: 1px solid rgb(173, 173, 173); */
+}
+
+.trip-info p .span-text{
+    font-size: 0.9rem;
+    color: rgb(236, 236, 236);
+    /* color: rgb(236, 236, 236); */
+}
+
+.ticket-info{
+    border-right: 1px dashed rgb(219, 219, 219);
+    /* border-style: dashed; */
+}
+
+.ticket-full-details{
+    border-right: 1px dashed rgb(48, 48, 48);
+}
+
+.ticket-details-heading-text{
+    font-size: 20px;
+    font-style: italic;
+    font-weight: 500;
+    color: rgb(26, 4, 56);
+}
+
+.ticket-full-details span{
+    font-size: 0.875rem;
+    font-weight: 500;
+    font-style: italic;
+    color: rgb(75, 2, 82);
+}
+
+.passenger-full-details span{
+    font-size: 0.875rem;
+    font-weight: 500;
+    font-style: italic;
+    color: rgb(75, 2, 82);
+}
+
+.total-amount{
+    font-size: 1rem !important;
+    color: rgb(54, 0, 54) !important;
+    font-weight: 600 !important;
+}
+
+@media(min-width:767px){
+    .ticket-info{
+        width: 20%;
+    }
+    
+}
+
+@media(max-width:767px){
+    .container-xl{
+        padding-left: 2px !important;
+        padding-right: 2px !important;
+    }
+
+    .ticket-info{
+        width: 33%;
+        margin-bottom: 2.5rem !important;
+    }
+
+    .ticket-full-details{
+        border-bottom: 1px dashed rgb(48, 48, 48);
+        margin-bottom: 1.5rem;
+    }
+    
+}
+
+@media(max-width:532px){
+    .ticket-info{
+        width: 50%;
+        margin-bottom: 2.5rem !important;
+    }
+
+    .ticket-full-details{
+        border-right: none;
+    }
+    
+    .passenger-full-details{
+        padding-left: 0.85rem !important;
+    }
+}
+

@@ -1,0 +1,168 @@
+.container-xl {
+    max-width: 1600px !important;
+}
+
+.frame {
+    width: 100%;
+   
+}
+
+.cancel{
+    position: relative;
+}
+.cancel-btn{
+    position: absolute;
+    left: 0;
+    top: -19px;
+}
+
+.custom-btn {
+    width: 120px; /* Adjust the width as needed */
+    height: 40px;
+    color: #fff !important;
+    border-radius: 5px;
+    font-family: 'Lato', sans-serif;
+    font-weight: 500;
+    background: transparent !important;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    display: inline-block;
+    box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, .5),
+                7px 7px 20px 0px rgba(0, 0, 0, .1),
+                4px 4px 5px 0px rgba(0, 0, 0, .1);
+    outline: none;
+    margin-right: 20px; /* Adjust the margin between buttons */
+}
+
+.btn-14,
+.btn-12 {
+    width: auto; /* Set the width to auto for flexible sizing */
+}
+
+.btn-12 {
+    position: relative;
+    right: 0; /* Reset the position */
+    bottom: 0; /* Reset the position */
+    margin-right: 0; /* Reset the margin */
+}
+
+.btn-14 {
+    color: #000; /* Black text color */
+    background: rgb(255, 151, 0) !important;
+    border: none;
+    z-index: 1;
+}
+
+.btn-14:after {
+    position: absolute;
+    content: "";
+    width: 100%;
+    height: 0;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    border-radius: 5px;
+    background-color: #eaf818 !important;
+    background-image: linear-gradient(315deg, #a9ad70 0%, #f6fc9c 74%) !important;
+    box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, .5);
+    transition: all 0.3s ease;
+}
+
+.btn-14:hover {
+    color: #554444;
+}
+
+.btn-14:hover:after {
+    top: auto;
+    bottom: 0;
+    height: 100%;
+}
+
+.btn-14:active {
+    top: 2px;
+}
+
+.btn-12 {
+    position: relative;
+    right: 0; /* Reset the position */
+    bottom: 0; /* Reset the position */
+    border: none;
+    box-shadow: none;
+
+    line-height: 40px;
+    -webkit-perspective: 230px;
+    perspective: 230px;
+}
+/* Add this CSS to adjust the layout */
+
+.btn-12 span {
+    background: rgb(0, 172, 238);
+    background: linear-gradient(0deg, rgba(0, 172, 238, 1) 0%, rgba(2, 126, 251, 1) 100%);
+    display: block;
+    position: absolute;
+    width: 68px;
+    height: 40px;
+    box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, .5),
+                7px 7px 20px 0px rgba(0, 0, 0, .1),
+                4px 4px 5px 0px rgba(0, 0, 0, .1);
+    border-radius: 5px;
+    margin: 0;
+    text-align: center;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-transition: all .3s;
+    transition: all .3s;
+}
+
+.btn-12 span:nth-child(1) {
+    box-shadow: -7px -7px 20px 0px #fff9,
+                -4px -4px 5px 0px #fff9,
+                7px 7px 20px 0px #0002,
+                4px 4px 5px 0px #0001;
+    -webkit-transform: rotateX(90deg);
+    -moz-transform: rotateX(90deg);
+    transform: rotateX(90deg);
+    -webkit-transform-origin: 50% 50% -20px;
+    -moz-transform-origin: 50% 50% -20px;
+    transform-origin: 50% 50% -20px;
+}
+
+.btn-12 span:nth-child(2) {
+    -webkit-transform: rotateX(0deg);
+    -moz-transform: rotateX(0deg);
+    transform: rotateX(0deg);
+    -webkit-transform-origin: 50% 50% -20px;
+    -moz-transform-origin: 50% 50% -20px;
+    transform-origin: 50% 50% -20px;
+}
+
+.btn-12:hover span:nth-child(1) {
+    box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, .5),
+                7px 7px 20px 0px rgba(0, 0, 0, .1),
+                4px 4px 5px 0px rgba(0, 0, 0, .1);
+    -webkit-transform: rotateX(0deg);
+    -moz-transform: rotateX(0deg);
+    transform: rotateX(0deg);
+}
+
+.btn-12:hover span:nth-child(2) {
+    box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, .5),
+                7px 7px 20px 0px rgba(0, 0, 0, .1),
+                4px 4px 5px 0px rgba(0, 0, 0, .1);
+    color: transparent;
+    -webkit-transform: rotateX(-90deg);
+    -moz-transform: rotateX(-90deg);
+    transform: rotateX(-90deg);
+}
+.large-td {
+    width: 200px; /* Adjust the width as needed */
+    height: 50px; /* Adjust the height as needed */
+}
+
+.error-message {
+    color: #ff0000 !important;
+    font-size: 14px;
+    margin-top: 5px;
+}

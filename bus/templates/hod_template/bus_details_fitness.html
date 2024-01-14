@@ -1,0 +1,57 @@
+{% extends 'hod_template/base_template.html' %}
+{% load static %}
+
+{% block page_title %}Bus Fitness Details{% endblock page_title %}
+
+{% block custom_css %}
+<!-- Include your custom CSS styles here -->
+{% endblock custom_css %}
+
+{% block main_content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Bus Fitness Details for {{ vehicle.regi_number }}</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Fitness Name</th>
+                                    <th>Fitness Start Date</th>
+                                    <th>Fitness End Date</th>
+                                    <th>Start Mileage</th>
+                                    <th>End Mileage</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for bus_fitness in bus_fitness_list %}
+                                <tr>
+                                    <td>{{ bus_fitness.fitness_name }}</td>
+                                    <td>{{ bus_fitness.fitness_start_date }}</td>
+                                    <td>{{ bus_fitness.fitness_end_date }}</td>
+                                    <td>{{ bus_fitness.start_mileage }}</td>
+                                    <td>{{ bus_fitness.end_mileage }}</td>
+                                    <td>
+                                        {% comment %} <a href="{% url 'edit_bus_fitness' bus_fitness.id %}" class="btn btn-sm btn-primary">Edit</a>
+                                        <a href="{% url 'delete_bus_fitness' bus_fitness.id %}" class="btn btn-sm btn-danger">Delete</a> {% endcomment %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock main_content %}
+
+{% block custom_js %}
+<!-- Include your custom JavaScript here -->
+{% endblock custom_js %}

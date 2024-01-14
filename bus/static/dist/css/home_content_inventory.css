@@ -1,0 +1,193 @@
+#recentVouchersTable {
+    /* Add any specific styles for the table */
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+.card-title-top {
+    float: left;
+    font-size: 1.1rem;
+    font-weight: 400;
+    margin: 0;
+}
+.card-title-top-pop{
+    float: left;
+    font-size: 1.1rem;
+    font-weight: 400;
+    margin: 0;
+
+}
+#recentVouchersTable th,
+#recentVouchersTable td {
+    /* Add styles for table header and data cells */
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+#recentVouchersTable th {
+    /* Add styles for table header */
+    background-color: #f2f2f2;
+}
+
+#recentVouchersBody tr:nth-child(even) {
+    /* Add alternate row background color */
+    background-color: #f9f9f9;
+}
+
+#recentVouchersBody tr:hover {
+    /* Add hover effect */
+    background-color: #e6f7ff;
+}
+
+/* Add these styles to your CSS file or within a style tag in your HTML file */
+
+/* Style for the card */
+.card-route {
+margin-top: 20px;
+}
+
+/* Style for the table */
+.table {
+width: 100%;
+border-collapse: collapse;
+margin-top: 20px;
+}
+
+/* Style for table header */
+.table th {
+
+padding: 10px;
+text-align: left;
+}
+
+/* Style for table rows */
+.table td, .table th {
+border: 1px solid #ddd;
+padding: 8px;
+}
+
+/* Style for alternating row colors */
+.table tbody tr:nth-child(even) {
+background-color: #f2f2f2; /* Add your desired even row background color */
+}
+
+/* Style for hover effect on rows */
+.table tbody tr:hover {
+background-color: #d3d3d3; /* Add your desired row hover background color */
+}
+
+
+.user-list-container {
+display: flex;
+flex-wrap: wrap;
+justify-content: space-around;
+padding: 20px;
+}
+
+.user-container {
+border: 1px solid #ccc;
+margin: 10px;
+padding: 10px;
+text-align: center;
+}
+
+.profile-picture {
+width: 80px;
+height: 80px;
+border-radius: 50%;
+margin-bottom: 10px;
+}
+
+.user-name {
+font-weight: bold;
+margin-bottom: 5px;
+}
+
+.sign-in-time,
+.online,
+.offline {
+font-size: 12px;
+color: #666;
+}
+
+.online {
+color: green;
+}
+
+.offline {
+color: red;
+}
+
+.tabs {
+display: flex;
+justify-content: center;
+align-items: center;
+margin-bottom: 1rem;
+}
+
+.tabs {
+display: flex;
+justify-content: center;
+align-items: center;
+margin-bottom: 1rem;
+}
+
+/* Style the tab links */
+.tab {
+    margin: 1rem;
+    padding: 1rem 2rem;
+    color: black;
+    /* border-bottom: 1px solid #ccc; */
+    /* border-radius: 4px; */
+    cursor: pointer;
+    text-decoration: none;
+    color: #333;
+    list-style-type: none !important;
+}
+
+/* Style the active tab */
+.tab.active {
+    background-color: #eee;
+    border-bottom: 1px solid #ccc;
+    border-color: #9b1f1f !important;
+    font-weight: bold;
+    color: #007bff !important; 
+}
+
+.tab.active a{
+    color: #007bff !important; 
+}
+
+
+/* Style the underline */
+#underline {
+    position: relative;
+    top: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: #007bff;
+    transition: width 0.3s ease-in-out;
+}
+.tab a{
+color:black !important;
+}
+/* Style the tab links when hovering */
+.tab:hover {
+background-color: #f2f2f2;
+}
+
+.tab-link{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+/* Style the table containers */
+/* .table-container {
+    padding: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+} */

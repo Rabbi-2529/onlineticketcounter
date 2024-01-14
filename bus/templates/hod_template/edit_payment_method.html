@@ -1,0 +1,35 @@
+{% extends 'hod_template/base_template.html' %}
+{% load static %}
+
+{% block page_title %}Edit Payment Method{% endblock page_title %}
+
+{% block main_content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Edit Payment Method</h3>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Name</label>
+                            <input type="text" name="name" id="name" class="form-control" value="{{ payment_method.name }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-check-label">Status</label><br>
+                            <input type="radio" name="status" value="1" id="status_active" class="form-check-input" {% if payment_method.status == 1 %}checked{% endif %} required>
+                            <label for="status_active" class="form-check-label">Active</label>
+                            <input type="radio" name="status" value="0" id="status_inactive" class="form-check-input" {% if payment_method.status == 0 %}checked{% endif %} required>
+                            <label for="status_inactive" class="form-check-label">Inactive</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Update Payment Method</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock main_content %}

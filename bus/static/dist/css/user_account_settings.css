@@ -1,0 +1,240 @@
+.container-xl{
+    background-color: rgb(255, 255, 255);
+}
+.page-header{
+    height: 50px;
+    background: rgb(62,7,75);
+    background: linear-gradient(180deg, rgba(62,7,75,1) 0%, rgba(40,10,69,1) 63%);
+}
+    
+.img-account-profile {
+    width: 200px;
+    height: 200px;
+    border-radius: inherit;
+}
+/* .rounded-circle {
+    border-radius: 50% !important;
+}*/
+
+.profile-pic-div{
+    position: relative;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.camera-icon{
+    position: absolute;
+    height: 50px;
+    bottom: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.24);
+    border-bottom-left-radius: 50%;
+    border-bottom-right-radius: 50%;
+    z-index: 99;
+}
+
+.camera-icon i{
+    font-size: 40px;
+    color: rgb(108, 73, 122);
+}
+
+.profile-pic-div .input-pic input[type="file"] {
+    cursor: pointer;
+    display: block;
+    height: 100%;
+    left: 0;
+    opacity: 0 !important;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    background-color: transparent;
+    z-index: 999;
+}
+
+.img-account-profile {
+    width: 100%;
+
+}
+
+.card-container{
+    border-radius: 20px;
+}
+
+.card {
+    border-radius: 20px;
+    /* box-shadow: 0 0.15rem 1.75rem 0 rgb(33 40 50 / 15%); */
+    box-shadow: 12px 16px 22px 9px rgba(0,0,0,0.1);
+}
+
+.card .card-header {
+    font-weight: 500;
+    border-top-left-radius: 20px !important;
+    border-top-right-radius: 20px !important;
+}
+.card-header:first-child {
+    border-radius: 0.35rem 0.35rem 0 0;
+}
+
+.card-body{
+    border-bottom-left-radius: inherit;
+    border-bottom-right-radius: inherit;
+    background-color: rgb(247, 247, 247);
+}
+
+.card-body label{
+    font-size: 14px;
+    font-weight: 400 !important;
+    color: rgb(73, 73, 73);
+}
+
+.card-header {
+    padding: 1rem 1.35rem;
+    margin-bottom: 0;
+    background-color: rgba(33, 40, 50, 0.03);
+    border-bottom: 1px solid rgba(33, 40, 50, 0.125);
+}
+
+.form-control {
+    display: block;
+    width: 100%;
+    padding: 0.875rem 1.125rem;
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1;
+    color: #69707a;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgb(235, 235, 235);
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border-radius: 0.35rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.form-control::placeholder{
+    font-weight: 300;
+    color: rgb(187, 187, 187);
+}
+
+.nav-borders .nav-link.active {
+    color: #0061f2;
+    border-bottom-color: #0061f2;
+}
+.nav-borders .nav-link {
+    color: #69707a;
+    /* font-weight: 300 !important; */
+    border-bottom-width: 0.125rem;
+    border-bottom-style: solid;
+    border-bottom-color: transparent;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+
+.user-profile-form label{
+    font-size: 14px;
+    font-weight: 400 !important;
+    color: rgb(54, 54, 54);
+}
+
+.btn-primary{
+    font-weight: 400 !important;
+    color: rgb(236, 236, 236);
+    border-radius: 10px;
+    background: rgb(62,7,75) !important;
+    background: linear-gradient(180deg, rgba(62,7,75,1) 0%, rgba(40,10,69,1) 63%) !important;
+    border: none;
+}
+
+.password-card-header{
+    cursor: pointer;
+    border-bottom: none;
+}
+
+.password-card-header.border{
+    border-bottom: rgba(33, 40, 50, 0.125);
+}
+
+.password-card-body{
+    max-height: 0;
+    overflow: hidden;
+    padding: 0;
+    background-color: transparent;
+}
+
+.password-card-body.show{
+    max-height: 500px;
+    padding: 20px;
+    background-color: rgb(247, 247, 247);
+    transition: 0.3s;
+}
+
+
+/* .password-card-body{
+    
+} */
+
+/* Date picker starts */
+.datepicker {
+    background-color: #fff;
+    border: none;
+  }
+  
+  .datepicker-dropdown {
+    top: 0;
+    left: 0;
+  }
+  
+  .datepicker table tr td.today, span.focused {
+    border-radius: 50% !important;
+  }
+  
+  thead tr:nth-child(2) {
+    background: rgb(62,7,75);
+    background: linear-gradient(180deg, rgba(62,7,75,1) 0%, rgba(40,10,69,1) 63%);
+  }
+  
+  thead tr:nth-child(3) th {
+    color: #400053 !important;
+    padding-top: 20px;
+    padding-bottom: 10px;
+  }
+  
+  .dow, .old-day, .day, .new-day {
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 0px !important;
+  }
+  
+  .old-day:hover, .day:hover, .new-day:hover, .month:hover, .year:hover, .decade:hover, .century:hover {
+    border-radius: 50% !important;
+    background-color: #eee;
+  }
+  
+  .active {
+    border-radius: 50% !important;
+    background-image: linear-gradient(#140352, #2e024b) !important;
+    color: #fff !important;
+  }
+  
+  .prev, .next, .datepicker-switch {
+    border-radius: 0 !important;
+    padding: 20px 10px !important;
+    text-transform: uppercase;
+    font-size: 20px;
+    color: #fff;
+    opacity: 0.8; 
+  }
+  
+  .prev:hover, .next:hover, .datepicker-switch:hover {
+    background-color: inherit !important;
+    opacity: 1;
+  }
+  /* Date picker ends */
+

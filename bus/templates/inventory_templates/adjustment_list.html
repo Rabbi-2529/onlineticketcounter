@@ -1,0 +1,337 @@
+{% extends 'inventory_templates/inventory_base.html' %}
+{% load static %}
+
+{% block custom_css %}
+<link rel="stylesheet" href="{% static "dist/css/add_product.css" %}">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.9/dist/flatpickr.min.css">
+<style>
+    /* Custom status colors */
+    .custom-status-pending {
+        color: orange; /* Adjust the color as needed */
+    }
+
+    .custom-status-received {
+        color: green; /* Adjust the color as needed */
+    }
+
+    .custom-status-completed {
+        color: blue; /* Adjust the color as needed */
+    }
+
+    .custom-status-canceled {
+        color: red; /* Adjust the color as needed */
+    }
+    .make-payment-link,
+    .view-payment-link{
+        color: black !important;
+    }
+    .delete-purchase {
+        color: black !important;
+    }
+    .btn-btn-light {
+        border-color: black;
+      }
+      .btn-btn-light {
+        border-color: black;
+        color: black; /* Set the default text color */
+        transition: border-color 0.4s, color 0.4s; /* Add a smooth transition for the color change */
+      }
+      
+      .btn-btn-light:hover {
+        border-color: blue;
+        color: blue; /* Change the text color to blue on hover */
+      }
+      .text-black .dropdown-item {
+        color: black !important;
+    }
+    .text-black .dropdown-item:hover {
+        box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3); /* Add a black shadow on hover */
+    }
+    .text-black .clicked {
+        color: black;
+    }
+    .text-black {
+        color: black !important;
+    }
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1050;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+    .modal-body{
+        width: 670px;
+    }
+    .modal-content {
+        background-color: #fefefe;
+        margin: 50% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        
+        width: 690px;
+        position: relative;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    }
+    
+
+    
+    /* CSS */
+    .custom-btn {
+      background-color: #EA4C89 !important;
+      border-radius: 8px;
+      border-style: none;
+      box-sizing: border-box;
+      color: #FFFFFF !important;
+      cursor: pointer;
+      display: inline-block;
+      font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      height: 40px;
+      line-height: 20px;
+      list-style: none;
+      margin: 0;
+      outline: none;
+      padding: 10px 16px;
+      position: relative;
+      text-align: center;
+      text-decoration: none;
+      transition: color 100ms;
+      vertical-align: baseline;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+    }
+    
+    .custom-btn:hover,
+    .custom-btn:focus {
+        background-color: #F082AC !important;
+    }
+    
+</style>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap4.min.css">
+
+
+{% endblock custom_css %}
+
+{% block main_content %}
+<div class="container-xl px-4 mt-4">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header d-flex justify-content-center">
+                        <h3 class="card-title py-2">Biller List</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+
+                            <div class="add-staff-type-button col-md-6 col-12 mb-2">
+                                <a href="{% url 'add_inventory_adjustment' %}" class="btn btn-success save-btn">Add Adjustment</a>
+                            </div>
+                            <table id="adjustmentList" class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>SL</th>
+                                        <th>Name</th>
+                                        <th>Code</th>
+                                        <th>Warehouse</th>
+                                        <th>Type</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for adjustment in adjustment %}
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td>{{ adjustment.product.name }}</td>
+                                        <td>{{ adjustment.product.barcode }}</td>
+                                        <td>{{ adjustment.warehouse }}</td>
+                                        <td>{{ adjustment.adjustment_type }}</td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <button class="btn btn-secondary custom-btn-group dropdown-toggle" type="button" id="actionsDropdown{{ adjustment.id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    Actions
+                                                </button>
+                                                <div class="dropdown-menu" aria-labelledby="actionsDropdown{{ adjustment.id }}">
+                                                    <a class="dropdown-item action-link" href="#" onclick="viewAdjustment({{ adjustment.id }})">
+                                                        View
+                                                    </a>
+                                                    <a class="dropdown-item action-link delete-adjusment" data-id="{{ adjustment.id }}" href="#" data-toggle="modal" data-target="#deleteAdjustmentModal">
+                                                        Delete
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- View Adjustment Modal -->
+<div class="modal fade" id="viewadjustmentModal" tabindex="-1" role="dialog" aria-labelledby="viewadjustmentModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" style="color:black !important" id="viewadjustmentModalLabel">View Adjustment</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="viewadjustmentModalBody">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Product ID</th>
+                            <th>Quantity</th>
+                            <th>Adjustment Type</th>
+                            <th>Warehouse</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adjustmentTableBody">
+                 
+                    </tbody>
+                </table>
+            </div>
+           
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<script>
+    $(document).ready(function() {
+        $('#adjustmentList').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ],
+            initComplete: function () {
+                console.log("DataTables initialized!"); // Debugging statement
+            }
+        });
+    });
+
+    // Function to fetch and display adjustment data in a modal
+
+        // Function to fetch and display adjustment data in a modal
+        function viewAdjustment(adjustmentId) {
+            $.ajax({
+                url: `/view_adjustment/${adjustmentId}/`, // Adjust the URL based on your Django project structure
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    if ('adjustment' in data) {
+                        var adjustment = data.adjustment;
+    
+                        // Set modal content with adjustment data
+                        $('#viewadjustmentModalLabel').text('View Adjustment');
+                        $('#adjustmentTableBody').html(`
+                            <tr>
+                                <td>${adjustment.id}</td>
+                                <td>${adjustment.product_id}</td>
+                                <td>${adjustment.quantity}</td>
+                                <td>${adjustment.adjustment_type}</td>
+                                <td>${adjustment.warehouse}</td>
+                            </tr>
+                        `);
+    
+                        // Show the modal
+                        $('#viewadjustmentModal').modal('show');
+                    } else {
+                        console.error('Adjustment data not found');
+                    }
+                },
+                error: function (error) {
+                    console.error('Error fetching adjustment data', error);
+                }
+            });
+        }
+        document.querySelectorAll('button[id^="viewAdjustmentModalCloseButton"]').forEach(function(closeButton) {
+            closeButton.addEventListener('click', function() {
+                // Close the edit modal
+                var targetModalId = closeButton.closest('.modal').id;
+                $(targetModalId).modal('hide');
+                window.location.href = "{% url 'adjustment_list' %}";
+            });
+        });
+    
+        // Add a click event handler for the "x" (cross) icon in the modal's header
+        document.querySelectorAll('button.close[data-dismiss="modal"]').forEach(function(closeIcon) {
+            closeIcon.addEventListener('click', function() {
+                // Close the edit modal
+                var targetModalId = closeIcon.closest('.modal').id;
+                $(targetModalId).modal('hide');
+                window.location.href = "{% url 'adjustment_list' %}";
+            });
+        });
+
+
+    
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+<script>
+    $(document).ready(function() {
+        $('.delete-adjusment').click(function() {
+            // Get the purchase ID from the data attribute
+            var adjustmentId = $(this).data('id');
+            
+            // Display a SweetAlert2 confirmation dialog
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You won\'t be able to revert this!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Send an AJAX request to delete the purchase
+                    $.ajax({
+                        url: `/delete_adjustment/${adjustmentId}/`, // Replace with your URL
+                        type: 'POST',
+                        data: {
+                            csrfmiddlewaretoken: '{{ csrf_token }}' // Replace with your CSRF token
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                // Handle a successful delete action
+                                // For example, you can remove the deleted item from the list
+                                // No need for alert here, as SweetAlert2 provides a built-in success message
+                                location.reload(); // Reloading the page as an example
+                            } else {
+                                // Handle errors
+                                Swal.fire('Error', response.message, 'error');
+                            }
+                        },
+                        error: function() {
+                            // Handle AJAX errors
+                            Swal.fire('Error', 'An error occurred during the delete process.', 'error');
+                        }
+                    });
+                }
+            });
+        });
+    });
+</script>
+{% endblock main_content %}

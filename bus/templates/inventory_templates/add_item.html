@@ -1,0 +1,305 @@
+{% extends 'inventory_templates/inventory_base.html' %}
+{% load static %}
+{% block custom_css %}
+<link rel="stylesheet" href="{% static "dist/css/add_product.css" %}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.9/dist/flatpickr.min.css">
+<style>
+    .container-fluid {
+        width: 70%;
+        padding-right: 7.5px;
+        padding-left: 7.5px;
+        margin-right: auto;
+        margin-left: auto;
+    }
+</style>
+{% endblock custom_css %}
+{% block page_title %}Seat Views{% endblock page_title %}
+
+{% block main_content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Add Product</h3>
+                    </div>
+                    <div class="card-body">
+                        {% if messages %}
+                        <div class="alert alert-success">
+                            {% for message in messages %}
+                            {{ message }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        
+                        <div class="flex-container">
+                            <form method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="row">
+                                    <div class="col-4 mt-4">
+                                        <div class="form-group">
+                                            <label for="name">Name:</label>
+                                            <input type="text"  class="form-control" id="name" name="name" required>
+                                        </div>
+                                    </div>
+
+
+                                   <div class="col-4 mt-4">
+                                    <div class="form-group">
+                                        <label for="category">Category</label>
+                                        <!--customselect-->
+                                        <div class="select_mate" data-mate-select="dropdown-active" >
+                                            <!--<select name="source_warehouse" onchange="" onclick="return false;" id="source_warehouse">-->
+                                            <select name="category" onchange="" onclick="return false;" id="category">
+                                                <option value=""  >Select The Option </option>
+                                                {% for subcategories in subcategories %}
+                                                        <option value="{{ subcategories.id }}">{{ subcategories.name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                            <p class="selecionado_opcion"  onclick="open_select(this)" ></p><span class="icon_select_mate" ><svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z"/>
+                                                <path d="M0-.75h24v24H0z" fill="none"/>
+                                            </svg></span>
+                                            <div class="cont_list_select_mate">
+                                            <ul class="cont_select_int">  </ul> 
+                                            </div>
+                                        </div>
+                                        <!--customselect-->
+                                    </div>
+                                </div>
+                              
+                    
+                                    <div class="col-4 mt-4">
+                                        <div class="form-group">
+                                            <label for="product_id">Product ID:</label>
+                                            <input type="text" class="form-control" id="product_id" name="product_id" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-4 mt-4">
+                                        {% comment %} <div class="form-group">
+                                            <label for="brand">Brand:</label>
+                                            <select id="brand"  class="form-control" name="brand" required>
+                                                <option value="" disabled selected>Select Brand</option>
+                                                {% for brand in brands %}
+                                                <option value="{{ brand.id }}">{{ brand.name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div> {% endcomment %}
+                                        <div class="form-group">
+                                            <label for="brand">Brand:</label>
+                                            <!--customselect-->
+                                            <div class="select_mate" data-mate-select="dropdown-active" >
+                                                <!--<select name="source_warehouse" onchange="" onclick="return false;" id="source_warehouse">-->
+                                                <select name="brand" onchange="" onclick="return false;" id="brand">
+                                                    <option value="" disabled selected>Select The Brand</option>
+                                                    {% for brand in brands %}
+                                                    <option value="{{ brand.id }}">{{ brand.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                                <p class="selecionado_opcion"  onclick="open_select(this)" ></p><span class="icon_select_mate" ><svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z"/>
+                                                    <path d="M0-.75h24v24H0z" fill="none"/>
+                                                </svg></span>
+                                                <div class="cont_list_select_mate">
+                                                <ul class="cont_select_int">  </ul> 
+                                                </div>
+                                            </div>
+                                            <!--customselect-->
+                                        </div>
+
+                                    </div>
+
+
+
+                                    <div class="col-4 mt-4">
+                                        <div class="form-group">
+                                            <label for="barcode">Barcode:</label>
+                                            <input type="text" id="barcode"  class="form-control" name="barcode">
+                                        </div>
+                                    </div>
+                                    <div class="col-4 mt-4">
+
+                                        <div class="form-group">
+                                            <label for="unit_measurement">Unit</label>
+                                            <!--customselect-->
+                                            <div class="select_mate" data-mate-select="dropdown-active" >
+                                                <!--<select name="source_warehouse" onchange="" onclick="return false;" id="source_warehouse">-->
+                                                    <select name="unit_measurement" onchange="" onclick="return false;" id="unit_measurement">
+                                                        <option value=""  >Select The Option </option>
+                                                        {% for unit in units %}
+                                                            <option value="{{ unit.name }}">{{ unit.name }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                <p class="selecionado_opcion"  onclick="open_select(this)" ></p><span class="icon_select_mate" ><svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z"/>
+                                                    <path d="M0-.75h24v24H0z" fill="none"/>
+                                                </svg></span>
+                                                <div class="cont_list_select_mate">
+                                                <ul class="cont_select_int">  </ul> 
+                                                </div>
+                                            </div>
+                                            <!--customselect-->
+                                        </div>
+                                        
+                                    </div>
+
+                                    
+                                    <div class="col-4 mt-4">
+                                        <div class="form-group">
+                                            <label for="item_price">Item Price:</label>
+                                            <input type="number" class="form-control" step="0.01" id="item_price" name="item_price" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-4 mt-4">
+                                        <div class="form-group">
+                                            <label for="expense_amount">Expense:</label>
+                                            <input type="number" class="form-control" step="0.01" id="expense_amount" name="expense_amount">
+                                        </div>
+                                    </div>
+                                    <div class="col-4 mt-4">
+                                        <div class="form-group">
+                                            <label for="unit_quantity">Unit Quantity:</label>
+                                            <input type="number"  class="form-control" id="unit_quantity" name="unit_quantity" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-4 mt-4">
+                                        <div class="form-group">
+                                            <label for="tax">Tax:</label>
+                                            <input type="number" class="form-control" step="0.01" id="tax" name="tax">
+                                        </div>
+                                    </div>
+                                    <div class="col-4 mt-4">
+                                        <div class="form-group">
+                                            <label for="discount">Discount:</label>
+                                            <input type="number" class="form-control" step="0.01" id="discount" name="discount">
+                                        </div>
+                                    </div>
+                                    <div class="col-4 mt-4">
+                                        <div class="form-group">
+                                            <label for="stock_alert">Stock Alert:</label>
+                                            <input type="number" class="form-control" id="stock_alert" name="stock_alert">
+                                        </div>
+                                    </div>
+                                    <div class="col-4 mt-4">
+                                        <div class="form-group">
+                                            <label for="purchase_date">Purchase Date:</label>
+                                            <input type="date" class="form-control" id="purchase_date" name="purchase_date">
+                                        </div>
+                                    </div>
+                                    <div class="col-4 mt-4">
+                                        <div class="form-group">
+                                            <label for="purchase_price">Purchase Price:</label>
+                                            <input type="number" step="0.01" id="purchase_price" class="form-control" name="purchase_price" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-4 mt-4">
+                                        <div class="form-group">
+                                            <label for="last_usage_maintenance_date">Last Usage/Maintenance Date:</label>
+                                            <input type="date" class="form-control" id="last_usage_maintenance_date" name="last_usage_maintenance_date">
+                                        </div>
+                                    </div>
+                                    <div class="col-4 mt-4">
+
+                                        <div class="form-group">
+                                            <label for="condition">Condition</label>
+                                            <!--customselect-->
+                                            <div class="select_mate" data-mate-select="dropdown-active" >
+                                                <!--<select name="source_warehouse" onchange="" onclick="return false;" id="source_warehouse">-->
+                                                <select name="condition" onchange="" onclick="return false;" id="condition">
+                                                    <option value=""  >Select The Option </option>
+                                                    <option value="New">New</option>
+                                                    <option value="Used">Used</option>
+                                                    <option value="Expired">Expired</option>
+                                                    <option value="Repaired">Repaired</option>
+                                                </select>
+                                                <p class="selecionado_opcion"  onclick="open_select(this)" ></p><span class="icon_select_mate" ><svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z"/>
+                                                    <path d="M0-.75h24v24H0z" fill="none"/>
+                                                </svg></span>
+                                                <div class="cont_list_select_mate">
+                                                <ul class="cont_select_int">  </ul> 
+                                                </div>
+                                            </div>
+                                            <!--customselect-->
+                                        </div>
+                                        {% comment %} <div class="form-group">
+                                            <label for="condition">Condition:</label>
+                                            <select id="condition" class="form-control" name="condition" required>
+                                                <option value="" disabled selected>Select Condition</option>
+                                                <option value="New">New</option>
+                                                <option value="Used">Used</option>
+                                                <option value="Expired">Expired</option>
+                                                <option value="Repaired">Repaired</option>
+                                            </select>
+                                        </div> {% endcomment %}
+                                    </div>
+
+                                    <div class="col-4 mt-4">
+                                        <div class="form-group">
+                                            <label for="warehouse">Select Warehouse</label>
+                                            <!--customselect-->
+                                            <div class="select_mate" data-mate-select="dropdown-active" >
+                                                <!--<select name="source_warehouse" onchange="" onclick="return false;" id="source_warehouse">-->
+                                                <select name="warehouse" onchange="" onclick="return false;" id="warehouse">
+                                                    <option value="" disabled selected>Select Warehouse</option>
+                                                    {% for warehouse in warehouses %}
+                                                    <option value="{{ warehouse.id }}">{{ warehouse.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                                <p class="selecionado_opcion"  onclick="open_select(this)" ></p><span class="icon_select_mate" ><svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z"/>
+                                                    <path d="M0-.75h24v24H0z" fill="none"/>
+                                                </svg></span>
+                                                <div class="cont_list_select_mate">
+                                                <ul class="cont_select_int">  </ul> 
+                                                </div>
+                                            </div>
+                                            <!--customselect-->
+                                        </div>
+                                        {% comment %} <div class="form-group">
+                                            <label for="warehouse">Warehouse:</label>
+                                            <select id="warehouse"  class="form-control" name="warehouse" required>
+                                                <option value="" disabled selected>Select Warehouse</option>
+                                                {% for warehouse in warehouses %}
+                                                <option value="{{ warehouse.id }}">{{ warehouse.name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div> {% endcomment %}
+                                    </div>
+                                    {% comment %} <div class="col-4 mt-4">
+                                        <div class="form-group">
+                                            <label for="warehouse">warehouse:</label>
+                                            <select id="warehouse" class="form-control" name="warehouse">
+                                                <option value="" disabled selected>Select Warehouse</option>
+                                                <!-- Add options for warehouses here -->
+                                            </select>
+                                        </div>
+                                    </div> {% endcomment %}
+                                    <div class="col-4 mt-4">
+                                        <div class="form-group">
+                                            <label for="price">Price:</label>
+                                            <input type="number" class="form-control" step="0.01" id="price" name="price">
+                                        </div>
+                                    </div>
+                                    <div class="col-4 mt-4">
+                                        <div class="form-group">
+                                            <label for="images">Images:</label>
+                                            <input type="file" class="form-control" id="images" name="images">
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Add other input fields for additional data if needed -->
+                                <button type="submit" class="save-btn">Add Product</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock main_content %}
+{% block custom_js %}
+<script type="text/javascript" src="{% static "dist/js/select_dropdown.js" %}"></script>
+{% endblock custom_js %}

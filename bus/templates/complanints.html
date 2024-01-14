@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block custom_css %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link rel="stylesheet" href={% static "css/dashboard.css"%}>    
+{% endblock custom_css %}
+{% block content %}
+
+
+
+<section class="about-banner relative">
+    <div class="overlay overlay-bg"></div>
+    <div class="container">
+    <div class="row d-flex align-items-center justify-content-center">
+        
+        <div class="about-content col-lg-12">
+        <h1 class="text-white">Profile </h1>
+        <p class="text-white link-nav">
+        
+            <a href={% url "about" %}> Manage My Account</a>
+            <span class="lnr lnr-arrow-right"></span>
+            <a href={% url "about" %}> Profile Setting</a>
+        </p>
+        </div>
+    </div>
+    </div>
+</section>
+
+
+
+<div class="container-xl px-4 mt-4">
+    <!-- Account page navigation-->
+    <!--<div class="page-header d-flex justify-content-center col-lg-12 col-md-12 col-12 mb-4">
+        <h4 class="my-auto">Profile settings</h4>
+    </div>-->
+    <div class="card-body">
+        {% if messages %}
+          <div class="messages">
+            {% for message in messages %}
+              <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+        </div>
+    <form method="POST" action="" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row card-container-row col-12">
+            <div class="col-xl-4 p-3 card-container">
+                <div class="row">
+                    <!-- Profile picture card-->
+                    <div class="card mb-4 mb-xl-0 px-0">
+                        <div class="card-header d-flex justify-content-center">Profile Picture</div>
+                        <div class="card-body text-center">
+                            <!-- Profile picture image-->
+                            <div class="d-flex justify-content-center">
+                                <div class="profile-pic-div">
+                                    {% if user.profile_picture %}
+                                        <img id="wizardPicturePreview" class="img-account-profile picture-src mb-2" src="{{ user.profile_picture.url }}" alt="http://bootdey.com/img/Content/avatar/avatar1.png">
+                                    {% else %}
+                                        <img id="wizardPicturePreview" class="img-account-profile picture-src mb-2" src="http://bootdey.com/img/Content/avatar/avatar1.png" alt="">
+                                    {% endif %}
+                                    
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="short-menu">
+                                <div class="p-4">
+                                    <div class="row">
+                                        <div class="col-12 d-flex justify-content-start p-3">
+                                            <a href="{% url 'dashboard' %}" class="nav-link menu-link">Manage My Account</a>
+                                        </div>
+
+                                        <div class="col-12 d-flex justify-content-start p-3">
+                                            <a href="{% url 'my_ticket_list' %}" class="nav-link menu-link">My Tickets</a>
+                                        </div>
+
+                                        <div class="col-12 d-flex justify-content-start p-3">
+                                            <a href="{% url 'complanints'%}" class="nav-link menu-link complaints-active">Complaint</a>
+                                        </div>
+
+                                        <div class="col-12 d-flex justify-content-start p-3">
+                                            <a href="{% url 'cancelticket' %}" class="nav-link menu-link">Ticket Cancellation</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="col-xl-8 p-md-3 px-1">
+                <!-- Account details card-->
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-center">Complaints</div>
+                    <div class="card-body">
+                        
+                            <div class="review-form__sZgKR">
+                                <form class="row" method="POST">
+                                    {% csrf_token %}
+                                    {% if form.errors %}
+                                        <div class="alert alert-danger" role="alert">
+                                            <strong>Error:</strong> Please check the form errors.
+                                        </div>
+                                    {% endif %}
+                                    <div class="col-lg-12 mb-2">
+                                        <label for="id_title">Title</label>
+                                        <input autocomplete="off" type="text" class="form-control" name="title" id="id_title" placeholder="Complaint title" required="">
+                                        {% if form.errors.title %}
+                                            <div class="text-danger">
+                                                {{ form.errors.title }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-lg-12 mb-2">
+                                        <label for="id_application">Application</label><br>
+                                        <div class="ant-radio-group ant-radio-group-outline">
+                                            <label class="ant-radio-wrapper">
+                                                <span class="ant-radio">
+                                                    <input name="application" type="radio" class="ant-radio-input" value="GENERAL">
+                                                    <span class="ant-radio-inner"></span>
+                                                </span>
+                                                <span>General</span>
+                                            </label>
+                                            <label class="ant-radio-wrapper ant-radio-wrapper-checked ps-3">
+                                                <span class="ant-radio ant-radio-checked">
+                                                    <input name="application" type="radio" class="ant-radio-input" value="BUS" checked="">
+                                                    <span class="ant-radio-inner"></span>
+                                                </span>
+                                                <span>Bus Service</span>
+                                            </label>
+                                        </div>
+                                        {% if form.errors.application %}
+                                            <div class="text-danger">
+                                                {{ form.errors.application }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-lg-12" style="margin-top: 20px;">
+                                        <label for="id_description">Description</label>
+                                        <textarea autocomplete="off" class="form-control" name="description" id="id_description" required="" rows="5">{{ form.description.value }}</textarea>
+                                        {% if form.errors.description %}
+                                            <div class="text-danger">
+                                                {{ form.errors.description }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <div style="margin-top: 20px; text-align: center;">
+                                            <button type="submit" class="btn btn-primary">Submit Complaint</button>
+                                        </div>
+                                        {% if messages %}
+                                        {% for message in messages %}
+                                            <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-danger{% endif %}" role="alert">
+                                                {{ message }}
+                                            </div>
+                                        {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                </form>
+                            </div>
+                            
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+
+
+
+{% endblock content %}

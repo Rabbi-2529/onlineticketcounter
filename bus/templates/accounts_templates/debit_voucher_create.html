@@ -1,0 +1,210 @@
+{% extends 'accounts_templates/accounts_base.html' %}
+{% load static %}
+
+{% block custom_css %}
+    
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<link rel="stylesheet" href="{% static "dist/css/add_product.css" %}">
+
+
+<style>
+    .row-box-wrapper {
+        border: 1px solid #ccc; /* Define the border style here */
+        padding: 10px; /* Add some padding for spacing */
+        border-radius: 5px; /* Optional: Add rounded corners */
+    }
+</style>
+{% endblock custom_css %}
+
+
+{% block page_title %}Create Debit Voucher{% endblock page_title %}
+
+{% block main_content %}
+<div class="container-xl px-4 mt-4">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Create Debit Voucher</h3>
+                    </div>
+                    <div class="card-body">
+                        {% if messages %}
+                        <div class="alert alert-success">
+                            {% for message in messages %}
+                            {{ message }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+
+                        <div class="flex-container">
+                            <form method="post">
+                                {% csrf_token %}
+                                <div class="row">
+                                    <div class="col-4 mt-4">
+                                        <div class="form-group">
+                                            <label for="date">Date</label>
+                                            <input type="date" class="form-control" id="date" name="date" required>
+                                        </div>
+                                    </div>
+                               
+                                    <div class="col-4 mt-4">
+                                        <div class="form-group">
+                                            <label for="payment_gateway">Payment Gateway</label>
+                                            <select class="form-control select2" id="payment_gateway" name="payment_gateway" required>
+                                                <option value="" disabled selected>Select Gateway</option>
+                                                {% for account in bank_accounts %}
+                                                <option value="{{ account.bank_name }}">{{ account.bank_name }}</option>
+                                            {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-4 mt-4">
+                                        <div class="form-group">
+                                            <label for="payment_mode">Payment Mode</label>
+                                            <select class="form-control select2" id="payment_mode" name="payment_mode" required>
+                                                <option value="" disabled selected>Select Payment Mode</option>
+                                                {% for payment_type in types %}
+                                                    <option value="{{ payment_type.0 }}">{{ payment_type.1 }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-4 mt-4">
+                                        <div class="form-group">
+                                            <label for="cheque_number">Cheque Number</label>
+                                            <input type="text" class="form-control" id="cheque_number" name="cheque_number" placeholder="Enter Cheque Number">
+                                        </div>
+                                    </div>
+                                    <div class="col-4 mt-4">
+                                        <div class="form-group">
+                                            <label for="reference">Reference</label>
+                                            <input type="text" class="form-control" id="reference" name="reference" required placeholder="Enter Reference">
+                                        </div>
+                                    </div>
+                                    <br>
+
+                                     <div class="row-box-wrapper">
+                                        <div class="row ck">
+                                            <div class="col-4 mt-4">
+                                                <div class="form-group">
+                                                    <label for="account">Account Name</label>
+                                                    <select class="form-control select2" id="account" name="account" required>
+                                                        <option value="" disabled selected>Select Account Name</option>
+                                                        {% for bank_account in bank_accounts %}
+                                                            <option value="{{ bank_account.id }}">{{ bank_account.account_name }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                        
+                                            </div>
+                                            <div class="col-4 mt-4">
+                                                <div class="form-group">
+                                                    <label for="amount">Amount</label>
+                                                    <input type="number" class="form-control" id="amount" name="amount" step="0.01" required placeholder="Enter Amount">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-1 mt-4">
+                                                <button type="button" class="btn btn-success add-row-button" style="display: inline-block; outline: 0; cursor: pointer; border: 1px solid #1d1c1d4d; font-weight: 600; background: #fff; padding: 0 10px; font-size: 13px; border-radius: 4px; color: white; background-color: #9147ff; height: 28px; min-width: 56px; transition: all 80ms linear;">
+                                                    Add Row
+                                                </button>
+                                            </div>
+                                            <div class="col-6 mt-4">
+                                                <button type="button" class="btn btn-danger clear-row-button" style="display: inline-block; outline: 0; cursor: pointer; border: 1px solid #1d1c1d4d; font-weight: 600; background: #fff; padding: 0 10px; font-size: 13px; border-radius: 4px; color: white; background-color: #DA0C81; height: 28px; min-width: 25px; transition: all 80ms linear;">
+                                                    Clear Row
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="col-8 mt-4">
+                                        <div class="form-group">
+                                            <label for="particular">Particular</label>
+                                            <textarea class="form-control" id="particular" name="particular" rows="3" placeholder="Enter Particular"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                
+                                <button type="submit" class="btn btn-success save-btn">Create Now</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock main_content %}
+
+{% block custom_js %} 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script>
+/*function showClock() {
+    // Initialize the timepicker on the travel_time input field
+    $('#travel_time').timepicker();
+}*/
+</script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $('#account').select2();
+        function createSecondRow() {
+            // Create a new row element
+            var newRow = $('<div class="row ck"></div>');
+            // Create the first column for "Account Name"
+            var accountColumn = $('<div class="col-4 mt-4"></div>');
+            var accountFormGroup = $('<div class="form-group"></div>');
+            var accountLabel = $('<label for="account">Account Name</label>');
+            var accountSelect = $('<select class="form-control select2" required></select>');
+            // Add the default option to the select element
+            accountSelect.append('<option value="" disabled selected>Select Account Name</option>');
+            // Add options from the bank_accounts variable
+            {% for bank_account in bank_accounts %}
+                accountSelect.append('<option value="{{ bank_account.id }}">{{ bank_account.account_name }}</option>');
+            {% endfor %}
+            // Append the elements to the column and the column to the row
+            accountFormGroup.append(accountLabel, accountSelect);
+            accountColumn.append(accountFormGroup);
+            newRow.append(accountColumn);
+            // Create the second column for "Amount"
+            var amountColumn = $('<div class="col-4 mt-4"></div>');
+            var amountFormGroup = $('<div class="form-group"></div>');
+            var amountLabel = $('<label for="amount">Amount</label>');
+            var amountInput = $('<input type="number" class="form-control" id="amount" name="amount" step="0.01" required placeholder="Enter Amount">');
+            // Append the elements to the column and the column to the row
+            amountFormGroup.append(amountLabel, amountInput);
+            amountColumn.append(amountFormGroup);
+            newRow.append(amountColumn);
+            // Append the new row above the "Add Row" button
+            $('.add-row-button').closest('.row').before(newRow);
+            // Initialize Select2 for the newly created select element
+            accountSelect.select2({
+                width: '100%'
+            });
+        }
+        // Event listener for the "Add Row" button
+        $('.add-row-button').click(function () {
+            createSecondRow();
+        });
+        // Event listener for the "Clear Row" button
+        $('.clear-row-button').click(function () {
+            // Check if there is more than one row before removing
+            if ($('.row.ck').length > 1) {
+                // Remove the last added row
+                $('.row.ck').last().remove();
+                rowCount--;
+            }
+        });
+    });
+</script>
+{% endblock custom_js %}

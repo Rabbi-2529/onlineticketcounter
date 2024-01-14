@@ -1,0 +1,71 @@
+{% extends 'root_template/base_template_root.html' %}
+{% load static %}
+{% block page_title %}
+    Department
+{% endblock page_title %}
+{% block custom_css %}
+    <link rel="stylesheet" href="{% static "dist/css/staff.css" %}">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+{% endblock custom_css %}
+{% block main_content %}
+
+<div class="container-xl px-4 mt-4">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header d-flex justify-content-center">
+                        <h3 class="card-title py-2">Payment Method List</h3>
+                        <a href="{% url 'create_staff_type' %}" class="btn btn-primary float-end add-user ms-auto">Add Department</a>
+                    </div>
+                    <div class="card-body">
+                        {% if messages %}
+                            <div class="alert alert-success">
+                                <ul>
+                                    {% for message in messages %}
+                                        <li>{{ message }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
+                        
+                        <div class="table-responsive">
+                            <table id="paydetaillist" class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Name</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for staff_type in staff_types %}
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td>{{ staff_type.name }}</td>
+                                        <td>{{ staff_type.status }}</td>
+                                        <td>
+                                            <a href="{% url 'edit_staff_type_root' staff_type.name %}"
+                                            class="btn btn-primary btn-sm edit-btn mb-2">
+                                            <i class="bi bi-pencil"></i> Edit
+                                        </a>
+                                        <a href="{% url 'delete_staff_type_root' staff_type.name %}"
+                                            class="btn btn-danger btn-sm delete-btn mb-2">
+                                            <i class="bi bi-trash"></i> Delete
+                                        </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock main_content %}

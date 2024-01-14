@@ -1,0 +1,144 @@
+{% extends 'root_template/base_template_root.html' %}
+
+{% load static %}
+
+{% block custom_css %}
+    <link rel="stylesheet" href="{% static "dist/css/add_product.css" %}">
+    <link rel="stylesheet" href="https://gitcdn.link/repo/minhur/bootstrap-toggle/v2.2.2/css/bootstrap-toggle.min.css">
+    <style>
+        .toggle {
+            width: 70px; /* Adjust the width as needed for a larger toggle switch */
+        }
+
+        .form-check {
+            margin-bottom: 53px; /* Increased margin for better spacing */
+        }
+
+        .form-group label {
+            font-size: 14px; /* Increased font size for label names */
+            font-weight: 500 !important;
+            color: rgb(54, 54, 54);
+            margin-top: 6px; /* Added margin below label names */
+        }
+
+        .form-check-label {
+            padding-inline: initial;
+            margin-left: 47px; /* Increased margin for better spacing */
+            font-size: 16px; /* Adjust the font size as needed */
+        }
+
+        /* Style for the toggle switch when it's checked (ON) */
+        .toggle.btn-primary.active,
+        .toggle.btn-primary:active,
+        .toggle.btn-primary:focus,
+        .toggle.btn-primary:hover {
+            background-color: #3498db; /* Updated color when the toggle is ON */
+            border-color: #3498db; /* Updated border color when the toggle is ON */
+            color: #fff; /* Text color when the toggle is ON */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add subtle shadow effect */
+        }
+
+        /* Style for the toggle switch when it's not checked (OFF) */
+        .toggle.btn-primary {
+            background-color: #ecf0f1; /* Updated background color when the toggle is OFF */
+            border-color: #bdc3c7; /* Updated border color when the toggle is OFF */
+            color: #34495e; /* Updated text color when the toggle is OFF */
+        }
+        .form-check-input:checked {
+            background-color: rgb(62,7,75) !important;
+            border-color: rgb(62,7,75) !important;
+        }
+
+        /* Style for the card header */
+        .card-header {
+            background-color: #3498db; /* Updated card header background color */
+            color: #fff; /* Updated card header text color */
+            padding: 15px; /* Adjust padding as needed */
+            border-bottom: 2px solid #2980b9; /* Updated border color for the bottom line */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add subtle shadow effect */
+        }
+
+        /* Style for the assign button */
+        .btn-primary {
+            background-color: #3498db; /* Updated button background color */
+            border-color: #3498db; /* Updated button border color */
+            font-size: 16px; /* Adjust the font size as needed */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add subtle shadow effect */
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9; /* Updated button background color on hover */
+            border-color: #2980b9; /* Updated button border color on hover */
+        }
+
+        /* Style for the error message */
+        .alert-danger {
+            margin-top: 20px; /* Add some space above the error message */
+            font-size: 16px; /* Adjust the font size as needed */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add subtle shadow effect */
+        }
+
+        .form-switch .form-check-input {
+            width: 49px!important;
+            margin-left: -0.5em !important;
+            background-image: url(data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgba%280, 0, 0, 0.25%29'/%3e%3c/svg%3e);
+            background-position: left center;
+            border-radius: 2em;
+            transition: background-position .15s ease-in-out;
+            height: 23px;
+        }
+    </style>
+{% endblock custom_css %}
+
+{% block main_content %}
+    <div class="container-xl px-4 mt-4">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- General form elements -->
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">Assign Department for {{ company.name }}</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <form method="POST">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label>Department</label>
+                                    <div class="form-group d-flex flex-row">
+                                        {% for staff_type_value, staff_type_display in staff_type_choices %}
+                                            <div class="form-check form-switch mr-3">
+                                                <input
+                                                    class="form-check-input toggle"
+                                                    type="checkbox"
+                                                    name="staff_type_name"
+                                                    value="{{ staff_type_value }}"
+                                                    id="toggle-{{ staff_type_value }}"
+                                                    data-toggle="toggle"
+                                                    data-on="{{ staff_type_display }}"
+                                                    data-off="{{ staff_type_display }}"
+                                                    {% if staff_type_value in assigned_staff_types %} checked {% endif %}  <!-- Check if staff type is assigned -->
+                                                >
+                                                <label class="form-check-label" for="toggle-{{ staff_type_value }}">{{ staff_type_display }}</label>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                {% if error_message %}
+                                    <div class="alert alert-danger">{{ error_message }}</div>
+                                {% endif %}
+                                <div class="form-group">
+                                    <button type="submit" class="save-btn">Assign</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://gitcdn.link/repo/minhur/bootstrap-toggle/v2.2.2/js/bootstrap-toggle.min.js"></script>
+{% endblock main_content %}

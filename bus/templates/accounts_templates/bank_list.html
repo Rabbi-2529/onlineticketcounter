@@ -1,0 +1,476 @@
+{% extends 'accounts_templates/accounts_base.html' %}
+{% load static %}
+
+{% block custom_css %}
+<link rel="stylesheet" href="{% static "dist/css/add_product.css" %}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.9/dist/flatpickr.min.css">
+<style>
+    /* Custom status colors */
+    .custom-status-pending {
+        color: orange; /* Adjust the color as needed */
+    }
+    .custom-status-received {
+        color: green; /* Adjust the color as needed */
+    }
+    .custom-status-completed {
+        color: blue; /* Adjust the color as needed */
+    }
+    .custom-status-canceled {
+        color: red; /* Adjust the color as needed */
+    }
+    .make-payment-link,
+    .view-payment-link{
+        color: black !important;
+    }
+    .delete-purchase {
+        color: black !important;
+    }
+    .btn-btn-light {
+        border-color: black;
+      }
+      .btn-btn-light {
+        border-color: black;
+        color: black; /* Set the default text color */
+        transition: border-color 0.4s, color 0.4s; /* Add a smooth transition for the color change */
+      }
+      
+      .btn-btn-light:hover {
+        border-color: blue;
+        color: blue; /* Change the text color to blue on hover */
+      }
+
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1050;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+    /* CSS */
+    .custom-btn {
+      background-color: #EA4C89 !important;
+      border-radius: 8px;
+      border-style: none;
+      box-sizing: border-box;
+      color: #FFFFFF !important;
+      cursor: pointer;
+      display: inline-block;
+      font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      height: 40px;
+      line-height: 20px;
+      list-style: none;
+      margin: 0;
+      outline: none;
+      padding: 10px 16px;
+      position: relative;
+      text-align: center;
+      text-decoration: none;
+      transition: color 100ms;
+      vertical-align: baseline;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+    }
+    .custom-btn:hover,
+    .custom-btn:focus {
+      background-color: #F082AC !important;
+    }
+
+    .round-icon {
+        border: 2px solid white; /* Adjust the border width and color as needed */
+        border-radius: 50%;
+        padding: 2px; /* Adjust padding to control the size of the rounded icon */
+        color: white; /* Set the color of the icon */
+        cursor: pointer;
+        background-color: transparent; /* Make the background transparent */
+    }
+
+</style>
+{% endblock custom_css %}
+{% block main_content %}
+<div class="container-xl px-4 mt-4">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header d-flex justify-content-center">
+                        <h3 class="card-title py-2">Company List</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <div class="add-staff-type-button col-md-6 col-12 mb-2">
+                                <a href="{% url 'add_bank' %}" class="btn btn-success save-btn">
+                                    <i class="fas fa-plus  round-icon"></i> Add Bank
+                                </a>
+                            </div>
+                            <table id="paydetaillist" class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>SL</th>
+                                        <th>Name</th>
+                                        <th>Branch</th>
+                                        <th>Account Name</th>
+                                        <th>Account Holder</th>
+                                        <th>Account No</th>
+                                        <th>Phone</th>
+                                        <th>Initial Balance</th>
+                                        <th>Main Balance</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for bank in banks %}
+                                        <tr>
+                                            <td>{{ forloop.counter }}</td>
+                                            <td>{{ bank.bank_name }}</td>
+                                            <td>{{ bank.branch }}</td>
+                                            <td>{{ bank.account_name }}</td>
+                                            <td>{{ bank.account_holder }}</td>
+                                            <td>{{ bank.account_no }}</td>
+                                            <td>{{ bank.phone_number }}</td>
+                                            <td>{{ bank.initial_balance }}</td>
+                                            <td>{{ bank.remaining_balance }}</td>
+                                            <td>
+                                                <span class="badge
+                                                    {% if bank.status == 'active' %}
+                                                        badge-success
+                                                    {% elif bank.status == 'inactive' %}
+                                                        badge-warning
+                                                    {% else %}
+                                                        badge-danger
+                                                    {% endif %}">
+                                                    {{ bank.status }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <div class="btn-group dropdown">
+                                                    {% comment %} <button class="btn btn-secondary custom-btn-group dropdown-toggle" type="button"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        Actions
+                                                    </button> {% endcomment %}
+                                                    <button class="btn btn-secondary custom-btn-group dropdown-toggle" type="button"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        Actions
+                                                    </button>
+                                                    <div class="dropdown-menu text-black">
+                                                        <a class="dropdown-item action-link edit-bank" href="#" data-toggle="modal" data-target="#editBankModal{{ bank.id }}">Update</a>
+                                                        <a class="dropdown-item action-link assign-account" data-bank-id="{{ bank.id }}" data-toggle="modal" data-target="#assignBankModal{{ bank.id }}">Assign Account Name</a>
+                                                        <a class="dropdown-item action-link delete-bank" data-id="{{ bank.id }}" data-toggle="modal" data-target="#deleteBankModal{{ bank.id }}">Delete</a>
+
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% for bank in banks %}
+<div class="modal fade" id="editBankModal{{ bank.id }}" tabindex="-1" role="dialog" aria-labelledby="editBankModalLabel{{ bank.id }}" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editBankModalLabel{{ bank.id }}" style="color:black  !important">Edit Bank</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <form id="editBankForm">
+                    {% csrf_token %}
+                    <input type="hidden" id="bankId" name="bank_id" value="{{ bank.id }}">
+                    <div class="form-group">
+                        <label for="bank_name">Bank Name:</label>
+                        <input type="text" class="form-control" id="bank_name" name="bank_name" value="{{ bank.bank_name }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="branch">Branch:</label>
+                        <input type="text" class="form-control" id="branch" name="branch" value="{{ bank.branch }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="account_name">Account Name:</label>
+                        <input type="text" class="form-control" id="account_name" name="account_name" value="{{ bank.account_name }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="account_holder">Account Holder:</label>
+                        <input type="text" class="form-control" id="account_holder" name="account_holder" value="{{ bank.account_holder }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="account_no">Account No:</label>
+                        <input type="text" class="form-control" id="account_no" name="account_no" value="{{ bank.account_no }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone_number">Phone Number:</label>
+                        <input type="text" class="form-control" id="phone_number" name="phone_number" value="{{ bank.phone_number }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="initial_balance">Initial Balance:</label>
+                        <input type="number" class="form-control" step="0.01" id="initial_balance" name="initial_balance" value="{{ bank.initial_balance }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="internet_banking_url">Internet Banking URL:</label>
+                        <input type="url" class="form-control" id="internet_banking_url" name="internet_banking_url" value="{{ bank.internet_banking_url }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="status">Status:</label>
+                        <div class="form-check form-check-inline">
+                            <input type="checkbox" class="form-check-input" id="activeStatus" name="status" value="active">
+                            <label class="form-check-label" for="activeStatus">Active</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input type="checkbox" class="form-check-input" id="inactiveStatus" name="status" value="inactive">
+                            <label class="form-check-label" for="inactiveStatus">Inactive</label>
+                        </div>
+                    </div>
+                    <button type="submit" class="custom-btn" data-bank-id="{{ bank.id }}">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="assignBankModal{{ bank.id }}" tabindex="-1" role="dialog" aria-labelledby="assignBankModalLabel{{ bank.id }}" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="assignBankModalLabel{{ bank.id }}" style="color:black !important">Assign Account</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="assignBankForm">
+                    {% csrf_token %}
+                    <input type="hidden" id="bankId" name="bank_id" value="{{ bank.id }}">
+
+                    <div class="form-group">
+                        <label for="combinedName">Assign Name:</label>
+
+                        <div class="select_mate" data-mate-select="dropdown-active" >
+                            <select class="form-control"  id="combinedName{{ bank.id }}" onchange="" onclick="return false;" >
+                                <option value="">Select a Name</option>
+                                {% for supplier in suppliers %}
+                                    <option value="supplier-{{ supplier.id }}">{{ supplier.name }}</option>
+                                {% endfor %}
+                                {% for counter in counters %}
+                                    <option value="counter-{{ counter.id }}">{{ counter.name }}</option>
+                                {% endfor %}
+                                {% for biller in billers %}
+                                    <option value="biller-{{ biller.id }}">{{ biller.name }}</option>
+                                {% endfor %}
+                            </select>
+                            <p class="selecionado_opcion"  onclick="open_select(this)" ></p><span onclick="open_select(this)" class="icon_select_mate" ><svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z"/>
+                                <path d="M0-.75h24v24H0z" fill="none"/>
+                            </svg></span>
+                            <div class="cont_list_select_mate">
+                            <ul class="cont_select_int">  </ul> 
+                            </div>
+                        </div>
+                  
+                        </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="custom-btn assign-account" data-bank-id="{{ bank.id }}" data-action="modal-view" data-target="#assignBankModal{{ bank.id }}">Assign</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+<script type="text/javascript" src="{% static "dist/js/select_dropdown.js" %}"></script>
+<script>
+    $(document).ready(function () {
+   
+        $('#editBankForm').submit(function (event) {
+            event.preventDefault();
+            var bankId = $('#bankId').val();
+            var formData = $(this).serialize();
+
+            $.ajax({
+                type: 'POST',
+                url: `/edit_bank/${bankId}/`,
+                data: formData,
+                success: function (response) {
+                    if (response.success) {
+                
+                        location.reload();
+
+                     
+                        var editedData = {
+                            bank_name: $('#bank_name').val(),
+                            branch: $('#branch').val(),
+                            account_name: $('#account_name').val(),
+                            account_holder: $('#account_holder').val(),
+                            account_no: $('#account_no').val(),
+                            phone_number: $('#phone_number').val(),
+                            initial_balance: $('#initial_balance').val(),
+                            internet_banking_url: $('#internet_banking_url').val(),
+                            status: $('input[name="status"]:checked').val()
+                        };
+                        console.log('Edited Data:', editedData);
+                    } else {
+                  
+                        console.log(response.message);
+                        location.reload();
+                    }
+                }
+            });
+        });
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script>
+        $(document).ready(function() {
+            $('.delete-bank').click(function() {
+                var bankId = $(this).data('id');
+
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: 'You won\'t be able to revert this!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                   
+                        $.ajax({
+                            url: `/delete_bank/${bankId}/`, 
+                            type: 'POST',
+                            data: {
+                                csrfmiddlewaretoken: '{{ csrf_token }}'
+                            },
+                            success: function(response) {
+                                if (response.success) {
+                              
+                                    location.reload();
+                                } else {
+                             
+                                    Swal.fire('Error', response.message, 'error');
+                                }
+                            },
+                            error: function() {
+                           
+                                Swal.fire('Error', 'An error occurred during the delete process.', 'error');
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('#paydetaillist').DataTable({
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'copy',
+                        text: '<i class="fa-solid fa-copy fa-lg"></i>',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7]
+                        }
+                    },
+                    {
+                        extend: 'csv',
+                        text: '<i class="fa-solid fa-file-csv fa-lg"></i>',
+                        filename: 'Bank List', 
+                        extension: '.csv',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7]
+                        },
+                        fieldSeparator: ',', 
+                        fieldBoundary: '"' 
+                    },
+                    {
+                        extend: 'excel',
+                        text: '<i class="fas fa-file-excel  fa-lg"></i>',
+                        filename: 'Bank  List', 
+                        extension: '.xlsx',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7]
+                        }
+                    },
+                    {
+                        extend: 'pdf',
+                        text: '<i class="fa-solid fa-file-pdf fa-lg"></i>',
+                        filename: 'Bank List', 
+                        extension: '.pdf',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7] 
+                        }
+                    },
+                    'print'
+                ],
+                initComplete: function () {
+                    console.log("DataTables initialized!"); 
+                }
+            });
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script>
+        $(document).ready(function () {
+            $('.assign-account').click(function () {
+                var bankId = $(this).data('bank-id');
+                var $modal = $('#assignBankModal' + bankId);
+                var combinedName = $('#combinedName' + bankId).val();
+                $('#assignBankModal'+bankId).hide();
+    
+                if (combinedName) {
+                    var csrftoken = getCookie('csrftoken');
+    
+                    $.ajax({
+                        type: 'POST',
+                        url: `/assign_bank/${bankId}/`,
+                        data: {
+                            'bank_id': bankId,
+                            'selected_value': combinedName,
+                            csrfmiddlewaretoken: csrftoken
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                // Display success message with SweetAlert
+                                Swal.fire({
+                                    title: 'Success',
+                                    text: response.message,
+                                    icon: 'success',
+                                }).then(function () {
+                                    // Close the modal after the user clicks "OK"
+                                    location.reload();
+                                });
+                            } else {
+                                // Display error message with SweetAlert
+                                Swal.fire('Error', response.message, 'error');
+                                
+                            }
+                        },
+                        error: function () {
+                            // Display generic error message with SweetAlert
+                            Swal.fire('Error', 'An error occurred during the form submission.', 'error');
+                        }
+                    });
+                }
+            });
+    
+            function getCookie(name) {
+                var value = "; " + document.cookie;
+                var parts = value.split("; " + name + "=");
+                if (parts.length == 2) return parts.pop().split(";").shift();
+            }
+        });
+    </script>
+{% endblock main_content %}

@@ -1,0 +1,30 @@
+{% extends 'hod_template/base_template.html' %}
+{% load static %}
+
+{% block page_title %}Change Return Date{% endblock page_title %}
+
+{% block main_content %}
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card card-primary">
+          <div class="card-header"> 
+          </div>
+          <div class="card-body">
+            <h1>Change Return Date</h1>
+            
+            <form method="post" action="{% url 'change_return_date' %}">
+              {% csrf_token %}
+              <input type="hidden" name="marked_coaches" value="{{ marked_coaches }}">
+              <label for="new_return_date">New Return Date:</label>
+              <input type="text" name="new_return_date" id="new_return_date">
+              <button type="submit" class="btn btn-primary">Change Return Date</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock main_content %}

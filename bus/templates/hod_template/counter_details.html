@@ -1,0 +1,71 @@
+{% extends 'hod_template/base_template.html' %}
+{% load static %}
+{% block custom_css %}
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <link rel="stylesheet" href="{% static "dist/css/add_counter.css" %}">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.7.0/css/buttons.dataTables.min.css">
+{% endblock custom_css %}
+{% block main_content %}
+<div class="container-xl px-4 mt-4">
+    <div class="container">
+        <div class="row d-flex justify-content-center">
+            <div class="col-md-12 col-12">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Counter Details</h3>
+                    </div>
+                    <div class="card-body">
+                        <table id="paydetaillist" class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Counter Name</th>
+                                    <th>Manager Name</th>
+                                    <th>Division</th>
+                                    <th>District</th>
+                                    <th>Thana</th>
+                                    <th>Address</th>
+                                    <th>Phone Numbers</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>{{ counter.name }}</td>
+                                    <td>{{ counter.manager }}</td>
+                                    <td>{{ counter.district.division.name }}</td>
+                                    <td>{{ counter.district.name }}</td>
+                                    <td>{{ counter.thana.name }}</td>
+                                    <td>{{ counter.address }}</td>
+                                    <td>{{ counter.phone_numbers }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <br>
+                        <a href="{% url 'manage_counters' %}" class="btn btn-secondary save-btn">
+                            <i class="fas fa-angel"></i> Back to Manage Counters
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.7.0/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.7.0/js/buttons.html5.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.7.0/js/buttons.print.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#paydetaillist').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ]
+        });
+    });
+</script>
+
+{% endblock main_content %}

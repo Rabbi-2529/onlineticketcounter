@@ -1,0 +1,67 @@
+{% extends 'root_template/base_template_root.html' %}
+{% load static %}
+{% block custom_css %}
+    
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <link rel="stylesheet" href="{% static "dist/css/add_route.css" %}">
+
+    <!-- Additional CSS for the Back to List button -->
+    <style>
+        .btn-back {
+            background-color: #ccc !important; /* Change the background color as needed */
+            color: #ffff00 !important;
+            float: right; /* Move the button to the right */
+            
+        }
+    </style>
+
+
+{% endblock custom_css %}
+
+{% block page_title %}Add Department{% endblock page_title %} {% block main_content %}
+
+<div class="container-xl px-4 mt-4">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <div class="card card-primary">
+                    <div class="card-header d-flex justify-content-center">
+                        <h3 class="card-title">Department</h3>
+                    </div>
+                    <div class="card-body">
+                      {% if messages %}
+                      <div class="alert alert-success">
+                          <ul>
+                              {% for message in messages %}
+                              <li>{{ message }}</li>
+                              {% endfor %}
+                          </ul>
+                      </div>
+                      {% endif %}
+            <form method="post">
+              {% csrf_token %}
+              <div class="form-group">
+                <label for="name">Name</label>
+                <select name="name" id="name" class="form-control">
+                    {% for choice in staff_type_choices %}
+                        <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                    {% endfor %}
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="description" class="form-label">Details:</label>
+                <textarea name="description" class="form-control"></textarea>
+              </div>
+              <button type="submit" class="staff-btn">Save</button>
+            </form>
+            <a href="{% url 'staff_type_list' %}" class="btn btn-back">Back to List</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock main_content %}

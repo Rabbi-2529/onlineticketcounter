@@ -1,0 +1,186 @@
+.main-part {
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+    padding: 0px 5px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.cpanel {
+    width: 24%;
+    background-color: #34495E;
+    color: #fff;
+    margin-top: 50px;
+}
+
+.icon-part i {
+    font-size: 30px;
+    padding: 10px;
+    border: 1px solid #fff;
+    border-radius: 50%;
+    margin-top: -25px;
+    margin-bottom: 10px;
+    background-color: #34495E;
+}
+
+.icon-part p {
+    margin: 0px;
+    font-size: 20px;
+    padding-bottom: 10px;
+}
+
+.card-content-part {
+    background-color: #2F4254;
+    padding: 5px 0px;
+}
+
+.cpanel .card-content-part:hover {
+    background-color: #5a5a5a;
+    cursor: pointer;
+}
+
+.card-content-part a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.cpanel-green .icon-part, .cpanel-green .icon-part i {
+    background-color: #16A085;
+}
+
+.cpanel-green .card-content-part {
+    background-color: #149077;
+}
+
+.cpanel-orange .icon-part, .cpanel-orange .icon-part i {
+    background-color: #4d3003;
+}
+
+.cpanel-orange .card-content-part {
+    border-radius: 10%;
+    background-color: #DA8C10;
+    -webkit-border-radius: 10%;
+    -moz-border-radius: 10%;
+    -ms-border-radius: 10%;
+    -o-border-radius: 10%;
+}
+
+.cpanel-blue .icon-part, .cpanel-blue .icon-part i {
+    background-color: #2980B9;
+}
+
+.cpanel-blue .card-content-part {
+    background-color: #2573A6;
+}
+
+.cpanel-red .icon-part, .cpanel-red .icon-part i {
+    background-color: #E74C3C;
+}
+
+.cpanel-red .card-content-part {
+    background-color: #CF4436;
+}
+
+.cpanel-skyblue .icon-part, .cpanel-skyblue .icon-part i {
+    background-color: #8E44AD;
+}
+
+.cpanel-skyblue .card-content-part {
+    background-color: #803D9B;
+}
+.transaction-table {
+    margin-top: 20px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    background-color: #f8f8f8;
+}
+
+.transaction-table h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th, .table td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+.table th {
+    background-color: #ffffff;
+    color: #fff;
+}
+
+.table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.table tr:hover {
+    background-color: #ddd;
+}.month-labels {
+    display: flex;
+    flex-direction: row;
+}
+
+.month-label {
+    width: 50px; /* Adjust the width as needed */
+    text-align: center;
+    margin-right: 10px; /* Add spacing between month labels */
+}
+    /* Add your custom CSS styles here to make it beautiful */
+
+    /* Style the tables */
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    /* Style table headers */
+    .table thead {
+        background-color: #f0f0f0;
+    }
+    
+    /* Style table header cells */
+    .table th {
+        padding: 8px;
+        text-align: left;
+    }
+    
+    /* Style table rows */
+    .table tbody tr:nth-child(odd) {
+        background-color: #f9f9f9;
+    }
+    
+    /* Style table cells */
+    .table td {
+        padding: 8px;
+        text-align: center;
+    }
+    
+
+    
+
+    
+    /* Style the h2 headers for the tables */
+    h2 {
+        text-align: center;
+        background-color: #42515b;
+        color: #fff;
+        padding: 10px;
+        border-radius: 4px 4px 0 0;
+    }
+    
+    /* Style the transaction-table */
+    .transaction-table {
+        margin: 20px 0;
+        padding: 10px;
+        border: 1px solid #d9d9d9;
+        border-radius: 4px;
+        background-color: #fff;
+    }

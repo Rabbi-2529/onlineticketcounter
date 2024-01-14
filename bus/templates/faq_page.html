@@ -1,0 +1,172 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<style>
+    .section-gap {
+        padding: 20px;
+      }
+      
+      .headline {
+        text-align: center;
+        margin-bottom: 30px;
+        color: #333;
+        font-family: Arial, sans-serif;
+      }
+      .headline h4 {
+        text-decoration: underline;
+      }
+      
+      .category {
+        margin-bottom: 20px;
+        padding: 10px;
+        background-color: #f9f9f9;
+        color: #333;
+        font-family: Arial, sans-serif;
+        font-size: 18px;
+      }
+      
+      .panel-title {
+        font-weight: bold;
+        margin-bottom: 10px;
+        color: #333;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+       
+      }
+      .panel-title a:hover {
+        color: red;
+      }
+      .panel-title a {
+        color: #333;
+        text-decoration: none;
+      }
+      
+      .panel-title a:hover {
+        color: #666;
+      }
+      
+      .panel-body {
+        background-color: #f9f9f9;
+        padding: 10px;
+        margin-bottom: 15px;
+        color: #333;
+        font-family: Arial, sans-serif;
+      }
+      
+      .panel-body p {
+        margin-bottom: 0;
+      }
+      
+      /* Custom styling for accordion icons */
+      .accordion-toggle::after {
+        content: "\f067";
+        font-family: FontAwesome;
+        float: right;
+        margin-top: 3px;
+        transform: rotate(180deg);
+        transition: all 0.3s;
+      }
+      
+      .accordion-toggle.collapsed::after {
+        transform: rotate(0deg);
+      }
+      
+      /* Styling for question box */
+      .question-box {
+        border: 1px solid #ccc;
+        padding: 15px;
+        background-color: #fff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 15px;
+        transition: box-shadow 0.3s;
+      }
+      
+      .question-box {
+        background-color: #f8f8f8;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        padding: 5px;
+      }
+      
+      .question-number {
+        font-size: 14px;
+        font-weight: bold;
+      }
+      
+      .panel-heading {
+        padding: 0;
+      }
+      
+      .panel-title {
+        margin-bottom: 0;
+      }
+      
+      .panel-title a {
+        display: block;
+        padding: 10px;
+        color: #000;
+        text-decoration: none;
+        transition: color 0.3s;
+        font-size: 16px;
+      }
+      
+      .panel-title a:hover {
+        color: #f00; /* Replace with your desired hover color */
+      }
+      
+      .panel-body p {
+        font-size: 14px;
+      }
+</style>
+
+<section class="about-banner relative">
+
+    <div class="overlay overlay-bg"></div>
+    <br>
+    <div class="container">
+      <div class="row d-flex align-items-center justify-content-center">
+        <div class="about-content col-lg-12">
+          <h1 class="text-white">FAQ</h1>
+          <p class="text-white link-nav">
+            <a href= {% url "index" %}>Home </a>
+            <span class="lnr lnr-arrow-right"></span>
+            <a href={% url "faq" %}> FAQ</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+<br><br>
+  <section class="section-gap">
+    <div class="bodyWrapperDiv" style="min-height: 1020px;">
+      <div class="container content">
+  
+        {% for category in categories %}
+        <h2 class="category">{{ category.name }}</h2>
+        <div class="panel-group acc-v1 margin-left-10" id="accordion-{{ category.id }}">
+          {% for faq in faqs %}
+          {% if faq.category == category %}
+          <div class="panel panel-default question-box">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion-{{ category.id }}" href="#collapse-{{ faq.id }}" aria-expanded="false">
+                  <span class="question-number">Question {{ forloop.index }}:</span> {{ faq.question }}
+                </a>
+              </h4>
+            </div>
+            <br>
+            <div id="collapse-{{ faq.id }}" class="panel-collapse collapse" aria-expanded="false">
+              <hr>
+              <div class="panel-body">
+                <p class="paragraph"><strong>Answer:</strong> {{ faq.answer }}</p>
+              </div>
+            </div>
+          </div>
+          {% endif %}
+          {% endfor %}
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+  
+  
+{% endblock %}

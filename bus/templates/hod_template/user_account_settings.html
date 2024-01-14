@@ -1,0 +1,249 @@
+{% extends 'hod_template/base_template.html' %}
+{% load static %}
+
+
+{% block custom_css %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.css">
+
+{% comment %} <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/css/bootstrap.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/css/bootstrap-responsive.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/js/bootstrap.js"></script> {% endcomment %}
+
+    <link rel="stylesheet" href="{% static "dist/css/user_account_settings.css" %}">
+    
+{% endblock custom_css %}
+
+{% block main_content %}
+
+<div class="container-xl px-4 mt-4">
+    <!-- Account page navigation-->
+    <div class="page-header d-flex justify-content-center col-lg-12 col-md-12 col-12 mb-4">
+        <h4 class="my-auto">Profile settings</h4>
+    </div>
+    <div class="card-body">
+        {% if messages %}
+          <div class="messages">
+            {% for message in messages %}
+              <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+        </div>
+    <form method="POST" action="" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row card-container-row">
+            <div class="col-xl-4 p-3 card-container">
+                <div class="row">
+                    <!-- Profile picture card-->
+                    <div class="card mb-4 mb-xl-0 px-0">
+                        <div class="card-header d-flex justify-content-center">Profile Picture</div>
+                        <div class="card-body text-center">
+                            <!-- Profile picture image-->
+                            <div class="d-flex justify-content-center">
+                                <div class="profile-pic-div">
+                                    {% if user.profile_picture %}
+                                        <img id="wizardPicturePreview" class="img-account-profile picture-src mb-2" src="{{ user.profile_picture.url }}" alt="http://bootdey.com/img/Content/avatar/avatar1.png">
+                                    {% else %}
+                                        <img id="wizardPicturePreview" class="img-account-profile picture-src mb-2" src="http://bootdey.com/img/Content/avatar/avatar1.png" alt="">
+                                    {% endif %}
+                                    <div class="input-pic">
+                                        <input type="file" id="wizard-picture" name="profile_pic" class="">
+                                    </div>
+                                    <div class="camera-icon d-flex justify-content-center">
+                                        <i class="fa-solid fa-camera my-auto"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Profile picture help block-->
+                            <div class="small font-italic text-muted mb-4">JPG or PNG no larger than 5 MB</div>
+                            <!-- Profile picture upload button-->
+                            <button class="btn btn-primary profile-pic-btn" type="button">Upload new image</button>
+                        </div>
+                    </div>
+
+                    <!-- Change password-->
+                    <div class="card mb-4 mb-xl-0 px-0 mt-2">
+                        <div class="card-header password-card-header d-flex justify-content-center">Change Password</div>
+                        <div id="password-card-body" class="card-body text-center password-card-body">
+                            <div class="mb-3">
+                                <label class="mb-1 ms-0" for="inputEmailAddress">Enter New Password</label>
+                                <input class="form-control" id="inputStreetAddress" type="text" name="new_password" placeholder="Street Address" value="">
+                            </div>
+                            <div class="mb-3">
+                                <label class="mb-1" for="inputEmailAddress">Confirm Password</label>
+                                <input class="form-control" id="inputStreetAddress" type="text" name="confirm_password" placeholder="Street Address" value="">
+                            </div>
+                            <!-- Profile picture upload button-->
+                            <button class="btn btn-primary" type="button">Change Password</button>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="col-xl-8 p-3">
+                <!-- Account details card-->
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-center">Account Details</div>
+                    <div class="card-body">
+                        
+                            <!-- Form Group (username)-->
+                            <div class="mb-3">
+                                <label class="mb-1" for="inputUsername">Username (how your name will appear to other users on the site)</label>
+                                <input class="form-control" id="inputUsername" type="text" name="username" placeholder="Enter your username" value="{{user.username}}">
+                            </div>
+                            <!-- Form Row-->
+                            <div class="row gx-3 mb-3">
+                                <!-- Form Group (first name)-->
+                                <div class="col-md-6">
+                                    <label class="mb-1" for="inputFirstName">First name</label>
+                                    <input class="form-control" id="inputFirstName" type="text" name="first_name" placeholder="Enter your first name" value="{{profile.first_name}}">
+                                </div>
+                                <!-- Form Group (last name)-->
+                                <div class="col-md-6">
+                                    <label class="mb-1" for="inputLastName">Last name</label>
+                                    <input class="form-control" id="inputLastName" type="text" name="last_name" placeholder="Enter your last name" value="{{profile.last_name}}">
+                                </div>
+                            </div>
+
+                            <!--Gender-->
+                            <div class="row gx-3 mb-3">
+                                <!-- Form Group (first name)-->
+                                <div class="col-md-8 d-flex">
+                                    <div class="my-1 pe-3" for="inputFirstName"><label for="">Gender</label></div>
+                                    <div class="form-check px-5 pt-1">
+                                        <input class="form-check-input" type="radio" name="gender" id="male" value="M" {% if profile.gender == 'M' %} checked {% endif %}>
+                                        <label class="form-check-label" for="male">
+                                            Male
+                                        </label>
+                                    </div>
+                                    <div class="form-check pt-1 pe-5">
+                                        <input class="form-check-input" type="radio" name="gender" id="female" value="F" {% if profile.gender == 'F' %} checked {% endif %}>
+                                        <label class="form-check-label" for="female">
+                                            Female
+                                        </label>
+                                    </div>
+                                    <div class="form-check pt-1">
+                                        <input class="form-check-input" type="radio" name="gender" id="others" value="O" {% if profile.gender == 'O' %} checked {% endif %}>
+                                        <label class="form-check-label" for="others">
+                                            Others
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            <!--Gender-->
+                            <!-- Form Row        -->
+                            <div class="row gx-3 mb-3">
+                                <!-- Form Group (organization name)-->
+                                <div class="col-md-6">
+                                    <label class="mb-1" for="inputOrgName">ID Type</label>
+                                    <input class="form-control" id="inputOrgName" type="text" name="id_tppe" placeholder="e.g. Passport" value="">
+                                </div>
+                                <!-- Form Group (location)-->
+                                <div class="col-md-6">
+                                    <label class="mb-1" for="inputLocation">NID/Passport Number</label>
+                                    <input class="form-control" id="inputLocation" type="text" name="passport_number" placeholder="123456789" value="{{profile.nid}}">
+                                </div>
+                            </div>
+                            <!-- Form Group (email address)-->
+                            <div class="mb-3">
+                                <label class="mb-1" for="inputEmailAddress">Email address</label>
+                                <input class="form-control" id="inputEmailAddress" type="email" name="email" placeholder="Email Address" value="{{user.email}}">
+                            </div>
+
+                            <!--Address-->
+                            <div class="mb-3">
+                                <label class="mb-1" for="inputEmailAddress">Street Address</label>
+                                <input class="form-control" id="inputStreetAddress" type="text" name="street_address" placeholder="Street Address" value="{{profile.address}}">
+                            </div>
+
+                            <div class="row gx-3 mb-3">
+                                <!-- Form Group (City)-->
+                                <div class="col-md-6">
+                                    <label class="mb-1" for="inputPhone">City/State</label>
+                                    <input class="form-control" id="inputState" type="tel" name="state" placeholder="City/State" value="{{profile.state}}">
+                                </div>
+                                <!-- Form Group (birthday)-->
+                                <div class="col-md-6">
+                                    <label class="mb-1" for="inputBirthday">Postal/Zip code</label>
+                                    <input class="form-control" id="inputZip" type="text" name="zip_code" placeholder="Postal/Zip code" value="{{profile.postcode}}">
+                                </div>
+                            </div>
+
+                            <!-- Form Row-->
+                            <div class="row gx-3 mb-3">
+                                <!-- Form Group (phone number)-->
+                                <div class="col-md-6">
+                                    <label class="mb-1" for="inputPhone">Phone number</label>
+                                    <input class="form-control" id="inputPhone" type="tel" name="phone" placeholder="Enter your phone number" value="{{profile.mobile_number}}">
+                                </div>
+                                <!-- Form Group (birthday)-->
+                                <div class="col-md-6">
+                                    <label class="mb-1" for="inputBirthday">Birthday</label>
+                                    <input type="text" id="dp1" class="form-control datepicker mr-2" name="birthday" placeholder="Select Date" name="date" value="{{profile.date_of_birth}}"><br>
+                                    <!--<input class="form-control" id="inputBirthday" type="text" name="birthday" placeholder="Enter your birthday" value="06/10/1988">-->
+                                </div>
+                            </div>
+
+                            <!-- Save changes button-->
+                            <div class="d-flex justify-content-center">
+                                <button class="btn btn-primary p-2" type="submit">Save changes</button>
+                            </div>
+                            
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock main_content %}
+
+{% block custom_js %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.js"></script>
+    
+    <script>
+        $(document).ready(function(){
+            $('.datepicker').datepicker({
+                format: 'yyyy-mm-dd',
+                todayHighlight: true,
+                toggleActive: true
+            });
+            // Prepare the preview for profile picture
+            $("#wizard-picture").change(function(){
+                readURL(this);
+            });
+
+            function readURL(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+            
+                    reader.onload = function (e) {
+                        $('#wizardPicturePreview').attr('src', e.target.result).fadeIn('slow');
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+
+            $('.profile-pic-btn').on('click', function(){
+                $('#wizard-picture').click()
+                console.log('clicked')
+            })
+
+            $('.password-card-header').on('click', function(){
+                $(this).addClass('border')
+                $('.password-card-body').addClass('show');
+            })
+
+            
+        });
+    </script>
+    
+
+{% endblock custom_js %}

@@ -1,0 +1,208 @@
+.custom-status-pending {
+    color: orange; /* Adjust the color as needed */
+}
+
+.custom-status-received {
+    color: green; /* Adjust the color as needed */
+}
+
+.custom-status-completed {
+    color: blue; /* Adjust the color as needed */
+}
+
+.custom-status-canceled {
+    color: red; /* Adjust the color as needed */
+}
+.make-payment-link,
+.view-payment-link{
+    color: black !important;
+}
+.delete-purchase {
+    color: black !important;
+}
+.btn-btn-light {
+    border-color: black;
+  }
+  .btn-btn-light {
+    border-color: black;
+    color: black; /* Set the default text color */
+    transition: border-color 0.4s, color 0.4s; /* Add a smooth transition for the color change */
+  }
+  
+  .btn-btn-light:hover {
+    border-color: blue;
+    color: blue; /* Change the text color to blue on hover */
+  }
+
+
+
+/* CSS */
+.custom-btn {
+  background-color: #EA4C89 !important;
+  border-radius: 8px;
+  border-style: none;
+  box-sizing: border-box;
+  color: #FFFFFF !important;
+  cursor: pointer;
+  display: inline-block;
+  font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  height: 40px;
+  line-height: 20px;
+  list-style: none;
+  margin: 0;
+  outline: none;
+  padding: 10px 16px;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  transition: color 100ms;
+  vertical-align: baseline;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.custom-btn:hover,
+.custom-btn:focus {
+  background-color: #F082AC !important;
+}
+
+/* view popup starts*/
+.update-modal-container {
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.3);
+    top: 0;
+    left: 0;
+    opacity: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    transition: 0.3s;
+    z-index: 99999999999999;
+}
+  
+.update-modal-container.show {
+    pointer-events: auto;
+    opacity: 1;
+    transition: 0.3s;
+}
+
+.update-modal {
+    position: relative;
+    background-color: rgb(255, 255, 255);
+    border-radius: 10px;
+    max-height: 90vh;
+    /* overflow-y: scroll; */
+    overflow-y: hidden;
+    /* Set the initial opacity to 0 */
+
+    /* Optional: Add padding if needed */
+    padding: 40px 10px;
+
+    /* Apply opacity to the entire modal, including its content */
+    transition: 0.3s;
+}
+
+/* Style for the container inside update-modal */
+.update-modal-content {
+    max-height: 100%; /* Adjust as needed */
+    overflow-y: scroll;
+    overflow-x: scroll;
+}
+
+/* WebKit Scrollbar Styles */
+.update-modal-content::-webkit-scrollbar {
+    width: 5px; /* Adjust the width as needed */
+}
+
+.update-modal-content::-webkit-scrollbar-thumb {
+    background-color: #4CAF50; /* Color of the thumb */
+    border-radius: 5px; /* Radius of the thumb */
+}
+
+.update-modal-content::-webkit-scrollbar-track {
+    background-color: #f1f1f1; /* Color of the track */
+}
+  
+  
+.x-mark {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    cursor: pointer;
+}
+/* view popup ends */
+
+/* edit popup starts */
+.update-modal-container-edit{
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.3);
+    top: 0;
+    left: 0;
+    opacity: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    transition: 0.3s;
+    z-index: 99999999999999;
+}
+  
+.update-modal-container-edit.show {
+    pointer-events: auto;
+    opacity: 1;
+    transition: 0.3s;
+}
+
+.update-modal-edit {
+    position: relative;
+    background-color: rgb(255, 255, 255);
+    border-radius: 10px;
+    max-height: 90vh;
+    /* overflow-y: scroll; */
+    overflow-y: hidden;
+    /* Set the initial opacity to 0 */
+
+    /* Optional: Add padding if needed */
+    padding: 40px 10px;
+
+    /* Apply opacity to the entire modal, including its content */
+    transition: 0.3s;
+}
+
+/* Style for the container inside update-modal */
+.update-modal-content-edit {
+    max-height: 100%; /* Adjust as needed */
+    overflow-y: scroll;
+    overflow-x: scroll;
+}
+
+/* WebKit Scrollbar Styles */
+.update-modal-content-edit::-webkit-scrollbar {
+    width: 5px; /* Adjust the width as needed */
+}
+
+.update-modal-content-edit::-webkit-scrollbar-thumb {
+    background-color: #4CAF50; /* Color of the thumb */
+    border-radius: 5px; /* Radius of the thumb */
+}
+
+.update-modal-content-edit::-webkit-scrollbar-track {
+    background-color: #f1f1f1; /* Color of the track */
+}
+  
+  
+.x-mark-edit {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    cursor: pointer;
+}
+/* edit popup ends */

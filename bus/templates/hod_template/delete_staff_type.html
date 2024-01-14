@@ -1,0 +1,62 @@
+{% extends 'hod_template/base_template.html' %} {% block main_content %}
+<style>
+  .profile-img {
+    max-width: 180px; /* Adjust the width as needed */
+    max-height: 180px; /* Adjust the height as needed */
+  }
+
+  .btn-danger {
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    padding: 5px 10px; /* Adjust padding for smaller size */
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    margin-right: 10px; /* Add margin to the right */
+  }
+  .btn-danger:hover {
+    background-color: #c82333;
+    color: #fff;
+  }
+  .btn-secondary {
+    background-color: #6c757d;
+    color: #fff;
+    border: none;
+    padding: 5px 10px; /* Adjust padding for smaller size */
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    margin-right: 10px; /* Add margin to the right */
+  }
+  .btn-secondary:hover {
+    background-color: #5a6268;
+    color: #fff;
+  }
+</style>
+<section class="content">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card card-info">
+          <div class="card-header">
+            <h3 class="card-title">User Details</h3>
+          </div>
+          <div class="card-body">
+            <h2>Delete Staff Type</h2>
+            <p>
+              Are you sure you want to delete the staff type "{{ staff_type.name }}"?
+            </p>
+            <form method="post">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+              <a href="{% url 'staff_type_list' %}" class="btn btn-secondary btn-sm">Cancel</a>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock main_content %}

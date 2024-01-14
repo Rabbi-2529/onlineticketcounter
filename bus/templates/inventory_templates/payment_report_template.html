@@ -1,0 +1,253 @@
+{% extends 'inventory_templates/inventory_base.html' %}
+{% load static %}
+
+{% block custom_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.css">
+<link rel="stylesheet" href="{% static "dist/css/add_product.css" %}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.9/dist/flatpickr.min.css">
+<style>
+    /* Add custom CSS for spacing and form design */
+    .form-container {
+        margin-bottom: 20px; /* Add space between form and table */
+        padding: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .form-container .form-row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+</style>
+{% endblock custom_css %}
+
+{% block main_content %}
+<div class="container-xl px-4 mt-4">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header d-flex justify-content-center">
+                        <h3 class="card-title py-2">Payment Report</h3>
+                    </div>
+                   
+
+                            <div class="card-body">
+                                <div class="form-container">
+                                    <!-- Add a form for generating the Purchase Report -->
+                                    <form method="GET" action="{% url 'generate_payment_report' %}">
+                                        {% csrf_token %}
+                                        <div class="form-row">
+                                            <div class="form-group col-md-4">
+                                                <label for="start_date">Start Date</label>
+                                                <input type="text" id="start_date" name="start_date" class="form-control datepicker" required>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label for="end_date">End Date</label>
+                                                <input type="text" id="end_date" name="end_date" class="form-control datepicker" required>
+                                            </div>
+                                            <div class="form-group col-md-4 "  style="margin-top: 10px;">
+                                                <button type="submit" class="btn btn-primary" name="generate_report" style="margin-top: 20px;">Generate Report</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+
+
+
+
+
+
+
+                            <!-- Display all payments in a table -->
+                            <div class="table-responsive">
+                                <table id="paymentlist" class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Purchase ID</th>
+                                            <th>Payment Date</th>
+                                            <th>Amount</th>
+                                            <th>Payment Method</th>
+                                            <th>Transaction ID</th>
+                                            <th>Payment Status</th>
+                                            <th>Purchase Status</th>
+                                            <th>Warehouse</th>
+                                            <th>Invoice Number</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for payment in all_payments %}
+                                        <tr>
+                                            <td><span class="badge badge-primary">{{ payment.purchase.id }}</span></td>
+                                            <td><span class="badge badge-secondary">{{ payment.payment_date }}</span></td>
+                                            <td><span class="badge badge-success">{{ payment.amount }}</span></td>
+                                            <td><span class="badge badge-warning">{{ payment.get_payment_method_display }}</span></td>
+                                            <td><span class="badge badge-info">{{ payment.transaction_id }}</span></td>
+                                            <td>
+                                                {% if payment.status == 'Paid' %}
+                                                    <span class="badge badge-success">{{ payment.status }}</span>
+                                                {% elif payment.status == 'Pending' %}
+                                                    <span class="badge badge-warning">{{ payment.status }}</span>
+                                                {% else %}
+                                                    <span class="badge badge-danger">{{ payment.status }}</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if payment.purchase.status == 'Shipped' %}
+                                                    <span class="badge badge-success">{{ payment.purchase.status }}</span>
+                                                {% elif payment.purchase.status == 'Pending' %}
+                                                    <span class="badge badge-warning">{{ payment.purchase.status }}</span>
+                                                {% else %}
+                                                    <span class="badge badge-danger">{{ payment.purchase.status }}</span>
+                                                {% endif %}
+                                            </td>
+                                            <td><span class="badge badge-primary">{{ payment.purchase.warehouse.name }}</span></td>
+                                            <td><span class="badge badge-secondary">{{ payment.purchase.invoice_number }}</span></td>{# Display Invoice Number #}
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock main_content %}
+
+{% block custom_js %}
+<script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.9/dist/flatpickr.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.js"></script>
+<script type="text/javascript" src="{% static "dist/js/select_dropdown.js" %}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Initialize flatpickr for date picker inputs
+        $('.datepicker').datepicker({
+            format: 'yyyy-mm-dd',
+            todayHighlight: true,
+            toggleActive: true
+        });
+
+        // Add an event listener for date change
+        $('.datepicker').on('changeDate', function(e) {
+            // Handle the date change
+            updatePaymentTable();
+        });
+
+        // Function to update the payment table
+        function updatePaymentTable() {
+            const startDate = document.getElementById("start_date").value;
+            const endDate = document.getElementById("end_date").value;
+
+            // Make an AJAX request to the filter_payment_report view
+            fetch(`/api/payments/?start_date=${startDate}&end_date=${endDate}`)
+                .then((response) => response.json())
+                .then((data) => {
+                    // Generate table rows and update the table
+                    let table = document.getElementById("paymentlist");
+                    let tableBody = table.querySelector('tbody');
+                    tableBody.innerHTML = ''; // Clear the table
+
+                    data.forEach((payment) => {
+                        // Create a new row for each payment
+                        let row = document.createElement('tr');
+
+                        // Create table cells for each column
+                        let purchaseIdCell = document.createElement('td');
+                        purchaseIdCell.textContent = payment.purchase_id;
+                        row.appendChild(purchaseIdCell);
+
+                        let paymentDateCell = document.createElement('td');
+                        paymentDateCell.textContent = payment.payment_date;
+                        row.appendChild(paymentDateCell);
+
+                        let amountCell = document.createElement('td');
+                        amountCell.textContent = payment.amount;
+                        row.appendChild(amountCell);
+
+                        let paymentMethodCell = document.createElement('td');
+                        paymentMethodCell.textContent = payment.payment_method;
+                        row.appendChild(paymentMethodCell);
+
+                        let transactionIdCell = document.createElement('td');
+                        transactionIdCell.textContent = payment.transaction_id;
+                        row.appendChild(transactionIdCell);
+
+                        let paymentStatusCell = document.createElement('td');
+                        paymentStatusCell.textContent = payment.payment_status;
+                        row.appendChild(paymentStatusCell);
+
+                        let purchaseStatusCell = document.createElement('td');
+                        purchaseStatusCell.textContent = payment.purchase_status;
+                        row.appendChild(purchaseStatusCell);
+
+                        let warehouseCell = document.createElement('td');
+                        warehouseCell.textContent = payment.warehouse;
+                        row.appendChild(warehouseCell);
+
+                        let invoiceNumberCell = document.createElement('td');
+                        invoiceNumberCell.textContent = payment.invoice_number;
+                        row.appendChild(invoiceNumberCell);
+
+                        // Add the row to the table
+                        tableBody.appendChild(row);
+                    });
+                });
+        }
+
+        // Initialize the table when the page loads
+        updatePaymentTable();
+    });
+</script>
+
+<script>
+    $(document).ready(function() {
+        $('#paymentlist').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'copy',
+                    text: 'Copy',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8] // Specify the correct number of columns
+                    }
+                },
+                {
+                    extend: 'csv',
+                    text: 'CSV',
+                    filename: 'Payment List',
+                    extension: '.csv',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8] // Specify the correct number of columns
+                    }
+                },
+                {
+                    extend: 'excel',
+                    text: 'Excel',
+                    filename: 'Payment List',
+                    extension: '.xlsx',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8] // Specify the correct number of columns
+                    }
+                },
+                {
+                    extend: 'pdf',
+                    text: 'PDF',
+                    filename: 'Payment List',
+                    extension: '.pdf',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8] // Specify the correct number of columns
+                    }
+                },
+                'print'
+            ],
+            initComplete: function () {
+                console.log("DataTables initialized!");
+            }
+        });
+    });
+</script>
+{% endblock custom_js %}

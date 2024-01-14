@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="zxx" class="no-js">
+  <head>
+    <!-- Mobile Specific Meta -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <!-- Favicon-->
+    <link rel="shortcut icon" href={% static "img/fav.png" %} />
+    <!-- Author Meta -->
+    <meta name="author" content="colorlib" />
+    <!-- Meta Description -->
+    <meta name="description" content="" />
+    <!-- Meta Keyword -->
+    <meta name="keywords" content="" />
+    <!-- meta character set -->
+    <meta charset="UTF-8" />
+    <!-- Site Title -->
+    <title>Travel</title>
+
+    <link
+      href="https://fonts.googleapis.com/css?family=Poppins:100,200,400,300,500,600,700"
+      rel="stylesheet"
+    />
+    <!--
+    CSS
+    ============================================= -->
+    <link rel="stylesheet" href={% static "css/linearicons.css"%} /> <link
+    rel="stylesheet" href={% static "css/font-awesome.min.css"%} /> <link
+    rel="stylesheet" href= {% static "css/bootstrap.css" %} /> <link
+    rel="stylesheet" href={% static "css/magnific-popup.css" %}/> <link
+    rel="stylesheet" href={% static "css/jquery-ui.css"%} /> <link
+    rel="stylesheet" href={% static "css/nice-select.css"%} /> <link
+    rel="stylesheet" href={% static "css/animate.min.css" %} /> <link
+    rel="stylesheet" href={% static "css/owl.carousel.css"%} /> <link
+    rel="stylesheet" href={% static "css/main.css"%} />
+    <link rel="stylesheet" href={% static "css/index.css"%} /> <link
+  </head>
+  <body>
+    <header id="header">
+      <div class="header-top">
+        <div class="container">
+          <div class="row align-items-center">
+            <div class="col-lg-6 col-sm-6 col-6 header-top-left">
+              <ul>
+                <li><a href="#">Visit Us</a></li>
+                <li><a href="#">Buy Tickets</a></li>
+              </ul>
+            </div>
+            <div class="col-lg-6 col-sm-6 col-6 header-top-right">
+              <div class="header-social">
+                <a href="#"><i class="fa fa-facebook"></i></a>
+                <a href="#"><i class="fa fa-twitter"></i></a>
+                <a href="#"><i class="fa fa-dribbble"></i></a>
+                <a href="#"><i class="fa fa-behance"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="container main-menu">
+        <div class="row align-items-center justify-content-between d-flex">
+          <div id="logo">
+            <a href="index.html"><img src={% static "img/logo.png"%} alt="" title="" /></a>
+          </div>
+          <nav id="nav-menu-container">
+            <ul class="nav-menu">
+              <li><a href="index.html">Home</a></li>
+              <li><a href="about.html">About</a></li>
+              <li><a href="packages.html">Packages</a></li>
+              <li><a href="hotels.html">Hotels</a></li>
+              <li><a href="insurance.html">Insurence</a></li>
+              <li class="menu-has-children">
+                <a href="">Blog</a>
+                <ul>
+                  <li><a href="blog-home.html">Blog Home</a></li>
+                  <li><a href="blog-single.html">Blog Single</a></li>
+                </ul>
+              </li>
+              <li class="menu-has-children">
+                <a href="">Pages</a>
+                <ul>
+                  <li><a href="elements.html">Elements</a></li>
+                  <li class="menu-has-children">
+                    <a href="">Level 2 </a>
+                    <ul>
+                      <li><a href="#">Item One</a></li>
+                      <li><a href="#">Item Two</a></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+              <li><a href={% url 'show_login'%}>Login</a></li>
+            </ul>
+          </nav>
+          <!-- #nav-menu-container -->
+        </div>
+      </div>
+    </header>
+
+      
+    <section>
+{% block content%}
+{% endblock content%}
+    </section>
+  <section>
+         {% block pst%}
+         {% endblock pst%}
+   </section>
+   <section>
+    {% block blg%}
+    {% endblock blg%}
+    </section>
+      <section class="price-area section-gap">
+        <div class="container">
+                <div class="row d-flex justify-content-center">
+                    <div class="menu-content pb-70 col-lg-8">
+                        <div class="title text-center">
+                            <h1 class="mb-10 text-info">AVAILABLE BUS OPERATORS</h1>
+                         
+                        </div>
+                    </div>
+                </div>						
+          <div class="row">
+            <div class="col-lg-4">
+              <div class="single-price">
+             
+                <ul class="price-list text-black">
+                  <li class="d-flex justify-content-between align-items-center">
+                    <span>Ahad Enterprise</span>
+            
+                  </li>
+                  <li class="d-flex justify-content-between align-items-center">
+                    <span>AK Travels</span>
+              
+                  </li>
+                  <li class="d-flex justify-content-between align-items-center">
+                    <span>Aqib Enterprise</span>
+                  
+                  </li>
+                  <li class="d-flex justify-content-between align-items-center">
+                    <span>Nepal</span>
+       
+                  </li>
+                  <li class="d-flex justify-content-between align-items-center">
+                    <span>Thiland</span>
+                
+                  </li>	
+                  <li class="d-flex justify-content-between align-items-center">
+                    <span>Singapore</span>
+                
+                  </li>														
+                </ul>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="single-price" >
+     
+                <ul class="price-list text-black">
+                  <li class="d-flex justify-content-between align-items-center">
+                    <span>New York</span>
+              
+                  </li>
+                  <li class="d-flex justify-content-between align-items-center">
+                    <span>Maldives</span>
+              
+                  </li>
+                  <li class="d-flex justify-content-between align-items-center">
+                    <span>Sri Lanka</span>
+                  
+                  </li>
+                  <li class="d-flex justify-content-between align-items-center">
+                    <span>Nepal</span>
+             
+                  </li>
+                  <li class="d-flex justify-content-between align-items-center">
+                    <span>Thiland</span>
+               
+                  </li>	
+                  <li class="d-flex justify-content-between align-items-center">
+                    <span>Singapore</span>
+             
+                  </li>														
+                </ul>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="single-price">
+            
+                <ul class="price-list text-black">
+                  <li class="d-flex justify-content-between align-items-center">
+                    <span>New York</span>
+    [        
+                  </li>
+                  <li class="d-flex justify-content-between align-items-center">
+                    <span>Maldives</span>
+         
+                  </li>
+                  <li class="d-flex justify-content-between align-items-center">
+                    <span>Sri Lanka</span>
+             
+                  </li>
+                  <li class="d-flex justify-content-between align-items-center">
+                    <span>Nepal</span>
+             
+                  </li>
+                  <li class="d-flex justify-content-between align-items-center">
+                    <span>Thiland</span>
+          
+                  </li>	
+                  <li class="d-flex justify-content-between align-items-center">
+                    <span>Singapore</span>
+        
+                  </li>														
+                </ul>
+              </div>
+            </div>												
+          </div>
+        </div>	
+      </section>
+      <!-- End price Area -->
+  
+      <!-- Start other-issue Area -->
+      <section class="operators_bus-operators__oF55A" >
+        <div class="container">
+          <div class="row d-flex justify-content-center">
+            <div class="menu-content pb-70 col-lg-12">
+              <div class="title text-center text-success">
+                <h1 class="mb-10 text-info" >POPULAR BUS ROUTES</h1>
+               <br>
+             <div class="row">
+              <div class="col-lg-4 text-black"><ul class="operators_bus-list__Dqfo4 ">
+                <li class="text-black"><a href=""  id="dhaka-bus-station-link" class="text-black">
+                  <div id="dhaka-bus-station-popup" class="popup">
+                    <h2>Dhaka Bus Station</h2>
+                    <p>Address: Abdullahpur Bus Stop, Abdullahpur, Dhaka</p>
+                    <p>Contact: +880 2-55040862</p>
+                    <p>Services: Bus tickets, snacks, restrooms</p>
+                    <button id="close-btn">Close</button>
+                  </div>
+                  DHAKA-Chittagong</a>
+                </li>
+    
+                <li class="text-black" ><a href="">DHAKA-KHAGRACHARI</a></li><li><a href="/popular-routes/dhaka-to-bandarban"  class="text-black">DHAKA-BANDARBAN</a></li><li><a href="/popular-routes/dhaka-to-teknaf"  class="text-black">DHAKA-TEKNAF</a></li><li><a href="/popular-routes/dhaka-to-rangamati"  class="text-black">DHAKA-RANGAMATI</a></li><li><a href="/popular-routes/dhaka-to-chapainawabganj" class="text-black">DHAKA-CHAPAINAWABGANJ</a></li><li><a href="/popular-routes/dhaka-to-rajshahi"  class="text-black">DHAKA-RAJSHAHI</a></li><li><a href="/popular-routes/dhaka-to-rangpur" class="text-black">DHAKA-RANGPUR</a></li><li><a href="/popular-routes/dhaka-to-barisal" class="text-black">DHAKA-BARISAL</a></li><li><a href="/popular-routes/dhaka-to-barguna"  class="text-black">DHAKA-BARGUNA</a></li><li><a href="/popular-routes/dhaka-to-kuakata"class="text-black">DHAKA-KUAKATA</a></li><li><a href="/popular-routes/dhaka-to-satkhira"class="text-black">DHAKA-SATKHIRA</a></li></ul></div><div class="col-lg-4"><ul class="operators_bus-list__Dqfo4 operators_routes__Xn3zT"><li><a href="/popular-routes/dhaka-to-khulna"class="text-black">DHAKA-KHULNA</a></li><li><a href="/popular-routes/dhaka-to-patuakhali"class="text-black">DHAKA-PATUAKHALI</a></li><li><a href="/popular-routes/dhaka-to-thakugaon" class="text-black">DHAKA-THAKURGAON</a></li><li><a href="/popular-routes/dhaka-to-chittagong"class="text-black">DHAKA-CHITTAGONG</a></li><li><a href="/popular-routes/dhaka-to-shyamnagar"class="text-black">DHAKA-SHYAMNAGAR</a></li><li><a href="/popular-routes/dhaka-to-kansat"class="text-black">DHAKA-KANSAT</a></li><li><a href="/popular-routes/dhaka-to-kaptai"class="text-black">DHAKA-KAPTAI</a></li><li><a href="/popular-routes/dhaka-to-benapole"class="text-black">DHAKA-BENAPOLE</a></li><li><a href="/popular-routes/chapainawabganj-to-dhaka"class="text-black">CHAPAINAWABGANJ-DHAKA</a></li><li><a href="/popular-routes/dhaka-to-pathorghata"class="text-black">DHAKA-PATHORGHATA</a></li><li><a href="/popular-routes/dhaka-to-kolkata"class="text-black">DHAKA-KOLKATA</a></li><li><a href="/popular-routes/dhaka-to-panchagarh"class="text-black">DHAKA-PANCHAGARH</a></li></ul></div><div class="col-4"><ul class="operators_bus-list__Dqfo4 operators_routes__Xn3zT"><li><a href="/popular-routes/dhaka-to-vandaria">DHAKA-VANDARIA</a></li><li><a href="/popular-routes/dhaka-to-khepupara">DHAKA-KHEPUPARA</a></li><li><a href="/popular-routes/dhaka-to-paikgasa">DHAKA-PAIKGASA</a></li><li><a href="/popular-routes/dhaka-to-burimari">DHAKA-BURIMARI</a>
+                </li></ul>
+  
+
+
+
+              
+              
+              </div></div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-3 col-md-6">
+            
+          </div>
+        </div>
+      </section>
+      <!-- End other-issue Area -->
+  
+      <!-- Start testimonial Area -->
+   
+      <!-- End testimonial Area -->
+  
+      <!-- Start home-about Area -->
+      
+      <!-- End home-about Area -->
+  
+  
+      <!-- start footer Area -->
+      <footer class="footer-area section-gap">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-4 col-md-6 col-sm-6">
+             <div class="single-footer-widget">
+                <h6>BdTicket</h6>
+                <p>
+                  logo
+  bdtickets.com is premium online booking portal which allows you to purchase ticket for various bus services, launch services, movies and events across the country
+                </p>
+              </div> 
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-6">
+              <div class="single-footer-widget">                                                                                                                             
+                                 
+                <h6>Company Info</h6>
+                <div class="row">
+                  <div class="col">
+                    <ul>
+                      <li><a href="#">Terms and Conditions</a></li>
+                      <li><a href="#">FAQ</a></li>
+                      <li><a href="#">Privacy Policy</a></li>
+                      <li><a href="#">Cancellation Policy</a></li>
+                         <li><a href="#">How To Buy Ticket</a></li>
+                    
+                    </ul>
+                  </div>
+               
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-6">
+              <div class="single-footer-widget">
+                <h4 class="text-white">About BDTICKETS</h4>
+               
+                <br>
+            
+                <div class="row">
+                  <div class="col">
+                    <ul>
+                      <li><a href="#">About Us</a></li>
+                      <li><a href="#">Contact Us</a></li>
+                  
+                    </ul>
+                  </div>
+              </div>
+            </div>
+         
+           
+            </div>
+            <div class="col-lg-10 col-sm-6 footer-social">
+              <a href="#"><i class="fa fa-facebook"></i></a>
+              <a href="#"><i class="fa fa-twitter"></i></a>
+              <a href="#"><i class="fa fa-dribbble"></i></a>
+              <a href="#"><i class="fa fa-behance"></i></a>
+            </div>
+          </div>
+  
+          <div
+            class="row footer-top d-flex justify-content-between align-items-center"
+  >
+            <p class="col-lg-6 col-sm-12 footer-text m-0">
+              <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+              Copyright &copy;
+              <script>
+                document.write(new Date().getFullYear());
+              </script>
+              All rights reserved | This template is made with
+              <i class="fa fa-heart-o" aria-hidden="true"></i> by
+              <a href="https://colorlib.com" target="_blank">Colorlib</a>
+              <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+            </p>
+            
+          </div>
+        </div>
+      </footer>
+      <!-- End footer Area -->
+  {% comment %} <script>
+    const popup = document.createElement("div");
+  popup.setAttribute("id", "dhaka-bus-station-popup");
+  popup.setAttribute("class", "popup");
+  
+  const popupContent = document.createElement("div");
+  popupContent.setAttribute("class", "popup-content");
+  
+  const heading = document.createElement("h2");
+  heading.textContent = "Dhaka Bus Station";
+  
+  const address = document.createElement("p");
+  address.textContent = "Address: Abdullahpur Bus Stop, Abdullahpur, Dhaka";
+  
+  const contact = document.createElement("p");
+  contact.textContent = "Contact: +880 2-55040862";
+  
+  const services = document.createElement("p");
+  services.textContent = "Services: Bus tickets, snacks, restrooms";
+  
+  const closeBtn = document.createElement("button");
+  closeBtn.setAttribute("id", "close-btn");
+  closeBtn.textContent = "Close";
+  
+  popupContent.appendChild(heading);
+  popupContent.appendChild(address);
+  popupContent.appendChild(contact);
+  popupContent.appendChild(services);
+  popupContent.appendChild(closeBtn);
+  
+  popup.appendChild(popupContent);
+  
+  document.body.appendChild(popup);
+  
+  const openBtn = document.getElementById("dhaka-bus-station-link");
+  const closePopup = document.getElementById("close-btn");
+  
+  openBtn.addEventListener("click", function() {
+    popup.style.display = "block";
+  });
+  
+  closePopup.addEventListener("click", function() {
+    popup.style.display = "none";
+  });
+
+
+
+
+  </script> {% endcomment %}
+ 
+      <script src={% static "js/vendor/jquery-2.2.4.min.js"%}></script>
+      <script src={% static "js/popper.min.js"%}></scrip>
+      <script src={% static "js/vendor/bootstrap.min.js"%}></script>
+      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBhOdIF3Y9382fqJYt5I_sswSrEw5eihAA"></script>
+      <script src={% static "js/jquery-ui.js"%}></script>
+    <script src={% static "js/easing.min.js"%}></script>
+      <script src={% static "js/hoverIntent.js" %}></script>
+      <script src={% static "js/superfish.min.js"%}></script>
+      <script src={% static "js/jquery.ajaxchimp.min.js"%}></script>
+      <script src={% static "js/jquery.magnific-popup.min.js"%}></script>
+      <script src={% static "js/jquery.nice-select.min.js"%}></script>
+      <script src={% static "js/owl.carousel.min.js"%}></script>
+      <script src={% static "js/mail-script.js"%}></script>
+      <script src={% static "js/main.js"%}></script>
+      <script src={% static "js/searchbar.js" %}></script>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    </body>
+  </html>
+  

@@ -1,0 +1,313 @@
+{% extends 'hod_template/base_template.html' %} {% block main_content %}
+{% load static %}
+{% block custom_css %}
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <link rel="stylesheet" href="{% static "dist/css/add_counter.css" %}">
+{% endblock custom_css %}
+
+<div class="container-xl px-4 mt-4">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-8">
+                <form role="form" action="{% url 'add_counter_save' %}" method="POST" id="add-counter-form">
+                    {% csrf_token %}
+                    <div class="card card-primary">
+                        <div class="card-header d-flex justify-content-center">
+                            <h3 class="card-title">Add Counter</h3>
+                        </div>
+                        
+                        <div class="card-body pb-2">
+                            <div class="form-group">
+                                <label class="col-12">Division</label>
+                                <select class="form-control" name="division" id="division-name">
+                                    <option value="" selected disabled>Select Division</option>
+                                    {% for division in divisions %}
+                                        <option id="id_{{ division.division_name }}" value="{{ division.division_id }}">{{ division.division_name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="card-body pb-2">
+                            <div class="form-group">
+                                <label>District</label>
+                                <select class="form-control" name="district" id="district-name">
+                                    <!-- Options will be populated dynamically using JavaScript -->
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="card-body pb-2">
+                            <div class="form-group">
+                                <label>Thana</label>
+                                <select class="form-control" name="thana" id="thana-name">
+                                    <!-- Options will be populated dynamically using JavaScript -->
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card card-primary card-body counter-cards">
+                        <div class="form-group">
+                            <label>Counter Name</label>
+                            <input type="text" class="form-control" placeholder="Enter counter name" name="name"/>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Manager Name</label>
+                            <select class="form-control" name="manager" id="manager-name">
+                                <option value="">Select Manager</option>
+                                {% for staff in staff_members %}
+                                    <option value="{{ staff.id }}">{{ staff.username }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    
+
+                        <!--<div class="form-group">
+                            <label for="staff">Manager Name</label>
+                            <select class="form-control" id="staff-name" name="staff">
+                                <option value="" selected disabled>Select staff</option>
+                                {% for staff in staff_members %}
+                                    <option value="{{ staff.id }}">{{ staff.admin.username }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>-->
+
+                        {% comment %} <div class="form-group">
+                            <label>Manager Name</label>
+                            <input type="text" class="form-control" placeholder="Enter manager name" name="manager"/>
+                        </div> {% endcomment %}
+                        <div class="form-group">
+                            <label>Address</label>
+                            <input type="text" class="form-control" placeholder="Enter address" name="address"/>
+                        </div>
+                        <div class="form-group">
+                            <label>Phone Numbers</label>
+                            <input type="text" class="form-control" placeholder="Enter phone numbers (separated by comma)" name="phone_numbers" size="50"/>
+                        </div>
+                        {% comment %} <div class="form-group">
+                            <label for="staff">Select Staff:</label>
+                            <select class="form-control" id="staff" name="staff">
+                                <option value="" selected disabled>Select a staff member</option>
+                                {% for staff in staff_members %}
+                                    <option value="{{ staff.id }}">{{ staff.admin.username }}</option>
+                                {% endfor %}
+                            </select>
+                        </div> {% endcomment %}
+                        <!--<div class="d-flex justify-content-center">
+                            <button type="button" class="btn btn-primary dynamic-add-remove-btn">Add More Counter</button>
+                        </div>-->
+                        <div id="success-error-message" class="alert" style="margin-top: 10px">
+                            {{ message }}
+                        </div>
+    
+                        <div class="card-btn mb-3 d-flex justify-content-center">
+                            <button type="submit" class="btn btn-primary btn-block save-btn">Add Counter</button>
+                        </div>
+                    </div>
+
+                    
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- /.content -->
+{% endblock main_content %}
+
+{% block custom_js %}
+<script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+    
+    <script>
+        $('#division-name').select2();
+        $('#district-name').select2();
+        $('#thana-name').select2();
+        $('#staff-name').select2();
+
+    $('#manager-name').select2();
+        //$('#union-name').select2();
+    </script>
+
+    <script>
+
+        $(document).ready(function(){
+            console.log('district-name: ', $('#district-name'))
+
+            function fetchLocations(url, targetDropdown, valueKey, textKey, contextData) {
+                fetch(url, {
+                    method: 'GET'
+                })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    throw new Error('Response not OK');
+                })
+                .then(data => {
+                    var dropdown = $(targetDropdown);
+                    dropdown.empty(); // Clear the dropdown before adding new options
+                    data[contextData].forEach(item => {
+                        const option = new Option(item[textKey], item[valueKey]);
+                        dropdown.append(option);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+            }
+
+            $('#division-name').on('change', function(){
+                console.log('clicked')
+                var selectedDivisionName = $(this).val();
+                // var selectedDivisionName = $(this).find('option:selected').text()  // it will send the division name
+                console.log('selectedDistrictId: ', selectedDivisionName)
+                
+                fetch('/district/?division_id=' + selectedDivisionName, {
+                    method: 'GET',
+                })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();  // Parse the JSON data if the response is successful
+                    }
+                    throw new Error('Response not OK');
+                })
+                .then(data => {
+                    var districtDropdown = $('#district-name');
+                    // Clear existing options from upazila dropdown
+                    console.log('data after success division')
+                    districtDropdown.empty(); // Clear the dropdown before adding new options
+                    // Add new options for upazilas
+                    data.districts.forEach(district => {
+                        //const option = document.createElement('option');
+                        //option.value = district.district_id;
+                        //option.textContent = district.district_name;
+                        const option = new Option(district.district_name, district.district_id);
+                        districtDropdown.append(option);
+                    });
+                    console.log('districtDropdown: ', districtDropdown.val());
+                    var districtDropdownValue = districtDropdown.val();
+
+                    // fetch thanas
+                    var selectedUpazilaID = $('#thana-name').val()
+                    fetchLocations('/thanas/?district_id=' + districtDropdownValue, '#thana-name', 'thana_id', 'thana_name', 'thana')
+
+                    // fetch upazilas
+                    /*fetch('/thanas/?district_id=' + districtDropdownValue, {
+                        method: 'GET',
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        var upazilaDropdown = $('#upazila-name');
+                        // Clear existing options from upazila dropdown
+                        console.log('data after success')
+                        upazilaDropdown.empty(); // Clear the dropdown before adding new options
+                        // Add new options for upazilas
+                        data.upazilas.forEach(upazila => {
+                            //const option = document.createElement('option');
+                            //option.value = upazila.upazila_id;
+                            //option.textContent = upazila.upazila_name;
+                            const option = new Option(upazila.upazila_name, upazila.upazila_id);
+                            upazilaDropdown.append(option);
+                        });
+
+                        // fetch unions
+                        var selectedUpazilaID = $('#upazila-name').val()
+                        fetchLocations('/unions/?upazila_id=' + selectedUpazilaID, '#union-name', 'union_id', 'union_name', 'unions')
+
+                    })
+                    .catch(error => {
+                    console.error('Error fetching upazilas:', error);
+                    });*/
+                })
+                .catch(error => {
+                console.error('Error fetching districts:', error);
+                });
+
+            });
+
+            $('#district-name').on('change', function(){
+                console.log('clicked')
+                var selectedDistrictName = $(this).val();
+                console.log('selectedDistrictId: ', selectedDistrictName)
+                fetchLocations('/thanas/?district_id=' + selectedDistrictName, '#thana-name', 'thana_id', 'thana_name', 'thana')
+
+            })
+
+            /*$('#upazila-name').on('change', function(){
+                console.log('clicked')
+                var selectedUpazilaID = $(this).val();
+                console.log('selectedDistrictId: ', selectedUpazilaID)
+                fetchLocations('/unions/?upazila_id=' + selectedUpazilaID, '#union-name', 'union_id', 'union_name', 'unions')
+
+            });*/
+
+            // Submit the form data to the views
+            $('#add-counter-form').submit(function (event) {
+                event.preventDefault();  // Prevent the default form submission behavior
+                
+                // Collect form data
+                //var formData = $(this).serializeArray();  // Serialize form fields as an array
+                
+                // Get the selected option text
+                var formData = {
+                    division_name: $('#division-name option:selected').text(),
+                    district_name: $('#district-name option:selected').text(),
+                    upazila_name: $('#upazila-name option:selected').text(),
+                    union_name: $('#union-name option:selected').text(),
+                };
+
+                $.each($(this).serializeArray(), function(index, field) {
+                    formData[field.name] = field.value;
+                });
+                
+                // Perform fetch request
+                fetch('/add_counter_save/', {
+                    method: 'POST',
+                    body: JSON.stringify(formData),
+                    headers: {
+                        'x-CSRFToken': '{{csrf_token}}',
+                        'Content-Type': 'application/json'
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Handle the response data, e.g., show a success message
+                    console.log('data: ', data);
+                    
+
+                    if (data.error) {
+                        if($('#success-error-message').hasClass('alert-success')){
+                            $('#success-error-message').removeClass('alert-success');
+                            $('#success-error-message').addClass('alert-danger').text(data.error);
+                        }
+                        else{
+                            $('#success-error-message').addClass('alert-danger').text(data.error);
+                        }
+                    }
+                    else if (data.success) {
+                        if($('#success-error-message').hasClass('alert-danger')){
+                            $('#success-error-message').removeClass('alert-danger');
+                            $('#success-error-message').addClass('alert alert-success').text(data.success);
+                            console.log('removed error added success')
+                        }
+                        else{
+                            $('#success-error-message').addClass('alert-success').text(data.success);
+                        }
+                        
+    }
+                })
+                .catch(error => {
+                    // Handle errors, e.g., show an error message
+                    console.error('Error:', error);
+                });
+            });
+        })
+
+    </script>
+
+{% endblock custom_js %}

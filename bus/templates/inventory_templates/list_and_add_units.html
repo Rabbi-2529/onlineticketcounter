@@ -1,0 +1,296 @@
+{% extends 'inventory_templates/inventory_base.html' %}
+{% load static %}
+
+{% block custom_css %}
+<link rel="stylesheet" href="{% static "dist/css/add_product.css" %}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.9/dist/flatpickr.min.css">
+<style>
+
+    .custom-btn {
+        background-color: #EA4C89 !important;
+        border-radius: 8px;
+        border-style: none;
+        box-sizing: border-box;
+        color: #FFFFFF !important;
+        cursor: pointer;
+        display: inline-block;
+        font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        height: 40px;
+        line-height: 20px;
+        list-style: none;
+        margin: 0;
+        outline: none;
+        padding: 10px 16px;
+        position: relative;
+        text-align: center;
+        text-decoration: none;
+        transition: color 100ms;
+        vertical-align: baseline;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+      }
+      
+      .custom-btn:hover,
+      .custom-btn:focus {
+        background-color: #F082AC !important;
+      }
+      .text-black .dropdown-item {
+        color: black !important;
+    }
+    .text-black .dropdown-item:hover {
+        box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3); /* Add a black shadow on hover */
+    }
+    .text-black .clicked {
+        color: black;
+    }
+    .text-black {
+        color: black !important;
+    }
+
+    .custom-btn-group{
+        background-color: rgb(46, 41, 99);
+        font-weight: 400;
+    }
+    
+    .custom-btn-group:hover{
+        background-color: rgb(9, 3, 66) !important;
+    }
+    
+    .custom-btn-group:focus{
+        background-color: rgb(9, 3, 66) !important;
+    }
+    
+    .action-link{
+        color: rgb(39, 39, 39) !important;
+        font-weight: 400;
+    }
+    
+    .action-link:hover{
+        color: rgb(233, 233, 233) !important;
+        background-color: rgb(9, 3, 66) !important;
+    }
+
+</style>
+{% endblock custom_css %}
+
+{% block page_title %}List and Add Units of Measurement{% endblock page_title %}
+
+{% block main_content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-4">
+                <!-- Left Column: Add Subcategory -->
+                <div class="card card-primary">
+                    <div class="card-body">
+                        {% if messages %}
+                        <div class="alert alert-success">
+                            {% for message in messages %}
+                            {{ message }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        <form action="" method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="name">Name</label>
+                                <input class="form-control form-control-lg border-5 add-unit-input bg-transparent rounded" type="text" name="name" placeholder="Add new unit name .." required>
+                            </div>
+                            <div class="form-group">
+                                <label for="short_name">Short Name</label>
+                                <input class="form-control form-control-lg border-5 add-unit-input bg-transparent rounded" type="text" name="short_name" placeholder="Add short name .." required>
+                            </div>
+                            <br>
+                            <button type="submit" class="custom-btn">Add Unit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- Unit of measurement list section -->
+            <div class="col-md-8">
+                <div class="card card-primary">
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Mark</th>
+                                    <th>Name</th>
+                                    <th>Short Name</th> <!-- I added Short Name here -->
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for unit in units %}
+                                <tr>
+                                    <td>
+                                        <input type="checkbox">
+                                    </td>
+                                    <td>{{ unit.name }}</td>
+                                    <td>{{ unit.short_name }}</td> <!-- Added Short Name here -->
+                                    <td>
+                                        <div class="btn-group">
+                                            <button class="btn btn-secondary custom-btn-group dropdown-toggle" type="button" id="actionsDropdown{{ unit.id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Actions
+                                            </button>
+                                            <div class="dropdown-menu text-black">
+                                              
+                                                <a class="dropdown-item action-link" id="edit-payment"  href="#" data-toggle="modal" data-target="#editUnitModal{{ unit.id }}">
+                                                    Edit Unit
+                                                </a>
+                                                <a class="dropdown-item action-link delete-unit" data-id="{{ unit.id }}" data-toggle="modal" data-target="#deleteUnitModal" href="#">Delete</a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- Edit Unit Modal -->
+                {% for unit in units %}
+              
+
+
+                <div class="modal fade" id="editUnitModal{{unit.id}}" tabindex="-1" role="dialog" aria-labelledby="editUnitModalLabel{{unit.id}}" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title text-black"  id="editUnitModalLabel{{unit.id}}">Edit Payment</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <!-- Form for editing payment details -->
+                                <form id="editUnitForm{{ unit.id }}">
+                                    {% csrf_token %}
+                                    <input type="hidden" id="unitId" name="purchase_id" value="{{ unit.id}}">
+                                    <div class="form-group">
+                                        <label for="name">Name:</label>
+                                        <input type="text" class="form-control" id="name" name="name" value="{{ unit.name }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="short_name">Short Name:</label>
+                                        <input type="text" class="form-control" id="short_name" name="short_name" value="{{ unit.short_name }}">
+                                    </div>
+                                   
+                                    <button type="submit" class="custom-btn" data-unit-id="{{ unit.id }}">Save Changes</button>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Delete Unit Modal -->
+                <div class="modal fade" id="deleteUnitModal{{ unit.id }}" tabindex="-1" role="dialog" aria-labelledby="deleteUnitModalLabel{{ unit.id }}" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="deleteUnitModalLabel{{ unit.id }}">Delete Unit</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Are you sure you want to delete the unit "{{ unit.name }}"?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-danger" onclick="confirmDeleteUnit({{ unit.id }})">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+
+{% endblock main_content %}
+
+{% block custom_js %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+
+<script>
+    // Edit Payment Form Submission
+    $(document).on('submit', 'form[id^="editUnitForm"]', function(event) {
+        event.preventDefault();
+        var unitId = $(this).find('button[type="submit"]').data('unit-id');
+        var form = $(this);
+
+        $.ajax({
+            url: '/edit_unit/' + unitId + '/', // Replace with your edit_payment URL
+            type: 'POST',
+            data: form.serialize(),
+            success: function(response) {
+                if (response.success) {
+                    $('#editUnitModal' + unitId).modal('hide');
+                    window.location.href = "{% url 'list_unit' %}";
+                    // Handle success, e.g., update payment details on the page
+                } else {
+                    // Handle errors or show an alert
+                    alert('Error: ' + response.message);
+                }
+            },
+            error: function() {
+                alert('Error: Failed to submit the form.');
+            }
+        });
+    });
+
+    // Delete Payment Confirmation
+</script>
+
+<script>
+    $(document).ready(function() {
+        $('.delete-unit').click(function() {
+            // Get the purchase ID from the data attribute
+            var unitId = $(this).data('id');
+            
+            // Display a SweetAlert2 confirmation dialog
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You won\'t be able to revert this!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Send an AJAX request to delete the purchase
+                    $.ajax({
+                        url: `/delete_unit/${unitId}/`, // Replace with your URL
+                        type: 'POST',
+                        data: {
+                            csrfmiddlewaretoken: '{{ csrf_token }}' // Replace with your CSRF token
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                // Handle a successful delete action
+                                // For example, you can remove the deleted item from the list
+                                // No need for alert here, as SweetAlert2 provides a built-in success message
+                                location.reload(); // Reloading the page as an example
+                            } else {
+                                // Handle errors
+                                Swal.fire('Error', response.message, 'error');
+                            }
+                        },
+                        error: function() {
+                            // Handle AJAX errors
+                            Swal.fire('Error', 'An error occurred during the delete process.', 'error');
+                        }
+                    });
+                }
+            });
+        });
+    });
+</script>
+{% endblock custom_js %}

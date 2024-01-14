@@ -1,0 +1,342 @@
+def views_seat(request, bus_number=None, coach_number=None, journey_date=None, route_id=None, start_point=None, end_point=None):
+    bus = get_object_or_404(Bus, bus_number=bus_number)
+    coach = get_object_or_404(Coach, bus=bus, coachnumber=coach_number)
+    print('journey_date: ', journey_date)
+    print('Start Point: ', start_point)
+    print('End Point: ', end_point)
+
+    start_point_route = get_object_or_404(
+        BusStop, name__name__iexact=start_point)
+    end_point_route = get_object_or_404(BusStop, name__name__iexact=end_point)
+
+    print('Start Point Route: ', start_point_route)
+    print('End Point Route: ', end_point_route)
+
+    route_parts = RoutePart.objects.filter(
+        start_point=start_point_route, end_point=end_point_route).first()
+    print('Route Part Id: ', route_parts.end_point)
+
+    journey_date_coach = coach.journey_dates.first()
+
+    journey_date1 = parse(journey_date).strftime('%Y-%m-%d')
+    journey_date_coach = get_object_or_404(
+        JourneyDateHistory, journey_date=journey_date1)
+
+    print('Popup date: ', journey_date_coach)
+
+    seat_types = []
+    total_rows = 0
+
+    seat_type_1_count = int(bus.seat_type_1) if bus.seat_type_1 else 0
+    seat_type_2_count = int(bus.seat_type_2) if bus.seat_type_2 else 0
+    seat_type_3_count = int(bus.seat_type_3) if bus.seat_type_3 else 0
+
+    total_columns = 5
+    total_rows = int(
+        bus.number_or_column) if bus.number_or_column else int(bus.columns)
+
+    # Retrieve booked seats from the Booking model for the specific coach's journey date
+    booked_seats = Booking.objects.filter(coach=coach, journey_date=journey_date_coach,
+                                          route_part=route_parts, is_booked=True).values_list('seat_number', flat=True)
+    print("Booked Seats:", booked_seats)
+    print('rote Id: ', route_id)
+
+    # booked_seats = {}
+    booked_seats = []
+    special_booked_seats = set()
+    non_special_booked_seats = set()
+
+    special_route_parts = [
+        part for part in route_parts.route.parts.all() if part.is_special_routepart]
+    print('special_route_parts: ', special_route_parts)
+    print('All Route Parts: ', route_parts.route.parts.all())
+
+    intermediate_route_parts = route_parts.route.intermediate_stops.all()
+    intermediate_route_parts_names = [
+        stop.name.name for stop in intermediate_route_parts]
+    print('intermediate_route_parts: ', intermediate_route_parts)
+    print('intermediate_route_parts_names: ', intermediate_route_parts_names)
+
+    # if the seats on the parent route are booked, the seats on the route part will show booked as well
+
+    for special_route_part in special_route_parts:
+        special_route_parts_start_point = str(special_route_part.start_point)
+        special_route_parts_end_point = str(special_route_part.end_point)
+        # special_booked_seats = Booking.objects.filter(
+        #     journey_date=journey_date_coach, coach=coach, route_part=special_route_part, is_booked=True
+        # ).values_list('seat_number', flat=True)
+
+        # for seat_number in special_booked_seats:
+        #     if seat_number not in non_special_booked_seats:
+        #         # booked_seats[seat_number] = True
+        #         booked_seats.append(seat_number)
+
+    print('special_booked_seats: ', special_booked_seats)
+    print("Booked Seats Dictionary:", booked_seats)
+
+    # Fetch all the booked seats for the non-special route parts and add them to the booked_seats dictionary
+    # non_special_route_parts = [part for part in route_parts.route.parts.all() if not part.is_special_routepart]
+
+    non_special_route_parts = [part for part in route_parts.route.parts.all()]
+    print('non_special_route_parts: ', non_special_route_parts)
+    non_special_route_parts_list = [
+        non_special_route for non_special_route in non_special_route_parts]
+    print('non_special_route_parts_list: ', non_special_route_parts_list)
+
+    route_parts_priority_dict = {}
+    priority = 0
+
+    if special_route_parts:
+        priority += 1
+
+        # add priority to the start_point of the parent route
+        if special_route_parts_start_point not in route_parts_priority_dict:
+            route_parts_priority_dict[special_route_parts_start_point] = priority
+
+    # add priority to all the intemediate points on the route
+    for intermediate_route_parts_name in intermediate_route_parts_names:
+        if intermediate_route_parts_name not in route_parts_priority_dict:
+            priority += 1
+            route_parts_priority_dict[intermediate_route_parts_name] = priority
+
+    # add priority to the end point of the parent route
+    if special_route_parts_end_point not in route_parts_priority_dict:
+        priority += 1
+        route_parts_priority_dict[special_route_parts_end_point] = priority
+    print('route_parts_priority_dict: ', route_parts_priority_dict)
+
+    intermediate_priority_dict = route_parts_priority_dict.copy()
+    intermediate_priority_dict_keys = list(intermediate_priority_dict.keys())
+    if intermediate_priority_dict:
+        if len(intermediate_priority_dict_keys) >= 2:
+            del intermediate_priority_dict[intermediate_priority_dict_keys[0]]
+            del intermediate_priority_dict[intermediate_priority_dict_keys[-1]]
+
+    print('intermediate_priority_dict_keys: ', intermediate_priority_dict)
+    print('route_parts_priority_dict: ', route_parts_priority_dict)
+
+    route_part_start_point = str(route_parts.start_point)
+    route_part_end_point = str(route_parts.end_point)
+    route_part_start_point_priority = route_parts_priority_dict[route_part_start_point]
+    route_part_end_point_priority = route_parts_priority_dict[route_part_end_point]
+    print('--------------------------------')
+
+    print('route_part_start_point_priority: ', route_part_start_point_priority)
+    print('route_part_end_point_priority: ', route_part_end_point_priority)
+
+    if route_part_start_point and route_part_end_point in route_parts_priority_dict:
+
+        for other_route_part in non_special_route_parts_list:
+            # take the start point and end point of each of the other route parts to compare
+            other_route_part_start_point = str(other_route_part.start_point)
+            other_route_part_end_point = str(other_route_part.end_point)
+
+            start_point_priority = route_parts_priority_dict[other_route_part_start_point]
+            end_point_priority = route_parts_priority_dict[other_route_part_end_point]
+
+            print('other route part: ', other_route_part)
+            print('start_point_priority: ', start_point_priority)
+            print('end_point_priority: ', end_point_priority)
+            print('route_part_start_point_priority: ',
+                  route_part_start_point_priority)
+            print('route_part_end_point_priority: ',
+                  route_part_end_point_priority)
+
+            if route_parts.start_point == other_route_part.start_point and route_parts.end_point == other_route_part.end_point:
+
+                print('both are equal')
+
+                route_part_booked_seats = Booking.objects.filter(
+                    journey_date=journey_date_coach, coach=coach, route_part=route_parts, is_booked=True
+                ).values_list('seat_number', flat=True)
+
+                print('route_part_booked_seats: ', route_part_booked_seats)
+                print('----------------------------------------------------------------')
+
+                for seat_number in route_part_booked_seats:
+                    if seat_number not in booked_seats:
+                        booked_seats.append(seat_number)
+
+            elif start_point_priority > route_part_start_point_priority and start_point_priority >= route_part_end_point_priority \
+                    and end_point_priority > route_part_end_point_priority:
+
+                print('Second if')
+                route_part_booked_seats = Booking.objects.filter(
+                    journey_date=journey_date_coach, coach=coach, route_part=route_parts, is_booked=True
+                ).values_list('seat_number', flat=True)
+
+                print('second route_part_booked_seats: ',
+                      route_part_booked_seats)
+                print('----------------------------------------------------------------')
+
+            elif start_point_priority < route_part_start_point_priority and end_point_priority <= route_part_start_point_priority \
+                    and end_point_priority < route_part_end_point_priority:
+
+                print('Third if')
+                route_part_booked_seats = Booking.objects.filter(
+                    journey_date=journey_date_coach, coach=coach, route_part=route_parts, is_booked=True
+                ).values_list('seat_number', flat=True)
+
+                print('third route_part_booked_seats: ',
+                      route_part_booked_seats)
+                print('----------------------------------------------------------------')
+
+            # inside the parent route
+            elif (start_point_priority <= route_part_start_point_priority and end_point_priority >= route_part_end_point_priority) \
+                    or route_part_start_point_priority < start_point_priority < route_part_end_point_priority \
+                    or route_part_start_point_priority < end_point_priority < route_part_end_point_priority:
+
+                other_route_part_booked_seats = Booking.objects.filter(
+                    journey_date=journey_date_coach, coach=coach, route_part=other_route_part, is_booked=True
+                ).values_list('seat_number', flat=True)
+                print('other_route_part_booked_seats: ',
+                      other_route_part_booked_seats)
+                print('----------------------------------------------------------------')
+
+                for seat_number in other_route_part_booked_seats:
+                    if seat_number not in booked_seats:
+                        booked_seats.append(seat_number)
+
+            else:
+
+                print('nothing matched!!')
+
+                # if start_point_priority < route_part_start_point_priority < end_point_priority and start_point_priority < route_part_end_point_priority < end_point_priority:
+
+
+    print("Booked Seats Dictionary1:", booked_seats)
+
+    # Now, the special_booked_seats set contains all booked seats for both special and non-special route parts
+
+    route = Route.objects.get(id=route_id)
+    print('route_part: ', route.parts.all())
+
+
+    if route_id:
+        route = Route.objects.get(id=route_id)
+        boarding_points = route.boarding_points.all()
+        print('boarding_points: ', boarding_points)
+
+    rows_seat_type_1 = []
+    rows_seat_type_2 = []
+    rows_seat_type_3 = []
+    rows_seat_type_1_len = 0
+    rows_seat_type_2_len = 0
+    rows_seat_type_3_len = 0
+    rows_type_1, rows_type_2, rows_type_3 = generate_rowss(
+        seat_type_1_count, seat_type_2_count, seat_type_3_count)
+    rows_type_index_1 = [(index, seat_row)
+                         for index, seat_row in enumerate(rows_type_1)]
+    rows_type_index_2 = [(index, seat_row)
+                         for index, seat_row in enumerate(rows_type_2)]
+    rows_type_index_3 = [(index, seat_row)
+                         for index, seat_row in enumerate(rows_type_3)]
+    # print('rows_type_1: ', rows_type_1 )
+    # print('rows_type_2: ', rows_type_2)
+    # print('rows_type_3: ', rows_type_3)
+    print('rows_type_2 len: ', len(rows_type_2) - 1)
+    print('rows_type_index_1: ', rows_type_index_1)
+    print('rows_type_index_2: ', rows_type_index_2)
+    print('rows_type_index_3: ', rows_type_index_3)
+
+    print('seat_type_1_count: ', seat_type_1_count)
+    print('seat_type_2_count: ', seat_type_2_count)
+    print('seat_type_3_count: ', seat_type_3_count)
+
+    print('len(rows_type_index_2) - 1,: ', len(rows_type_index_2) - 1,)
+
+    if seat_type_1_count > 0:
+        seat_type_1 = '1:1'
+        seat_types.append({
+            'type': seat_type_1,
+            # 'seats': generate_seats(seat_type_1, seat_type_1_count, total_columns, booked_seats),
+            'rows': rows_type_index_1,
+            'total_seats': seat_type_1_count * total_columns,
+        })
+
+    if seat_type_2_count > 0:
+        seat_type_2 = '1:2'
+        seat_types.append({
+            'type': seat_type_2,
+            # 'seats': generate_seats(seat_type_2, seat_type_2_count, total_columns, booked_seats),
+            'rows': rows_type_index_2,
+            'type_2_row_len': len(rows_type_index_2) - 1,
+            'total_seats': seat_type_2_count,
+        })
+
+    if seat_type_3_count > 0:
+        seat_type_3 = '2:2'
+        seat_types.append({
+            'type': seat_type_3,
+            # 'seats': generate_seats(seat_type_3, seat_type_3_count, total_columns, booked_seats),
+            'rows': rows_type_index_3,
+            'type_3_row_len': len(rows_type_index_3) - 1,
+            'total_seats': seat_type_3_count * total_columns,
+        })
+
+    if rows_type_1 and not rows_type_2 and not rows_type_3:
+        seat_type_1 = '1:1'
+        rows_seat_type_1 = rows_type_index_1
+        rows_seat_type_1_len = len(rows_type_1) - 1
+        rows_seat_type_2_len = 0
+        rows_seat_type_3_len = 0
+
+    elif rows_type_2 and not rows_type_1 and not rows_type_3:
+        seat_type_2 = '1:2'
+        rows_seat_type_2 = rows_type_index_2
+        rows_seat_type_2_len = len(rows_type_2) - 1
+        rows_seat_type_1_len = 0
+        rows_seat_type_3_len = 0
+
+    elif rows_type_3 and not rows_type_1 and not rows_type_2:
+        seat_type_3 = '2:2'
+        rows_seat_type_3 = rows_type_index_3
+        rows_seat_type_3_len = len(rows_type_3) - 1
+        rows_seat_type_1_len = 0
+        rows_seat_type_2_len = 0
+
+    total_rows = seat_type_1_count + seat_type_2_count + seat_type_3_count
+    print('rows_seat_type_1: ', seat_type_1_count)
+    print('rows_seat_type_2: ', seat_type_2_count)
+    print('rows_seat_type_3: ', rows_seat_type_3)
+
+    if rows_seat_type_1:
+        print('Found rows_seat_type_1')
+    else:
+        print('not Found rows_seat_type_1')
+    extra_seat = bus.extra_seat
+    print('extra_seat: ', extra_seat)
+    print('seat_types: ', seat_types)
+
+    remaining_rows = total_rows - seat_type_1_count - \
+        seat_type_2_count - seat_type_3_count
+
+    context = {
+        'seat_types': seat_types,
+        'bus': bus,
+        'selected_bus': bus,
+        'total_rows': total_rows,
+        'coach': coach,
+        'journey_date_coach': journey_date_coach,
+        'boarding_points': boarding_points,
+        'booked_seats': json.dumps(list(booked_seats)),
+        'route_id': route_id,
+        'route_part_id': route_parts.id,
+        'seat_type_1_count': seat_type_1_count,
+        'seat_type_2_count': seat_type_2_count,
+        'seat_type_3_count': seat_type_3_count,
+        # 'seat_type_1': seat_type_1,
+        # 'seat_type_2': seat_type_2,
+        # 'seat_type_3': seat_type_3,
+        'rows_seat_type_1': rows_seat_type_1,
+        'rows_seat_type_2': rows_seat_type_2,
+        'rows_seat_type_3': rows_seat_type_3,
+        'rows_seat_type_1_len': rows_seat_type_1_len,
+        'rows_seat_type_2_len': rows_seat_type_2_len,
+        'rows_seat_type_3_len': rows_seat_type_3_len,
+        'extra_seat': extra_seat,
+        'total_rows': total_rows
+    }
+
+
+    return render(request, 'hod_template/seatview.html', context)

@@ -1,0 +1,186 @@
+.search-form {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.search-input {
+    max-width: 200px;
+    height: 40px;
+}
+
+.search-button {
+    padding: 6px 12px;
+    font-size: 12px;
+    background: linear-gradient(90deg, #0f0566, transparent) #0a15b4;
+    border: none !important;
+    transition: background-color 0.3s;
+}
+
+.search-button:hover, .search-button:focus {
+    background-color: #220346;
+}
+
+.edit-btn{
+    border: none !important;
+    background: linear-gradient(90deg, #3b0149, transparent) #620ab4;
+    transition: background-color 0.3s;
+}
+
+.edit-btn:hover, .edit-btn:focus {
+    background-color: #8c2eca;
+}
+
+.delete-btn{
+    border: none !important;
+    background: linear-gradient(90deg, rgb(218, 5, 51), transparent) #e96900;
+    transition: background-color 0.3s;
+}
+
+.delete-btn:hover, .delete-btn:focus {
+    background-color: #e40000;
+}
+
+.table-container {
+    overflow-x: scroll !important;
+}
+
+/* Add alternating row background colors */
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f5f5f5;
+}
+
+.card {
+    border-radius: 20px;
+    /* box-shadow: 0 0.15rem 1.75rem 0 rgb(33 40 50 / 15%); */
+    box-shadow: 12px 16px 22px 9px rgba(0,0,0,0.1);
+}
+
+.card-header{
+    border-top-left-radius: 20px !important;
+    border-top-right-radius: 20px !important;
+    background: rgb(62,7,75);
+    background: linear-gradient(180deg, rgba(62,7,75,1) 0%, rgba(40,10,69,1) 63%);
+}
+
+.add_facilities-button {
+    width: auto !important;
+    border: none !important;
+    padding: 0.875em 2em;
+    border-radius: 10px;
+    background: linear-gradient(90deg, #0f0566, transparent) #0a15b4;
+    transition: background-color 0.3s;
+}
+.add_facilities-button:hover, .add-facility-button:focus {
+    background-color: #031b46;
+}
+
+/* edit staff types */
+.edit-staff-type-form {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.edit-staff-type-form label {
+    font-weight: bold;
+}
+
+.edit-staff-type-form input[type="text"],
+.edit-staff-type-form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.edit-staff-type-form button[type="submit"] {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.edit-staff-type-form button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+.back-to-list-link {
+    display: inline-block;
+    margin-top: 10px;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.back-to-list-link:hover {
+    text-decoration: underline;
+}
+
+.edit-staff-type-form label{
+    font-size: 14px;
+    font-weight: 400 !important;
+    color: rgb(73, 73, 73);
+}
+
+.table th{
+    font-size: 16px;
+    font-weight: 600 !important;
+    color: rgb(36, 36, 36);
+}
+
+.table td{
+    font-size: 15px;
+    font-weight: 500 !important;
+    color: rgb(48, 48, 48);
+}
+
+.form-control {
+    display: block;
+    width: 100%;
+    padding: 0.875rem 1.125rem;
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1;
+    color: #69707a;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgb(235, 235, 235);
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border-radius: 0.35rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.back-to-list-link{
+    color: #3b0149 !important;
+}
+
+.submit-btn {
+    width: auto !important;
+    border-radius: 10px;
+    padding: 0.875em 2em;
+    background: linear-gradient(90deg, #0f0566, transparent) #0a15b4;
+    transition: background-color 0.3s;
+}
+.submit-btn:hover, .submit-btn:focus {
+    background-color: #031b46;
+}
+
+/* edit staff type template */
+.form-group label{
+    font-size: 14px;
+    font-weight: 400 !important;
+    color: rgb(54, 54, 54);
+}
+
+.form-control::placeholder{
+    font-weight: 300;
+    color: rgb(187, 187, 187);
+}
+
+

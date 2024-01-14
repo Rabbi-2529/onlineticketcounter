@@ -1,0 +1,33 @@
+{% extends 'hod_template/base_template.html' %}
+{% load static %}
+{% block custom_css %}
+    <link rel="stylesheet" href="{% static "dist/css/staff_type.css" %}">
+    <link rel="stylesheet" href="{% static "dist/css/add_product.css" %}">
+{% endblock custom_css %}
+
+{% block main_content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Edit Bus Stop</h2>
+                </div>
+                <div class="card-body">
+                    
+
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="name">Bus Stop Name:</label>
+                            <input type="text" name="name" id="name" class="form-control" value="{{ bus_stop.name }}">
+                        </div>
+                        <button type="submit" class="save-btn">Update</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock main_content %}

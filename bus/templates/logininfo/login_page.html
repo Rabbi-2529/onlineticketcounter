@@ -1,0 +1,297 @@
+
+
+{% extends 'logininfo/base.html' %}
+
+
+
+{% block content %}
+
+
+
+<style>
+  
+  .login-box {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 400px;
+    padding: 40px;
+    transform: translate(-50%, -50%);
+    background: rgba(0,0,0,.5);
+    box-sizing: border-box;
+    box-shadow: 0 15px 25px rgba(0,0,0,.6);
+    border-radius: 10px;
+  }
+  
+  .login-box h2 {
+    margin: 0 0 30px;
+    padding: 0;
+    color: #fff;
+    text-align: center;
+  }
+  
+  .login-box .user-box {
+    position: relative;
+  }
+  
+  .login-box .user-box input {
+    width: 100%;
+    padding: 10px 0;
+    font-size: 16px;
+    color: #fff;
+    margin-bottom: 30px;
+    border: none;
+    border-bottom: 1px solid #fff;
+    outline: none;
+    background: transparent;
+  }
+  .login-box .user-box label {
+    position: absolute;
+    top:0;
+    left: 0;
+    padding: 10px 0;
+    font-size: 16px;
+    color: #fff;
+    pointer-events: none;
+    transition: .5s;
+  }
+  
+  .login-box .user-box input:focus ~ label,
+  .login-box .user-box input:valid ~ label {
+    top: -20px;
+    left: 0;
+    color: #03e9f4;
+    font-size: 12px;
+  }
+  .forgot-password-text {
+    color: white;
+  }
+  .g-recaptcha {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .g-recaptcha iframe {
+    border: none;
+    width: 100%;
+    height: 76px;
+  }
+
+    
+  .submit-button {
+    position: relative;
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    text-decoration: none;
+    text-transform: uppercase;
+    overflow: hidden;
+    transition: .5s;
+    background-color: #03e9f4;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .submit-button span {
+    position: absolute;
+    display: block;
+    background-color: #fff;
+  }
+  
+  .submit-button span:nth-child(1) {
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 2px;
+    animation: span-anim1 1s linear infinite;
+  }
+  
+  .submit-button span:nth-child(2) {
+    top: -100%;
+    right: 0;
+    width: 2px;
+    height: 100%;
+    animation: span-anim2 1s linear infinite;
+    animation-delay: .25s;
+  }
+  
+  .submit-button span:nth-child(3) {
+    bottom: 0;
+    right: -100%;
+    width: 100%;
+    height: 2px;
+    animation: span-anim3 1s linear infinite;
+    animation-delay: .5s;
+  }
+  
+  .submit-button span:nth-child(4) {
+    bottom: -100%;
+    left: 0;
+    width: 2px;
+    height: 100%;
+    animation: span-anim4 1s linear infinite;
+    animation-delay: .75s;
+  }
+  
+  @keyframes span-anim1 {
+    0% {
+      left: -100%;
+    }
+    50%, 100% {
+      left: 100%;
+    }
+  }
+  
+  @keyframes span-anim2 {
+    0% {
+      top: -100%;
+    }
+    50%, 100% {
+      top: 100%;
+    }
+  }
+  
+  @keyframes span-anim3 {
+    0% {
+      right: -100%;
+    }
+    50%, 100% {
+      right: 100%;
+    }
+  }
+  
+  @keyframes span-anim4 {
+    0% {
+      bottom: -100%;
+    }
+    50%, 100% {
+      bottom: 100%;
+    }
+  }
+  
+</style>
+<div class="login-box">
+  <h2>Login</h2>
+  <form action="/doLogin" method="post" id="demo-form">
+    {% csrf_token %}
+    <div class="user-box">
+      <input type="text" name="email_or_phone" id="email_or_phone" required="">
+      <label>Username</label>
+    </div>
+    <div class="user-box">
+      <input type="password" name="password" required="">
+      <label>Password</label>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <p class="forgot-password-text">Forgot your password? <a href={% url 'forget_password' %}>Reset password</a></p>
+      </div>
+    </div>
+    <div class="input-group mb-4">
+      <div class="g-recaptcha" data-sitekey="6LeWtqUZAAAAAMO6YmxX5_XWel9hLWrb_iEiff26"></div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <button type="submit" class="submit-button">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          Login
+        </button>
+      </div>
+    </div>
+    <div class="row">
+      {% if messages %}
+      <div class="col-12">
+        {% for message in messages %}
+        {% if message.tags == 'error' %}
+        <div class="alert alert-danger" style="margin-top:10px">{{ message }}</div>
+        {% endif %}
+        {% if message.tags == 'success' %}
+        <div class="alert alert-success" style="margin-top:10px">{{ message }}</div>
+        {% endif %}
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+  </form>
+</div>
+{% endblock content %}
+
+
+{% comment %} {% extends 'logininfo/base.html' %}
+{% block content %}
+<div class="login-box">
+  <div class="login-logo">
+
+  </div>
+  <!-- /.login-logo -->
+  <div class="card">
+    <div class="card-body login-card-body">
+      <h3>Login Here</h3>
+
+      <form action="/doLogin" method="post" id="demo-form">
+      {% csrf_token %}
+        <div class="input-group mb-3">
+          
+          <input type="text" name="email_or_phone" id="email_or_phone"  placeholder="Email Or Phone Number"  class="form-control" required>
+         
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-envelope"></span>
+            </div>
+          </div>
+        </div>
+        <div class="input-group mb-3">
+          <input type="password" class="form-control" placeholder="Password" name="password">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-lock"></span>
+            </div>
+          </div>
+        </div>
+        <div class="input-group mb-3">
+                <div class="g-recaptcha" data-sitekey="6LeWtqUZAAAAAMO6YmxX5_XWel9hLWrb_iEiff26"></div>
+        </div>
+        <div class="row">
+          <!-- /.col -->
+          <div class="col-12">
+            <button type="submit" class="btn btn-primary btn-block" >Sign In</button>
+          </div><!-- /.col -->
+ 
+          <div class="col-12 login-links">
+            <a href={% url 'forget_password' %}>Forgot password?</a>
+          </div>
+          <div class="col-12    login-links justify-content-end">
+            <a href="{% url 'signup_user' %}"> Signup</a>
+         </div>
+        </div>
+        <div class="row">
+          {% if messages %}
+         <div class="col-12">
+            {% for message in messages %}
+            {% if message.tags == 'error' %}
+            <div class="alert alert-danger" style="margin-top:10px">{{ message }}</div>
+            {% endif %}
+            {% if message.tags == 'success' %}
+            <div class="alert alert-success" style="margin-top:10px">{{ message }}</div>
+            {% endif %}
+            {% endfor %}
+          </div>
+          {% endif %}
+        </div>
+      </form>
+  <!-- /.social-auth-links -->
+
+    </div>
+    <!-- /.login-card-body -->
+  </div>
+</div>
+<!-- /.login-box -->
+
+<!-- jQuery -->
+{% endblock content %} {% endcomment %}

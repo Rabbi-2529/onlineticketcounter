@@ -1,0 +1,1005 @@
+{% extends 'inventory_templates/inventory_base.html' %}
+{% load static %}
+
+{% block custom_css %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.9/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="{% static "dist/css/trading.css" %}">
+{% endblock custom_css %}
+
+{% block main_content %}
+<div class="container-xl px-2 mt-4">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <form method="POST" action="" id="add-transfer-form" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="col-md-12">
+                    <div class="card card-primary">
+                        <div class="card-header d-flex justify-content-center">
+                            <h3 class="card-title py-2">Add Used</h3>
+                        </div>
+                        <div class="card-body">
+                            <!--<form method="POST" action="{% url 'add_transfer' %}" enctype="multipart/form-data">
+                                {% csrf_token %}-->
+                                <div class="forms">
+                                    <div class="row">
+                                        <div class="form-group col-lg-4 col-md-2 col-12">
+                                            <label for="transfer-date">Date<span class="required-star">*</span></label>
+                                            <input type="text" id="transfer-date" class="form-control datepicker mr-2" name="transfer_date" placeholder="Select Date" value="">
+                                        </div>
+
+                                        <div class="form-group col-lg-4 col-md-2 col-12">
+                                            <label for="source_warehouse">From Warehouse</label>
+                                            <!--customselect-->
+                                            <div class="select_mate" data-mate-select="dropdown-active" >
+                                                <!--<select name="source_warehouse" onchange="" onclick="return false;" id="source_warehouse">-->
+                                                <select name="source_warehouse" onchange="handleSourceWarehouseChange()" onclick="return false;" id="source_warehouse">
+                                                    <option value=""  >Select The Option </option>
+                                                    {% for warehouse in warehouses %}
+                                                        <option value="{{ warehouse.id }}">{{ warehouse.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                                <p class="selecionado_opcion"  onclick="open_select(this)" ></p><span class="icon_select_mate" ><svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z"/>
+                                                    <path d="M0-.75h24v24H0z" fill="none"/>
+                                                </svg></span>
+                                                <div class="cont_list_select_mate">
+                                                <ul class="cont_select_int">  </ul> 
+                                                </div>
+                                            </div>
+                                            <!--customselect-->
+                                        </div>
+
+                                        <div class="form-group col-lg-4 col-md-2 col-12">
+                                            <label for="bus">Select Bus:</label>
+                                            <!--customselect-->
+                                            <div class="select_mate" data-mate-select="dropdown-active" >
+                                                <select name="bus" onchange="" onclick="return false;" id="bus">
+                                                    <option value=""  >Select The Option </option>
+                                                    {% for bus in buses %}
+                                                        <option value="{{ bus.id }}">{{ bus.bus_number }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                                <p class="selecionado_opcion"  onclick="open_select(this)" ></p><span onclick="open_select(this)" class="icon_select_mate" ><svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z"/>
+                                                    <path d="M0-.75h24v24H0z" fill="none"/>
+                                                </svg></span>
+                                                <div class="cont_list_select_mate">
+                                                <ul class="cont_select_int">  </ul> 
+                                                </div>
+                                            </div>
+                                            <!--customselect-->
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="product_search">Search Product by ID or Name:</label>
+                                        <input type="text" class="form-control" id="product_search" name="product_search">
+                                    </div>
+                                    <!-- Hidden input field to store selected product's ID -->
+                                    <input type="hidden" id="selected_product_id" name="product_id">
+                                    
+                                    <!-- Product details will be displayed here -->
+
+                                    <div id="product_details" class="table-responsive">
+                                        <!--Product details will be displayed here-->
+                                    </div>
+
+                                    <div id="total-calculation-summary" class="row justify-content-md-end total-calculation-summary">
+                                        <div class="total-calculation mt-4">
+                                            <div class="row">
+                                                <div class="col-6 amount-title">
+                                                    <p class="py-2 mb-1 mt-1 right-para"><span>Total Amount</span></p>
+                                                </div>
+                                                <div class="col-6 amount-div">
+                                                    <p class="py-2 mb-1 mt-1"><span id="summary-total-amount">0.00</span></p>
+                                                </div>
+                                            
+                                          
+                                            </div>
+            
+                                            <div class="row">
+                                                <div class="col-6 amount-title">
+                                                    <p class="py-2 mb-1 mt-1 right-para"><span>Order Tax</span></p>
+                                                </div>
+                                                <div class="col-6 amount-div">
+                                                    <p class="py-2 mb-1 mt-1"><span id="summary-tax">Bdt 500000.00</span></p>
+                                                </div>
+                                            </div>
+            
+                                            <div class="row">
+                                                <div class="col-6 amount-title">
+                                                    <p class="py-2 mb-1 mt-1 right-para"><span>Discount</span></p>
+                                                </div>
+                                                <div class="col-6 amount-div">
+                                                    <p class="py-2 mb-1 mt-1"><span>(-)Bdt </span><span id="summary-discount"></span></p>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-6 amount-title last-amount-title">
+                                                    <p class="py-2 mb-1 mt-1 right-para"><span>Shipping</span></p>
+                                                </div>
+                                                <div class="col-6 amount-div last-amount-div">
+                                                    <p class="py-2 mb-1 mt-1"><span id="summary-shipping">Bdt 0.00</span></p>
+                                                </div>
+                                            </div>
+            
+                                            <div class="row">
+                                                <div class="col-6 amount-title last-amount-title">
+                                                    <p class="py-2 mb-1 mt-1 right-para"><span>Grand Total</span></p>
+                                                </div>
+                                                <div class="col-6 amount-div last-amount-div">
+                                                    <p class="py-2 mb-1 mt-1"><span>BDT 500000.00</span></p>
+                                                </div>
+                                            </div>
+            
+                                            <div class="row">
+                                                <div class="col-6 amount-title border-0">
+                                                    <p class="py-2 mb-1 mt-1 right-para"><span class="grand-total">Grand Amount</span></p>
+                                                </div>
+                                                <div class="col-6 amount-div border-0">
+                                                    <p class="py-2 mb-1 mt-1"><span id="summary-grand-amount" class="grand-total">BDT 500000.00</span></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-5">
+                                        <div class="form-group col-lg-4 col-md-6 col-12">
+                                            <label for="installation_cost">Installation Cost</label>
+                                            <input type="text" class="form-control" id="installation_cost" name="installation_cost">
+                                        </div>
+
+                                        <div class="form-group col-lg-4 col-md-6 col-12">
+                                            <label for="purchase_status">Purchase Status</label>
+                                            <!--customselect-->
+                                            <div class="select_mate" data-mate-select="dropdown-active" >
+                                                <select name="purchase_status" onchange="" onclick="return false;" id="purchase_status">
+                                                    <option value=""  >Select The Option</option>
+                                                    {% for warehouse in warehouses %}
+                                                        <option value="{{ warehouse.id }}">{{ warehouse.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                                <p class="selecionado_opcion"  onclick="open_select(this)" ></p><span onclick="open_select(this)" class="icon_select_mate" ><svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z"/>
+                                                    <path d="M0-.75h24v24H0z" fill="none"/>
+                                                </svg></span>
+                                                <div class="cont_list_select_mate">
+                                                <ul class="cont_select_int">  </ul> 
+                                                </div>
+                                            </div>
+                                            <!--customselect-->
+                                        </div>
+
+                                        <div class="form-group col-lg-4 col-md-6 col-12">
+                                            <label for="installation_note">Staff Remark</label>
+                                            <textarea class="form-control" id="installation_note" rows="3" name="installation_note"></textarea>
+                                        </div>
+                                    </div>
+
+                                    
+                                </div>
+                                <!-- Submit button -->
+                                <div class="d-flex justify-content-center mt-4">
+                                    <button type="submit" id="form-submit-btn" class="btn btn-primary save-btn">Submit</button>
+                                </div>
+                                <div id="success-error-message" class="alert" style="margin-top: 10px">
+                            
+                                </div>
+                            <!--</form>-->
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block custom_js %}
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="{% static "dist/js/select_dropdown.js" %}"></script>
+    <script>
+        // Maintain a list of selected products
+        $(document).ready(function(){
+            $('.datepicker').datepicker({
+                format: 'yyyy-mm-dd',
+                todayHighlight: true,
+                toggleActive: true
+            });
+        })  
+    </script>
+
+    <script>
+        var selectedProducts = [];
+        var warehouseProducts = [];
+        var selectedTaxRate = 0;
+
+        // Calculate tax and discount when the page loads initially
+        $(document).ready(function() {
+            calculateTotalAmount();
+        });
+        
+
+        function handleSourceWarehouseChange() {
+            warehouseProducts = []
+            // Get the selected warehouse value
+            console.log('source_warehouse')
+            var selectedWarehouse = $('#source_warehouse').val();
+            console.log('value changed to: ', selectedWarehouse)
+            
+            // Call the fetchData function with the selected value
+            productsByWarehouse(selectedWarehouse);
+        }
+
+
+        function calculateTax(totalAmount, taxRate) {
+            return (totalAmount * taxRate) / 100;
+        }
+
+        function calculateDiscount(totalAmount, discountRate) {
+            return (totalAmount * discountRate) / 100;
+        }
+
+        function updateTaxAmount(totalAmount) {
+            // Get the selected tax rate
+            const selectedTaxRate = parseFloat($('#tax_rate').val()) || 0;
+            console.log('selectedTaxRate: ', selectedTaxRate)
+            // Calculate the tax amount
+            const taxAmount = calculateTax(totalAmount, selectedTaxRate);
+            // Update the tax amount in the HTML element
+            $('#summary-tax').text('BDT ' + taxAmount.toFixed(2));
+        }
+
+        function updateDiscountAmount(totalAmount) {
+            // Get the entered discount rate
+            const discountRate = parseFloat($('#discount').val()) || 0;
+            // Calculate the discount amount
+            const discountAmount = calculateDiscount(totalAmount, discountRate);
+            // Update the discount amount in the HTML element
+            // You can customize this to display the discount in your preferred format
+            $('#summary-discount').text(discountAmount.toFixed(2));
+            calculateGrandAmount();
+        }
+
+        function updateShippingCost() {
+            // Get the entered shipping cost
+            const shippingCost = parseFloat($('#installation_cost').val()) || 0;
+            // Update the shipping cost in the HTML element
+            $('#summary-shipping').text('BDT ' + shippingCost.toFixed(2));
+            // Calculate the grand amount
+            calculateGrandAmount();
+        }
+
+        function calculateGrandAmount() {
+            const totalAmount = parseFloat($('#summary-total-amount').text()) || 0;
+            const taxAmount = parseFloat($('#summary-tax').text().replace('BDT ', '')) || 0;
+            const discountAmount = parseFloat($('#summary-discount').text().replace('Discount: ', '')) || 0;
+            const shippingCost = parseFloat($('#summary-shipping').text().replace('BDT ', '')) || 0;
+            const grandAmount = totalAmount + taxAmount - discountAmount + shippingCost;
+            console.log('value changed to: ', grandAmount)
+            // Update the "Grand Amount" field in the HTML element
+            $('#summary-grand-amount').text('BDT ' + grandAmount.toFixed(2));
+        }
+
+        // Attach event listeners to the tax rate, discount, and shipping cost input fields
+        /*$('#tax_rate, #discount, #installation_cost').on('input', function() {
+            // Recalculate the total amount and update tax, discount, and shipping cost when the input values change
+            calculateTotalAmount();
+        });*/
+        
+
+        function calculateTotalAmount(productSearchType) {
+            let totalAmount = 0;
+            let taxRate = 0;
+        
+            productSearchType.forEach(product => {
+                const quantityInput = $(`.input-qty[data-product_id="${product.product_id}"]`);
+                const quantity = parseInt(quantityInput.val()) || 0;
+                const price = parseFloat(product.item_price) || 0;
+        
+                // Log the price and quantity values
+                console.log('Total Quantity:', quantity);
+                console.log('quantityInput: ', quantityInput)
+                console.log('price: ', price)
+        
+                totalAmount += quantity * price;
+            });
+        
+            // Log the total amount to the console
+            console.log('Total Amount:', totalAmount);
+            
+            //console.log(`Product: ${product.name}, Quantity: ${quantity}, Price: ${price}`);
+
+        
+            // Update the total amount in the HTML element
+            $('#summary-total-amount').text(totalAmount.toFixed(2));
+            calculateTax(totalAmount, taxRate);
+            updateTaxAmount(totalAmount);
+            updateDiscountAmount(totalAmount);
+            updateShippingCost();
+            calculateGrandAmount();
+        }
+        
+        function productsByWarehouse(selectedWarehouse){
+            const url = `/get_products_by_warehouse/${selectedWarehouse}/`;
+            fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Network response was not ok (${response.status} ${response.statusText})`);
+                }
+                return response.json(); // Assuming the response is in JSON format
+            })
+            .then(data => {
+                if (data.success) {
+                    // Add the product data to the selected products list
+                    const product = data.data;
+                    /*product.quantity = 1; // Default quantity*/
+                    warehouseProducts.push(...product);
+
+                    // Remove the product if the remove button is clicked
+                    $(document).on('click', '.remove-product', function () {
+                        const productIdToRemove = $(this).data('btn-product-id');
+                        console.log('removed btn clicked')
+                    
+                        // Remove the product from the selectedProducts array
+                        warehouseProducts = warehouseProducts.filter(product => product.product_id !== productIdToRemove);
+                    
+                        // Re-calculate the total quantity and price
+                        calculateTotalAmount(warehouseProducts);
+                    
+                        // Update the product details section and any other necessary UI updates
+                        //updateProductDetails();
+                        updateProductDetailsWarehouse();
+                    
+                        // Remove the product from the UI (if needed)
+                        $(this).closest('.product-container').remove();
+                    });
+
+                    // Attach event listeners to the tax rate, discount, and shipping cost input fields
+                    $('#tax_rate, #discount, #installation_cost').on('input', function() {
+                        // Recalculate the total amount and update tax, discount, and shipping cost when the input values change
+                        console.log('input changed')
+                        calculateTotalAmount(warehouseProducts);
+                    });
+
+                    updateProductDetailsWarehouse();
+                    $('.qty-btn-plus').on('click', function(){
+                        var $n = $(this).parent(".qty-container").find(".input-qty");
+                        $n.val(Number($n.val()) + 1);
+                        console.log('quan: ', $n.val());
+                        calculateTotalAmount(warehouseProducts);
+                    })
+
+                    $('.qty-btn-minus').on('click', function(){
+                        var $n = $(this).parent(".qty-container").find(".input-qty");
+                        $n.val(Number($n.val()) - 1);
+                        console.log('quan: ', $n.val());
+                        calculateTotalAmount(warehouseProducts);
+                    })
+                    
+                    calculateTotalAmount(warehouseProducts);
+
+                }
+                else {
+                    // Handle server-side errors or display a message
+                    console.error('Server response error:', data.message || 'Unknown error');
+                }
+            })
+            .catch(error => {
+                // Handle network or other errors
+                console.error('Fetch error:', error.message || 'Unknown error');
+            });
+        }
+
+        // Function to fetch product details and display them
+        function fetchProductDetails(searchQuery) {
+            const selectedWarehouse = $('#source_warehouse').val();
+            console.log('selectedWarehouse: ', selectedWarehouse);
+            // Check if the product is already selected
+            const existingProduct = selectedProducts.find(product => product.name.toLowerCase().startsWith(searchQuery.toLowerCase()));
+            
+            
+            if (existingProduct) {
+                // If the product is already selected, update its quantity
+                //existingProduct.quantity++;
+                //updateProductDetails();
+                updateProductDetailsWarehouse();
+                
+                // Clear the search field
+                //document.getElementById('product_search').value = '';
+                return;
+            }
+
+            // Make an AJAX request to fetch product details using fetch
+            const url = `/get_product_details/?search=${searchQuery}&warehouse=${selectedWarehouse}`;
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Network response was not ok (${response.status} ${response.statusText})`);
+                    }
+                    return response.json(); // Assuming the response is in JSON format
+                })
+                .then(data => {
+                    if (data.success) {
+                        // Add the product data to the selected products list
+                        const product = data.data;
+                        /*product.quantity = 1; // Default quantity*/
+                        selectedProducts.push(product);
+
+                        // Remove the product if the remove button is clicked
+                        $(document).on('click', '.remove-product', function () {
+                            const productIdToRemove = $(this).data('btn-product-id');
+                            console.log('removed btn clicked')
+                        
+                            // Remove the product from the selectedProducts array
+                            selectedProducts = selectedProducts.filter(product => product.product_id !== productIdToRemove);
+                        
+                            // Re-calculate the total quantity and price
+                            calculateTotalAmount(selectedProducts);
+                        
+                            // Update the product details section and any other necessary UI updates
+                            //updateProductDetails();
+                            updateProductDetails();
+                        
+                            // Remove the product from the UI (if needed)
+                            $(this).closest('.product-container').remove();
+                        });
+
+                        // Remove the product from the array
+                        /*removeButton.addEventListener('click', () => {
+                            // Remove the product from the selected products list
+                            selectedProducts.splice(selectedProducts.indexOf(product), 1);
+                            // Update the product details section
+                            updateProductDetails();
+                        });*/
+                        console.log('selected products: ', selectedProducts)
+
+
+                        // Set the selected product's ID in the hidden input field
+                        //document.getElementById('selected_product_id').value = product.id;
+
+                        // Update the product details section
+                        updateProductDetails();
+                        $('.qty-btn-plus').on('click', function(){
+                            var $n = $(this).parent(".qty-container").find(".input-qty");
+                            $n.val(Number($n.val()) + 1);
+                            console.log('quan: ', $n.val());
+                            calculateTotalAmount(selectedProducts);
+                        })
+    
+                        $('.qty-btn-minus').on('click', function(){
+                            var $n = $(this).parent(".qty-container").find(".input-qty");
+                            $n.val(Number($n.val()) - 1);
+                            console.log('quan: ', $n.val());
+                            calculateTotalAmount(selectedProducts);
+                        })
+                        calculateTotalAmount(selectedProducts);
+
+                        // Clear the search field
+                        //document.getElementById('product_search').value = '';
+                    }
+                    else {
+                        // Handle server-side errors or display a message
+                        console.error('Server response error:', data.message || 'Unknown error');
+                    }
+                })
+                .catch(error => {
+                    // Handle network or other errors
+                    console.error('Fetch error:', error.message || 'Unknown error');
+                });
+        }
+
+        // Function to update the quantity of a selected product
+        function updateQuantity(productId) {
+            const quantityInput = document.getElementById(`quantity-${productId}`);
+            const newQuantity = parseInt(quantityInput.value);
+            const product = selectedProducts.find(p => p.id === productId);
+            if (product && !isNaN(newQuantity) && newQuantity >= 0) {
+                product.unit_quantity = newQuantity;
+                updateProductDetails();
+            }
+            else {
+                // Reset the input value to the previous quantity
+                quantityInput.value = product.unit_quantity;
+            }
+        }
+
+        // Function to increment the quantity of a selected product
+        function incrementQuantity(productId) {
+            const product = selectedProducts.find(p => p.id === productId);
+            const warehouse_product = warehouseProducts.find(p => p.id === productId);
+            if (product) {
+                var buttonPlus = $(".qty-btn-plus");
+                //product.unit_quantity++;
+                //console.log('product.quantity: ', product.unit_quantity)
+                //updateProductDetails();
+                buttonPlus.click(function () {
+                    console.log('product.quantity out: ')
+                    var $n = $(this).parent(".qty-container").find(".input-qty");
+                    $n.val(Number($n.val()) + 1);
+                    console.log('quan: ', $n.val());
+                    updateProductDetailsWarehouse();
+                });
+                
+            }
+            
+            if (warehouse_product) {
+                var buttonPlus = $(".qty-btn-plus");
+                //product.unit_quantity++;
+                //console.log('product.quantity: ', product.unit_quantity)
+                //updateProductDetails();
+                buttonPlus.click(function () {
+                    var $n = $(this).parent(".qty-container").find(".input-qty");
+                    $n.val(Number($n.val()) + 1);
+                    console.log('quan: ', $n.val());
+                    updateProductDetailsWarehouse();
+                });
+            }
+        }
+        
+        // Function to decrement the quantity of a selected product
+        function decrementQuantity(productId) {
+            const product = selectedProducts.find(p => p.id === productId);
+            console.log('product.quantity out: ', product.unit_quantity)
+            if (product && product.unit_quantity > 1) {
+                product.unit_quantity--;
+                console.log('product.quantity: ', product.unit_quantity)
+                updateProductDetails();
+                //updateProductDetails();
+            }
+        }
+
+        // Function to update the product details section
+        function updateProductDetailsWarehouse() {
+            const productDetailsTable = document.createElement('table');
+            productDetailsTable.classList.add('table', 'mt-3');
+
+            // Create table header
+            const tableHeader = productDetailsTable.createTHead();
+            const headerRow = tableHeader.insertRow();
+            const headers = ['Name', 'Batch No', 'Price', 'Quantity', 'Discount', 'Tax', 'Purchase Date', 'Sub Total', 'Usage/Maintainance', 'Condition', 'Action'];
+
+            headers.forEach(headerText => {
+                const th = document.createElement('th');
+                th.textContent = headerText;
+                headerRow.appendChild(th);
+            });
+
+            // Create table body
+            const tableBody = productDetailsTable.createTBody();
+
+            warehouseProducts.forEach(product => {
+                const row = tableBody.insertRow();
+                console.log('products: ', Object.keys(product))
+
+                const keys = Object.keys(product);
+
+                keys.forEach(key => {
+                    if(key !== 'product_id'){
+                        const cell = row.insertCell();
+                        if(key === 'product_id'){
+                            return;
+                        }
+                        if (key === 'unit_quantity') {
+                            // Create a div element with the class "qty-container"
+                            const divContainer = document.createElement("div");
+                            divContainer.className = "qty-container";
+
+                            // Create the "minus" button
+                            const minusButton = document.createElement("button");
+                            minusButton.className = "qty-btn-minus btn-light";
+                            minusButton.type = "button";
+                            minusButton.innerHTML = '<i class="fa fa-minus"></i>';
+                            //minusButton.onclick = () => decrementQuantity(product.id);
+
+                            // Create the input element
+                            const inputElement = document.createElement("input");
+                            inputElement.id = `quantity-${product.product_id}`;
+                            inputElement.type = "number";
+                            inputElement.name = "qty";
+                            inputElement.value = "0";
+                            inputElement.className = "input-qty";
+                            inputElement.min = "0";
+                            //inputElement.max = "9";
+                            inputElement.value = product[key];
+                            inputElement.setAttribute("data-product_id", product.product_id);
+
+                            // Create the "plus" button
+                            const plusButton = document.createElement("button");
+                            plusButton.className = "qty-btn-plus btn-light";
+                            plusButton.type = "button";
+                            plusButton.innerHTML = '<i class="fa fa-plus"></i>';
+                            //plusButton.onclick = () => incrementQuantity(product.id);
+
+                            // Append the elements to the "qty-container" div
+                            divContainer.appendChild(minusButton);
+                            divContainer.appendChild(inputElement);
+                            divContainer.appendChild(plusButton);
+
+                            // Now you can append the "qty-container" div to a specific container in your HTML
+                            cell.appendChild(divContainer);
+                            $(".total-calculation-summary").addClass("expanded");
+                        }
+                        else{
+                            cell.textContent = product[key];
+                        }
+                    }
+                });
+
+                // Add a remove button
+                const removeCell = row.insertCell();
+                const removeButton = document.createElement('button');
+                removeButton.setAttribute('type', 'button');
+                removeButton.classList.add('btn', 'btn-danger', 'remove-product');
+                removeButton.setAttribute('data-btn-product-id', product.product_id);
+                /*removeButton.addEventListener('click', () => {
+                    // Remove the product from the selected products list
+                    warehouseProducts.splice(warehouseProducts.indexOf(product), 1);
+                    // Update the product details section
+                    updateProductDetails();
+                });*/
+
+                /*$(document).on('click', '.remove-product', function () {
+                    const productIdToRemove = $(this).data('btn-product-id');
+                
+                    // Remove the product from the selectedProducts array
+                    selectedProducts = selectedProducts.filter(product => product.product_id !== productIdToRemove);
+                
+                    // Re-calculate the total quantity and price
+                    calculateTotalAmount(productId, productPrice, selectedProducts);
+                
+                    // Update the product details section and any other necessary UI updates
+                    updateProductDetails();
+                
+                    // Remove the product from the UI (if needed)
+                    $(this).closest('.product-container').remove();
+                });*/
+
+                const removeIcon = document.createElement('i');
+                removeIcon.classList.add('fa-solid', 'fa-x', 'fa-xs'); // Use 'fa-xs' for small size
+                // Replace 'fa-trash' with the class of the desired icon (e.g., 'fa-times' for a close icon)
+                removeButton.appendChild(removeIcon);
+                removeCell.appendChild(removeButton);
+            });
+
+            // Display the product details in the product_details div
+            const productDetailsDiv = $('#product_details');
+            productDetailsDiv.empty(); // Clear the existing content if needed
+
+            // Assuming that productDetailsTable is a jQuery object as well
+            productDetailsDiv.append(productDetailsTable);
+
+            // Check if there are no selected products and display a message
+            if (warehouseProducts.length === 0) {
+                const messageDiv = document.createElement('div');
+                messageDiv.textContent = 'Please select a product.';
+                productDetailsDiv.appendChild(messageDiv);
+            }
+        }
+
+
+        // Function to update the product details section
+        function updateProductDetails() {
+            const productDetailsTable = document.createElement('table');
+            productDetailsTable.classList.add('table', 'mt-3');
+
+            // Create table header
+            const tableHeader = productDetailsTable.createTHead();
+            const headerRow = tableHeader.insertRow();
+            const headers = ['Name', 'Batch No', 'Price', 'Quantity', 'Discount', 'Tax', 'Purchase Date', 'Sub Total', 'Usage/Maintainance', 'Condition', 'Action'];
+
+            headers.forEach(headerText => {
+                const th = document.createElement('th');
+                th.textContent = headerText;
+                headerRow.appendChild(th);
+            });
+
+            // Create table body
+            const tableBody = productDetailsTable.createTBody();
+
+            selectedProducts.forEach(product => {
+                const row = tableBody.insertRow();
+
+                const keys = Object.keys(product);
+
+                keys.forEach(key => {
+                    if(key !== 'product_id'){
+                        const cell = row.insertCell();
+                        if(key === 'product_id'){
+                            return;
+                        }
+                        if (key === 'unit_quantity') {
+                            // Create a div element with the class "qty-container"
+                            const divContainer = document.createElement("div");
+                            divContainer.className = "qty-container";
+
+                            // Create the "minus" button
+                            const minusButton = document.createElement("button");
+                            minusButton.className = "qty-btn-minus btn-light";
+                            minusButton.type = "button";
+                            minusButton.innerHTML = '<i class="fa fa-minus"></i>';
+                            //minusButton.onclick = () => decrementQuantity(product.id);
+
+                            // Create the input element
+                            const inputElement = document.createElement("input");
+                            inputElement.id = `quantity-${product.product_id}`;
+                            inputElement.type = "number";
+                            inputElement.name = "qty";
+                            inputElement.value = "0";
+                            inputElement.className = "input-qty";
+                            inputElement.min = "0";
+                            //inputElement.max = "9";
+                            inputElement.value = product[key];
+                            inputElement.setAttribute("data-product_id", product.product_id);
+
+                            // Create the "plus" button
+                            const plusButton = document.createElement("button");
+                            plusButton.className = "qty-btn-plus btn-light";
+                            plusButton.type = "button";
+                            plusButton.innerHTML = '<i class="fa fa-plus"></i>';
+                            //plusButton.onclick = () => incrementQuantity(product.id);
+
+                            // Append the elements to the "qty-container" div
+                            divContainer.appendChild(minusButton);
+                            divContainer.appendChild(inputElement);
+                            divContainer.appendChild(plusButton);
+
+                            // Now you can append the "qty-container" div to a specific container in your HTML
+                            cell.appendChild(divContainer);
+                            $(".total-calculation-summary").addClass("expanded");
+                        }
+                        else{
+                            cell.textContent = product[key];
+                        }
+                    }
+                });
+
+                // Add a remove button
+                const removeCell = row.insertCell();
+                const removeButton = document.createElement('button');
+                removeButton.setAttribute('type', 'button');
+                removeButton.classList.add('btn', 'btn-danger', 'remove-product');
+                removeButton.setAttribute('data-btn-product-id', product.product_id);
+                /*removeButton.addEventListener('click', () => {
+                    //console.log('selectedProducts.indexOf(product): ', selectedProducts.indexOf(product))
+                    // Remove the product from the selected products list
+                    selectedProducts.splice(selectedProducts.indexOf(product), 1);
+                    // Update the product details section
+                    updateProductDetails();
+
+                });*/
+                const removeIcon = document.createElement('i');
+                removeIcon.classList.add('fa', 'fa-trash'); // Replace 'fa-trash' with the class of the desired icon (e.g., 'fa-times' for a close icon)
+                removeButton.appendChild(removeIcon);
+                removeCell.appendChild(removeButton);
+            });
+
+            // Display the product details in the product_details div
+            const productDetailsDiv = $('#product_details');
+            productDetailsDiv.empty(); // Clear the existing content if needed
+
+            // Assuming that productDetailsTable is a jQuery object as well
+            productDetailsDiv.append(productDetailsTable);
+
+            // Check if there are no selected products and display a message
+            /*if (selectedProducts.length === 0) {
+                const messageDiv = document.createElement('div');
+                messageDiv.textContent = 'Please select a product.';
+                productDetailsDiv.appendChild(messageDiv);
+            }*/
+        }
+        
+        {% comment %} function incrementProductQuantity(){
+            $('.qty-btn-plus').on('click', function(){
+                var $n = $(this).parent(".qty-container").find(".input-qty");
+                $n.val(Number($n.val()) + 1);
+                console.log('quan: ', $n.val());
+                calculateTotalAmount();
+                
+            })
+        }
+
+        function incrementProductQuantity(){
+            $('.qty-btn-minus').on('click', function(){
+                var $n = $(this).parent(".qty-container").find(".input-qty");
+                $n.val(Number($n.val()) - 1);
+                console.log('quan: ', $n.val());
+                calculateTotalAmount();
+            })
+        }  {% endcomment %}
+
+        
+        // Call this function initially and whenever there's a change in selected products or their quantities
+    
+        // Attach an event listener to the product search field
+        document.addEventListener('DOMContentLoaded', function () {
+            const productSearchInput = document.getElementById('product_search');
+
+            productSearchInput.addEventListener('input', function () {
+                const searchQuery = this.value;
+                if (searchQuery) {
+                    // Fetch and display product details when the user types or selects a product
+                    fetchProductDetails(searchQuery);
+                    $('.qty-btn-plus').on('click', function(){
+                        var $n = $(this).parent(".qty-container").find(".input-qty");
+                        $n.val(Number($n.val()) + 1);
+                        console.log('quan: ', $n.val());
+                        //calculateTotalAmount(product.product_id, product.item_price, warehouseProducts);
+                    })
+
+                    $('.qty-btn-minus').on('click', function(){
+                        var $n = $(this).parent(".qty-container").find(".input-qty");
+                        $n.val(Number($n.val()) - 1);
+                        console.log('quan: ', $n.val());
+                        //calculateTotalAmount();
+                    })
+                }
+                else {
+                    // Clear the product details when the search field is empty
+                    //document.getElementById('product_details').innerHTML = '';
+                }
+            });
+        });
+
+        
+    </script>
+
+    <script>
+        $(document).ready(function(){
+            // fetch script
+            /*$('#attach_document').on('change', function() {
+                const fileInput = this;
+                const file = fileInput.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.onload = function(event) {
+                        const base64Data = event.target.result;
+                        $('#fileData').val(base64Data);
+                    };
+                }
+            });*/
+
+            $('#add-transfer-form').on('submit', function(e){
+                e.preventDefault();
+                console.log('form button clicked')
+                /*var form = $('#add-transfer-form')
+                console.log('form: ', form)*/
+                var formData = $(this).serializeArray();
+                const form = document.querySelector('#add-transfer-form');
+                const formFile = new FormData(form);
+                data = {}
+
+                // Get all of the input files
+                const fileInputs = $('input[type="file"]');
+                
+                console.log('fileInputs: ', fileInputs)
+                if (fileInputs.length === 0) {
+                    // Handle the error
+                    console.log('No file input')
+                }
+                else{
+                    // Create a FormData object to handle the files
+                    var documentFile = formFile.get('attach_document')
+                    console.log('new FormData: ', formFile.get('attach_document'))
+                    data['attach_document'] = documentFile
+                    
+                    fileInputs.each(function() {
+                        if (this.files.length > 0) {
+                            formFile.append('attach_document', this.files[0]);
+                            console.log('this.files[0]: ', this.files[0])
+                            console.log('formFile: ', formFile)
+                        }
+                        
+                    });
+                    console.log('formFile: ', formFile)
+                }
+
+
+                var inputElements = $('input[name="qty"]');
+                inputElements.each(function() {
+                    var inputElement = $(this);
+                    var productID = inputElement.data("product_id");
+                    var quantity = inputElement.val();
+            
+                    // Create a product dictionary
+                    var productDict = {
+                        'product_id': productID,
+                        'quantity': quantity
+                    };
+            
+                    // Add the product dictionary to the data object
+                    if (!data['product_info']) {
+                        data['product_info'] = [];
+                    }
+            
+                    data['product_info'].push(productDict);
+                });
+
+                
+
+                formData.forEach(function(entry){
+                    console.log('form data: ', entry.name)
+                    if(entry.name === 'qty'){
+                        return
+                    }
+                    else {
+                        data[entry.name] = entry.value;
+                    }
+                })
+                formFile.append('json_data', JSON.stringify(data));
+                
+                formFile.forEach(function(value, key) {
+                    console.log(key, value);
+                });
+
+                fetch('/save_product_installation/', {
+                    method: 'POST',
+                    //body: JSON.stringify(data),
+                    body: formFile,
+                    headers: {
+                        'x-CSRFToken': '{{csrf_token}}',
+                        //'Content-Type': 'application/json'
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Handle the response data, e.g., show a success message
+                    console.log('data: ', data);
+                    
+    
+                    if (data.error) {
+                        if($('#success-error-message').hasClass('alert-success')){
+                            $('#success-error-message').removeClass('alert-success');
+                            $('#success-error-message').addClass('alert-danger').text(data.error);
+                        }
+                        else{
+                            $('#success-error-message').addClass('alert-danger').text(data.error);
+                        }
+                    }
+                    else if (data.success) {
+                        if($('#success-error-message').hasClass('alert-danger')){
+                            $('#success-error-message').removeClass('alert-danger');
+                            $('#success-error-message').addClass('alert alert-success').text(data.success);
+                            console.log('removed error added success')
+                        }
+                        else{
+                            $('#success-error-message').addClass('alert-success').text(data.success);
+                        }
+                        
+                    }
+                })
+                .catch(error => {
+                    // Handle errors, e.g., show an error message
+                    console.error('Error:', error);
+                });
+            })
+        })
+    </script>
+    <script>
+        // Add the JavaScript code here
+    
+        var totalAmount = 0;
+    
+        function updateTotalAmount() {
+            var price = parseFloat(document.getElementById("product_price").value);
+            var quantity = parseInt(document.getElementById("product_quantity").value);
+    
+            var productTotal = price * quantity;
+            totalAmount = productTotal;
+    
+            document.getElementById("summary-total-amount").textContent = totalAmount.toFixed(2);
+        }
+    
+        // Add event listeners for product select and quantity input
+        document.getElementById("product_select").addEventListener("change", updateTotalAmount);
+        document.getElementById("product_quantity").addEventListener("input", updateTotalAmount);
+    
+        // Initialize total amount on page load
+        updateTotalAmount();
+    </script>
+    <!-- Include your custom JavaScript here if needed -->
+{% endblock custom_js %}

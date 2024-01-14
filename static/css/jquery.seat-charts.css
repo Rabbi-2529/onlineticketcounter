@@ -1,0 +1,127 @@
+div.seatCharts-cell {
+  height: 10px;
+  width: 8px;
+  margin: 3px;
+  float: left;
+  text-align: center;
+  outline: none;
+  font-size: 8px;
+  line-height: 8px;
+}
+
+div.seatCharts-seat {
+  color: white;
+  border-radius: 5px;
+  cursor: default;
+  background-color: transparent;
+}
+
+div.seatCharts-seat:focus {
+  border: none;
+}
+
+div.seatCharts-space {
+  background-color: white;
+}
+
+div.seatCharts-row {
+  height: 10px;
+}
+
+div.seatCharts-row:after {
+  clear: both;
+}
+
+div.seatCharts-seat.available {
+  background: rgb(156, 195, 222);
+  background: radial-gradient(
+    circle,
+    rgba(156, 195, 222, 1) 0%,
+    rgba(110, 185, 238, 1) 25%,
+    rgba(64, 144, 212, 1) 50%,
+    rgba(46, 135, 196, 1) 75%,
+    rgba(40, 121, 177, 1) 100%
+  );
+
+  /* Add smell effect */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+div.seatCharts-seat.available.first-class {
+  background: rgb(178, 64, 212);
+  background: radial-gradient(
+    circle,
+    rgba(178, 64, 212, 1) 0%,
+    rgba(137, 26, 158, 1) 25%,
+    rgba(118, 12, 149, 1) 50%,
+    rgba(126, 17, 149, 1) 75%,
+    rgba(94, 2, 121, 1) 100%
+  );
+
+  /* Add smell effect */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+div.seatCharts-seat.focused {
+  background: rgb(219, 215, 215);
+  background: radial-gradient(
+    circle,
+    rgba(219, 215, 215, 1) 0%,
+    rgba(205, 205, 205, 1) 25%,
+    rgba(195, 192, 192, 1) 50%,
+    rgba(204, 204, 204, 1) 75%,
+    rgba(207, 207, 207, 1) 100%
+  );
+  color: #1a1c1e;
+
+  /* Add smell effect */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+div.seatCharts-seat.selected {
+  background-color: #85ffbd;
+  background-image: linear-gradient(45deg, #85ffbd 0%, #fffb7d 100%);
+
+  /* Add smell effect */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+div.seatCharts-seat.unavailable {
+  background: rgb(252, 121, 121);
+  background: radial-gradient(
+    circle,
+    rgba(252, 121, 121, 1) 0%,
+    rgba(249, 81, 81, 1) 25%,
+    rgba(231, 53, 53, 1) 50%,
+    rgba(255, 24, 24, 1) 75%,
+    rgba(217, 6, 6, 1) 100%
+  );
+
+  /* Add smell effect */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Seat Size Styling */
+
+div.seatCharts-seat.small {
+  background-color: #f5f5f5;
+  /* Add small size background color or image */
+}
+
+div.seatCharts-seat.medium {
+  background-color: #cccccc;
+  /* Add medium size background color or image */
+}
+
+div.seatCharts-seat.large {
+  background-color: #999999;
+  /* Add large size background color or image */
+}
+
+ul.seatCharts-legendList {
+  list-style: none;
+}
+
+li.seatCharts-legendItem {
+  line-height: 1;
+}

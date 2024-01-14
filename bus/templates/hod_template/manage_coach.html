@@ -1,0 +1,82 @@
+{% extends 'hod_template/base_template.html' %}
+
+{% load static %}
+{% block custom_css %}
+    <link rel="stylesheet" href="{% static "dist/css/add_coach.css" %}">
+{% endblock custom_css %}
+
+{% block main_content %}
+    <div class="container-xl px-4 mt-4">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- general form elements -->
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">Manage Coach</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <form method="GET" action="{% url 'manage_coach' %}" class="search-form">
+                            <div class="row card-body justify-content-between pb-0">
+                                <div class="add-staff-type-button col-md-6 col-12 mb-2">
+                                    <a href="{% url 'add_coach' %}" class="btn btn-success save-btn">Add New Coach</a>
+                                </div>
+                                <div class="form-group col-md-6 col-12">
+                                    <div class="input-group">
+                                        <input type="text" name="search_query" id="search-input" class="form-control form-control-sm search-input me-0" placeholder="Search by coach model name or coach number" value="{{ search_query }}">
+                                        <div class="input-group-append">
+                                            <button type="submit" class="btn btn-primary search-button">Search</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="card-body">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Coach Model Name</th>
+                                    <th>Coach Number</th>
+                                    <th>Coach Type</th>
+                                    <th>Arrival Time</th>
+                                    <th>Price</th>
+                                    <th>Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for coach in coaches|dictsort:'coachmodelname' %}
+                                <tr>
+                                    <td>{{ coach.coachmodelname }}</td>
+                                    <td>{{ coach.coachnumber }}</td>
+                                    <td>{{ coach.coachtype }}</td>
+                                    <td>{{ coach.arrivaltime }}</td>
+                                    <td>{{ coach.price }}</td>
+                                    <td>
+                                    <a href="{% url 'edit_coach' coach.id %}" class="btn btn-primary btn-sm edit-btn">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a href="{% url 'delete_coach' coach.id %}"  class="btn btn-danger btn-sm delete-btn">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                    <a href="{% url 'manage_coach_view' coach.id %}"  class="btn btn-info btn-sm btn-icon view-btn">
+                                        <span class="icon"><i class="fas fa-eye"></i></span> 
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="6">No coaches found.</td>
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        <br>
+                        
+                        </div>
+                    </div>
+                    <!-- /.card -->
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- /.content -->
+{% endblock main_content %}

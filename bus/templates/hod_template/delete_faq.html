@@ -1,0 +1,17 @@
+{% extends 'hod_template/base_template.html' %} {% load static %}{% block page_title %}Delete  FAQ{% endblock page_title %} {% block main_content %}
+<div class="container">
+    <h2>Delete FAQ</h2>
+    <p>Are you sure you want to delete the following FAQ?</p>
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">{{ faq.question }}</h5>
+        <p class="card-text">{{ faq.answer }}</p>
+      </div>
+    </div>
+    <form method="post" action="{% url 'delete_faq' faq.id %}">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger mt-3">Delete</button>
+      <a href="{% url 'faq_list' %}" class="btn btn-secondary mt-3">Cancel</a>
+    </form>
+  </div>
+{% endblock main_content %}

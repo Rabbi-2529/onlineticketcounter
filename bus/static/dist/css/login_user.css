@@ -1,0 +1,309 @@
+/* .login-box {
+    background-color: #fff !important;
+    padding: 40px !important; 
+    border-radius: 10px !important;
+    
+    text-align: center !important;
+    width: 420px !important;
+    margin: 0 auto;
+    box-shadow: 12px 16px 22px 9px rgba(0,0,0,0.1) !important;
+}
+h2 {
+    color: #333;
+}
+
+.user-box {
+    position: relative;
+    margin-bottom: 30px;
+    left: -43px;
+}
+
+
+.user-box input {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    outline: none;
+    font-size: 18px;
+    color: #333;
+    margin-left: 7px;
+}
+
+.user-box label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    transition: all 0.2s ease-in-out;
+}
+
+.user-box input:focus ~ label,
+.user-box input:valid ~ label {
+    top: -25px;
+    font-size: 16px;
+    color: #428bca;
+}
+
+.forgot-password-text {
+    color: #428bca;
+}
+
+.input-group.mb-4 {
+    margin-bottom: 30px;
+}
+.submit-button {
+    position: relative;
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    text-decoration: none;
+    text-transform: uppercase;
+    overflow: hidden;
+    transition: .5s;
+    background-color: #03e9f4;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .submit-button span {
+    position: absolute;
+    display: block;
+    background-color: #fff;
+  }
+  
+  .submit-button span:nth-child(1) {
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 2px;
+    animation: span-anim1 1s linear infinite;
+  }
+  
+  .submit-button span:nth-child(2) {
+    top: -100%;
+    right: 0;
+    width: 2px;
+    height: 100%;
+    animation: span-anim2 1s linear infinite;
+    animation-delay: .25s;
+  }
+  
+  .submit-button span:nth-child(3) {
+    bottom: 0;
+    right: -100%;
+    width: 100%;
+    height: 2px;
+    animation: span-anim3 1s linear infinite;
+    animation-delay: .5s;
+  }
+  
+  .submit-button span:nth-child(4) {
+    bottom: -100%;
+    left: 0;
+    width: 2px;
+    height: 100%;
+    animation: span-anim4 1s linear infinite;
+    animation-delay: .75s;
+  }
+  
+
+.alert {
+    margin-top: 10px;
+} */
+
+.login-container{
+    display: flex;
+    justify-content: center;
+}
+
+.login-box{
+    border-radius: 20px;
+    background: rgb(149,152,7);
+    background: radial-gradient(circle, rgba(149,152,7,0.2) 0%, rgba(43,85,6,0.2) 100%);
+    box-shadow: -4px -4px 38px 4px rgba(0,0,0,0.1);
+}
+
+
+.field-label{
+    font-size: 15px;
+    font-weight: 500 !important;
+}
+
+.forgot-password-text{
+    font-size: 13px;
+    color: blue;
+    font-weight: 500 !important;
+}
+
+.user-box{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.user-fields{
+    width: 340px;
+    max-width: 340px;
+}
+
+.field-input{
+    width: 100%;
+}
+
+.remember-div{
+    width: 100%;
+}
+
+.remember-inputs{
+    padding: 5px 124px;
+}
+
+.save-btn {
+    width: auto !important;
+    border: none !important;
+    color: rgb(228, 228, 228);
+    border-radius: 10px;
+    padding: 0.875em 2em;
+    background: linear-gradient(90deg, #0f0566, transparent) #0a15b4;
+    transition: background-color 0.3s;
+}
+
+.save-btn:hover, .staff-btn:focus {
+    background-color: #031b46;
+    color: rgb(228, 228, 228);
+}
+
+/* =================================================================*/
+.material {
+    position: relative;
+    padding: 0;
+    margin: 5px;
+    border: none;
+    overflow: visible;
+}
+
+.material input {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 12px 10px 8px;
+    border: none;
+    border-radius: 10px;
+    box-shadow: none;
+    border: 1px solid rgba(4, 131, 32, 0.35);
+    font-size: 14px;
+    outline: none;
+    cursor: text;
+    background: rgb(149,152,7);
+    background: radial-gradient(circle, rgba(231, 231, 198, 0.9) 0%, rgba(200, 228, 175, 0.9) 100%);
+}
+
+.material input:focus{
+    border: none;
+    border-radius: 0;
+}
+
+.material input::-webkit-input-placeholder {
+    transition: color 300ms ease;
+}
+
+.material input:not(:focus)::-webkit-input-placeholder {
+    color: transparent;
+}
+
+.material hr {
+    content: '';
+    display: block;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 2px;
+    border: none;
+    background: #069412;
+    font-size: 1px;
+    will-change: transform, visibility;
+    transition: all 500ms ease-out;
+    transform: scaleX(0);
+    visibility: hidden;
+    z-index: 10;
+}
+
+.material input:focus ~ hr {
+    transform: scaleX(1);
+    visibility: visible;
+}
+
+.material label {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 14px;
+    font-weight: 400 !important;
+    color: #59676e;
+    transform-origin: 0 -150%;
+    transition: 500ms linear;
+    pointer-events: none;
+}
+
+.material input:focus ~ label,
+.material input:valid ~ label {
+    top: -20px;
+    transform: scale(0.9);
+}
+/* =================================================================*/
+
+/* .eye-toggle {
+    position: absolute;
+    right: 9px;
+    top: 50%; 
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 14px; 
+    color: #666; 
+    transition: color 0.3s; 
+}
+
+.eye-toggle:hover {
+    color: #333; 
+} */
+
+.password-toggle{
+    position: absolute;
+    /* display: flex; */
+    width: auto;
+    top: 9px;
+    right: 12px;
+    cursor: pointer;
+    z-index: 999;
+}
+
+.error-text{
+    font-size: 12px !important;
+}
+
+.field-icons{
+    position: absolute;
+    font-size: 18px;
+    top: 5px;
+    right: 15px;
+}
+
+.field-icons i{
+    color: rgb(0, 71, 0);
+}
+
+.field-eye-icon{
+    position: absolute;
+    font-size: 18px;
+    top: 5px;
+    right: 40px;
+}
+
+.field-eye-icon i{
+    color: rgb(0, 71, 0);
+}

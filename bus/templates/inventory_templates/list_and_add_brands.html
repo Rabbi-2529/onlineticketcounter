@@ -1,0 +1,388 @@
+{% extends 'inventory_templates/inventory_base.html' %}
+{% load static %}
+
+{% block custom_css %}
+<link rel="stylesheet" href="{% static "dist/css/inventory_sub.css" %}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.9/dist/flatpickr.min.css">
+<style>
+    /* Custom status colors */
+    .custom-status-pending {
+        color: orange; /* Adjust the color as needed */
+    }
+
+    .custom-status-received {
+        color: green; /* Adjust the color as needed */
+    }
+
+    .custom-status-completed {
+        color: blue; /* Adjust the color as needed */
+    }
+
+    .custom-status-canceled {
+        color: red; /* Adjust the color as needed */
+    }
+    .make-payment-link,
+    .view-payment-link{
+        color: black !important;
+    }
+    .delete-purchase {
+        color: black !important;
+    }
+    .btn-btn-light {
+        border-color: black;
+      }
+      .btn-btn-light {
+        border-color: black;
+        color: black; /* Set the default text color */
+        transition: border-color 0.4s, color 0.4s; /* Add a smooth transition for the color change */
+      }
+      
+      .btn-btn-light:hover {
+        border-color: blue;
+        color: blue; /* Change the text color to blue on hover */
+      }
+      .text-black .dropdown-item {
+        color: black !important;
+    }
+    .text-black .dropdown-item:hover {
+        box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3); /* Add a black shadow on hover */
+    }
+    .text-black .clicked {
+        color: black;
+    }
+    .text-black {
+        color: black !important;
+    }
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1050;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+
+    
+    /* CSS */
+    .custom-btn {
+      background-color: #EA4C89 !important;
+      border-radius: 8px;
+      border-style: none;
+      box-sizing: border-box;
+      color: #FFFFFF !important;
+      cursor: pointer;
+      display: inline-block;
+      font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      height: 40px;
+      line-height: 20px;
+      list-style: none;
+      margin: 0;
+      outline: none;
+      padding: 10px 16px;
+      position: relative;
+      text-align: center;
+      text-decoration: none;
+      transition: color 100ms;
+      vertical-align: baseline;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+    }
+    
+    .custom-btn:hover,
+    .custom-btn:focus {
+        background-color: #F082AC !important;
+    }
+    
+</style>
+
+{% endblock custom_css %}
+
+{% block page_title %}List and Add Brands{% endblock page_title %}
+
+{% block main_content %}
+<section class="content">
+    <div class="container-xl px-4 mt-4">
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-md-12">
+                    <div class="card card-primary">
+                        <div class="card-header d-flex justify-content-center">
+                            <h3 class="card-title py-2">Add Brand</h3>
+                        </div>
+                        <div class="card-body">
+                            <form method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                            <!-- Create brand section -->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div id="image-card" class="card custom-card p-0 overflow-hidden image-card"> <!-- Apply the custom-card class -->
+                                        
+                                        <!-- Profile picture image -->
+                                        <div class="d-flex justify-content-center image-div">
+                                            <div id="drop-area" class="profile-pic-div">
+                                                <!--<input type="file" name="image" class="input-file" id="image-upload">
+                                                <label for="image-upload">Upload Image</label>-->
+                                                <img id="wizardPicturePreview" class="img-account-profile picture-src mb-2" src="" alt="">
+                                                <div class="input-pic">
+                                                    <input type="file" id="wizard-picture" name="image" class="">
+                                                </div>
+                                                <div class="image-label-div">
+                                                    <div class="image-innner-label-div">
+                                                        <div class="mb-3">
+                                                            <i class="fa-solid fa-arrow-up-from-bracket fa-2xl"></i>
+                                                        </div>
+                                                        {% comment %} <span>Upload picture</span> {% endcomment %}
+                                                        <span>Drag &amp; Drop or <br>Click to Upload</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                                <div class="col-md-6" style="margin-top: 5px;">
+                                    
+                                    <div class="mt-4">
+                                        <label for="text">Create Brand</label>
+                                        <input class="form-control form-control-lg border-5px add-brand-input bg-transparent rounded" type="text" name="name" placeholder="Add new brand ..">
+                                    </div>
+                                </div>
+                               
+                                    
+                                     </form>
+                                
+                            </div>
+
+                            <!-- Brand list section -->
+
+                            <br>
+                            <br>
+                            <div class="row mx-1 px-5 pb-3 w-80">
+                                <div class="col mx-auto">
+                                    {% for brand in brands %}
+                                    <!-- Brand Item -->
+                                    <div class="row px-3 align-items-center brand-item rounded">
+                                        <div class="col-auto m-1 p-0 d-flex align-items-center">
+                                            <!-- Checkbox for marking the item -->
+                                            <input type="checkbox" class="brand-checkbox" />
+                                            <!-- Image box -->
+                                            <div class="image-box">
+                                                
+                                                <img src="{{ brand.image.url }}" alt="{{ brand.name }}">
+                                            </div>
+                                        </div>
+                                        <div class="col px-1 m-5 d-flex align-items-center">
+                                            <!-- Brand name -->
+                                            <span class="badge badge-warning brand-badge">{{ brand.name }}</spa
+                                            <input type="text" class="form-control form-control-lg border-0 edit-brand-input bg-transparent rounded px-3" readonly value="{{ brand.name }}" title="{{ brand.name }}" />
+                                            <input type="text" class="form-control form-control-lg border-0 edit-brand-input rounded px-3 d-none" value="{{ brand.name }}" />
+                                        </div>
+                                        <div class="col-auto m-1 p-0">
+                                            <div class="dropdown">
+                                                <button class="btn btn-secondary custom-btn-group dropdown-toggle" type="button" id="actionsDropdown{{ brand.id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    Actions
+                                                </button>
+                                                <div class="dropdown-menu" aria-labelledby="actionsDropdown{{ brand.id }}">
+                                                    <a class="dropdown-item action-brand"  id="edit-brand"  href="#" data-toggle="modal" data-target="#editBrandModal{{ brand.id }}">
+                                                        Edit 
+                                                    </a><a
+                                                    class="dropdown-item action-link delete-brand"   data-id="{{ brand.id }}" data-toggle="modal" data-target="#deletebrandModal"> Delete</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal fade" id="editBrandModal{{ brand.id }}" tabindex="-1" role="dialog" aria-labelledby="editBrandModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title text-black"  id="editBrandModalLabel{{brand.id}}">Edit Payment</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <!-- Form for editing payment details -->
+                                                    <form id="editBrandForm">
+                                                        
+                                                            {% csrf_token %}
+                                                            <div class="form-group">
+                                                                <label for="editBrandName{{ brand.id }}">Brand Name</label>
+                                                                <input type="text" class="form-control" id="editBrandName{{ brand.id }}" name="name" value="{{ brand.name }}" required>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="editBrandImage{{ brand.id }}">Brand Image</label>
+                                                                <input type="file" class="form-control-file" id="editBrandImage{{ brand.id }}" name="image">
+                                                            </div>
+                                                            <button type="submit" class="custom-btn" data-brand-id="{{ brand.id }}">Save Changes</button>
+                                                        </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                          
+                                    {% endfor %}
+                            
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+{% endblock main_content %}
+{% block custom_js %}
+<script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.9/dist/flatpickr.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script>
+    // Edit Brand Form Submission
+    $(document).on('submit', 'form[id^="editBrandForm"]', function(event) {
+        event.preventDefault();
+        var brandId = $(this).find('button[type="submit"]').data('brand-id'); // Fix typo: 'data-payment-id' to 'data-brand-id'
+        var form = $(this);
+
+        $.ajax({
+            url: '/edit_brand/' + brandId + '/', // Ensure there's a trailing slash
+            type: 'POST',
+            data: new FormData(this),
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                if (response.success) {
+                    $('#editBrandModal' + brandId).modal('hide');
+                    window.location.href = "{% url 'list_brands' %}";
+               
+                } else {
+                    // Handle errors or show an alert
+                    alert('Error: ' + response.error);
+                }
+            },
+            error: function() {
+                alert('Error: Failed to submit the form.');
+            }
+        });
+    });
+</script>
+<script>
+    const imgDiv = $('#wizardPicturePreview')
+    imgDiv.hide();
+    // Function to submit the edit brand form via AJAX
+
+
+    // Drag and Drop feature starts
+    var dropArea = $('#drop-area');
+    var imageCard = $('#image-card')
+
+    dropArea.on('dragenter dragover', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        imageCard.addClass('highlight');
+    });
+
+    dropArea.on('dragleave', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        imageCard.removeClass('highlight');
+    });
+
+    dropArea.on('drop', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        //var files = e.originalEvent.dataTransfer.files;
+        /*var files = e.dataTransfer.files;
+        readURL(files[0]);
+        imageCard.removeClass('highlight');*/
+
+        var files = e.originalEvent.dataTransfer.files || e.dataTransfer.files;
+        if (files && files.length > 0) {
+            $("#wizard-picture").prop("files", files);
+            $("#wizard-picture").trigger("change");
+            console.log('files: ', files[0])
+            imageCard.removeClass('highlight');
+        }
+        
+    });
+
+    $("#wizard-picture").change(function(){
+        readURL(this);
+    });
+
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            imgDiv.show();
+
+    
+            reader.onload = function (e) {
+                $('#wizardPicturePreview').attr('src', e.target.result).fadeIn('slow');
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    /*$('.profile-pic-btn').on('click', function(){
+        $('#wizard-picture').click()
+        console.log('clicked')
+    })*/
+    // Drag and Drop feature ends
+ 
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+<script>
+    $(document).ready(function() {
+        $('.action-link').click(function() {
+            // Get the purchase ID from the data attribute
+            var brandId = $(this).data('id');
+            
+            // Display a SweetAlert2 confirmation dialog
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You won\'t be able to revert this!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Send an AJAX request to delete the purchase
+                    $.ajax({
+                        url: `/delete_brand/${brandId}/`, // Replace with your URL
+                        type: 'POST',
+                        data: {
+                            csrfmiddlewaretoken: '{{ csrf_token }}' // Replace with your CSRF token
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                // Handle a successful delete action
+                                // For example, you can remove the deleted item from the list
+                                // No need for alert here, as SweetAlert2 provides a built-in success message
+                                location.reload(); // Reloading the page as an example
+                            } else {
+                                // Handle errors
+                                Swal.fire('Error', response.message, 'error');
+                            }
+                        },
+                        error: function() {
+                            // Handle AJAX errors
+                            Swal.fire('Error', 'An error occurred during the delete process.', 'error');
+                        }
+                    });
+                }
+            });
+        });
+    });
+</script>
+{% endblock custom_js %}

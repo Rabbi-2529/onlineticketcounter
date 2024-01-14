@@ -1,0 +1,28 @@
+{% extends 'hod_template/base_template.html' %}
+{% load static %}
+
+{% block main_content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Delete Tax</h2>
+                </div>
+                <div class="card-body">
+                    <p>Are you sure you want to delete the following tax entry?</p>
+                    <p><strong>Tax Name:</strong> {{ tax.tax_name }}</p>
+                    <p><strong>Tax Value:</strong> {{ tax.tax_value }}</p>
+                    <p><strong>Status:</strong> {{ tax.get_status_display }}</p>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                        <a href="{% url 'tax_list' %}" class="btn btn-secondary">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock main_content %}

@@ -1,0 +1,217 @@
+{% extends 'hod_template/base_template.html' %} 
+<style>
+  .suggestions-container {
+    position: relative;
+    margin-top: 10px;
+  }
+
+  .district-suggestion {
+    cursor: pointer;
+    padding: 5px;
+  }
+
+  .district-suggestion:hover {
+    background-color: #e0e0e0;
+  }
+</style>
+{% block page_title %} Add District {% endblock page_title %} 
+{% block main_content %}
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-5 offset-md-3">
+        <!-- general form elements -->
+        <br>
+        <br>
+        <div class="card card-primary">
+          <div class="card-header">
+            <h3 class="card-title">Add District</h3>
+          </div>
+          <!-- /.card-header -->
+          <!-- form start -->
+          <br>
+          <form role="form" action="{% url 'add_district' %}" method="post">
+            {% csrf_token %}
+            <div class="card-body">
+              <div class="form-group">
+                <label>District Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter district name"
+                  name="name"
+                />
+              </div>
+              {% if messages %}
+              <div class="alert alert-success" style="margin-top: 10px">
+                {% for message in messages %}
+                {{ message }}
+                {% endfor %}
+              </div>
+              {% endif %}
+             
+            </div>
+            <!-- /.card-body -->
+            <div class="card-footer">
+              <button type="submit" class="btn btn-primary btn-block">
+                Add District
+              </button>
+            </div>
+          </form>
+        </div>
+        <!-- /.card -->
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock main_content %} 
+
+{% block custom_js %}
+<script>
+  var districts = [
+  "Bagerhat",
+  "Bandarban",
+  "Barguna",
+  "Barisal",
+  "Bhola",
+  "Bogra",
+  "Brahmanbaria",
+  "Chandpur",
+  "Chapai Nawabganj",
+  "Chittagong",
+  "Chuadanga",
+  "Comilla",
+  "Cox's Bazar",
+  "Dhaka",
+  "Dinajpur",
+  "Faridpur",
+  "Feni",
+  "Gaibandha",
+  "Gazipur",
+  "Gopalganj",
+  "Habiganj",
+  "Jamalpur",
+  "Jessore",
+  "Jhalokati",
+  "Jhenaidah",
+  "Joypurhat",
+  "Khagrachhari",
+  "Khulna",
+  "Kishoreganj",
+  "Kurigram",
+  "Kushtia",
+  "Lakshmipur",
+  "Lalmonirhat",
+  "Madaripur",
+  "Magura",
+  "Manikganj",
+  "Meherpur",
+  "Moulvibazar",
+  "Munshiganj",
+  "Mymensingh",
+  "Naogaon",
+  "Narail",
+  "Narayanganj",
+  "Narsingdi",
+  "Natore",
+  "Nawabganj",
+  "Netrokona",
+  "Nilphamari",
+  "Noakhali",
+  "Pabna",
+  "Panchagarh",
+  "Patuakhali",
+  "Pirojpur",
+  "Rajbari",
+  "Rajshahi",
+  "Rangamati",
+  "Rangpur",
+  "Satkhira",
+  "Shariatpur",
+  "Sherpur",
+  "Sirajganj",
+  "Sunamganj",
+  "Sylhet",
+  "Tangail",
+  "Thakurgaon"
+];
+
+var districtInput = document.querySelector('input[name="name"]');
+
+function suggestDistricts(event) {
+  var inputValue = event.target.value.toLowerCase();
+  var suggestions = [];
+
+  suggestions = districts.filter(function (district) {
+    return district.toLowerCase().indexOf(inputValue) !== -1;
+  });
+
+  if (inputValue.length > 0) {
+    clearSuggestions();
+
+    suggestions.forEach(function (suggestion) {
+      var suggestionElement = document.createElement("div");
+      suggestionElement.classList.add("district-suggestion");
+      suggestionElement.textContent = suggestion;
+
+      suggestionElement.addEventListener("mouseover", function () {
+        suggestionElement.style.backgroundColor = "#e0e0e0";
+      });
+
+      suggestionElement.addEventListener("mouseout", function () {
+        suggestionElement.style.backgroundColor = "transparent";
+      });
+
+      suggestionElement.addEventListener("click", function () {
+        districtInput.value = suggestion;
+        clearSuggestions();
+      });
+
+      suggestionsContainer.appendChild(suggestionElement);
+    });
+  } else {
+    clearSuggestions();
+  }
+}
+
+function clearSuggestions() {
+  while (suggestionsContainer.firstChild) {
+    suggestionsContainer.removeChild(suggestionsContainer.firstChild);
+  }
+}
+
+districtInput.addEventListener("input", suggestDistricts);
+
+var suggestionsContainer = document.createElement("div");
+suggestionsContainer.classList.add("suggestions-container");
+
+districtInput.parentNode.appendChild(suggestionsContainer);
+</script>
+
+<script>
+  $(document).ready(function(){
+      $("#id_province").change(function(){
+          var province_id=$(this).val();
+
+          if(province_id!=""){
+              $.ajax({
+                  url:'',
+                  type:'POST',
+                  data:{province_id:province_id}
+              })
+              .done(function(response){
+                  console.log(response);
+                  $("#id_district").html(response);
+              })
+              .fail(function(){
+                  console.log("failed");
+              })
+          }
+          else{
+              $("#id_district").html("<option value=''>---------</option>");
+          }
+      });
+  });
+</script>
+{% endblock custom_js %}

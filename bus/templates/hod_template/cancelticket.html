@@ -1,0 +1,149 @@
+{% extends 'hod_template/base_template.html' %}
+
+{% load static %}
+{% block custom_css %}
+ <link rel="stylesheet" href="{% static "dist/css/ticket_cancellation.css" %}">
+ <link rel="stylesheet" href="{% static "dist/css/cancelticket.css" %}"> 
+
+
+{% endblock custom_css %}
+
+{% block main_content %}
+
+<div class="container-xl px-4 mt-4">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <!-- general form elements -->
+                <div class="card card-primary">
+                <div class="card-header d-flex justify-content-center">
+                    <h3 class="card-title">Cancel  tickets</h3>
+                </div>
+                <!-- /.card-header -->
+                {% comment %} <div class="card-body">
+                    <form
+                    method="GET"
+                    action="{% url 'manage_tickets' %}"
+                    class="search-form"
+                    >
+                    <!-- Search form code here -->
+                    </form>
+                </div> {% endcomment %}
+
+                <div class="card-body">
+                    {% if messages %}
+                        <div class="alert alert-success">
+                            <ul>
+                                {% for message in messages %}
+                                <li>{{ message }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                    {% if cancel_ticket_data %}
+                    <table id="paydetaillist" class="table table-bordered">
+                            <thead>
+                                <tr>
+                                  
+                                    <th>Booking ID</th>
+                                    <th>Start Point</th>
+                                    <th>End Point</th>
+                                    <th>Seat Number</th>
+                                    <th>Journey Date</th>
+                                    <th>Departure Time</th>
+                                    <th>Request User</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for data in cancel_ticket_data %}
+                                <tr>
+                                    
+                                    <td>{{ data.booking.id }}</td>
+                                    <td>{{ data.start_point }}</td>
+                                    <td>{{ data.end_point }}</td>
+                                    <td>{{ data.seat_number }}</td>
+                                    <td>{{ data.journey_date }}</td>
+                                    <td>{{ data.departure_time }}</td>
+                                    <td>{{ data.request_user.username }}</td>
+                                    <td>{{ data.cancel_ticket.status }}</td>
+                                    <td class="large-td">
+                                        
+                                            <div class="frame row d-flex">
+                                                {% if data.cancel_ticket.status == "Pending" %}
+                                                <div class="col-3">
+                                                    <form action="{% url 'approve_cancel_request' data.cancel_ticket.id %}" method="post" class="button-form" style="width: 80px; height: 50px;">
+                                                        {% csrf_token %}
+                                                        <button type="submit" class="custom-btn btn-14">Approve</button>
+                                                    </form>
+                                                </div>
+                                                <div class="col-1 cancel">
+                                                    <form action="{% url 'reject_cancel_request' data.cancel_ticket.id %}" method="post" class="button-form" style="width: 150px; height: 50px;">
+                                                        {% csrf_token %}
+                                                        <button type="submit" class="custom-btn cancel-btn btn-12"><span>Click!</span><span>Reject</span></button>
+                                                    </form>
+                                                </div>
+                                                {% endif %}
+                                        
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <div class="no-data-text-div d-flex justify-content-center">
+                            <p class="no-data-text mb-0 py-3">No tickets found.</p>
+                        </div>
+                    {% endif %}
+                    </div>
+                </div>
+                <!-- /.card -->
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function() {
+        $('#paydetaillist').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'copy',
+                    text: 'Copy',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3,4,5,6,7,8] // Specify which columns to include
+                    }
+                },
+                {
+                    extend: 'csv',
+                    text: 'CSV',
+                    filename: 'Cancel List', // Specify the filename
+                    extension: '.csv',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3,4,5,6,7,8] // Specify which columns to include
+                    },
+                    fieldSeparator: ',', // Specify the field separator (comma)
+                    fieldBoundary: '"' // Specify the field boundary character
+                },
+                {
+                    extend: 'excel',
+                    text: 'Excel',
+                    filename: 'Cancel List', // Specify the filename
+                    extension: '.xlsx',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3,4,5,6,7,8] // Specify which columns to include
+                    }
+                },
+                'pdf',
+                'print'
+            ],
+            initComplete: function () {
+                console.log("DataTables initialized!"); // Debugging statement
+            }
+        });
+    });
+    </script>
+<!-- /.content -->
+{% endblock main_content %}

@@ -1,0 +1,198 @@
+{% extends 'accounts_templates/accounts_base.html' %}
+{% load static %}
+
+{% block custom_css %}
+<link rel="stylesheet" href="{% static "dist/css/add_product.css" %}">
+<link rel="stylesheet" href="{% static "dist/css/transection.css" %}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.9/dist/flatpickr.min.css">
+<style>
+    /* Add custom CSS styles here */
+</style>
+{% endblock custom_css %}
+
+{% block main_content %}
+<div class="main-part">
+    <div class="cpanel">
+        <div class="icon-part">
+            <i class="fa-solid fa-credit-card"></i><br>
+            <small>Net Income</small>
+            <p>{{ total_income }}</p>
+        </div>
+    </div>
+
+    <div class="cpanel cpanel-green">
+        <div class="icon-part">
+            <i class="fa-solid fa-credit-card"></i><br>
+            <small>Total Expense</small>
+            <p>{{ total_expense }}</p>
+        </div>
+    </div>
+
+
+    <div class="cpanel cpanel-orange">
+        <div class="icon-part">
+            <i class="fa-solid fa-credit-card"></i><br>
+            <small>Total Profit</small>
+            <p>{{ total_profit }}</p>
+        </div>
+    </div>
+    
+    <div class="cpanel cpanel-orange">
+        <div class="icon-part">
+            <i class="fa-solid fa-credit-card"></i><br>
+            <small>Total Loss</small>
+            <p>{{ total_profit }}</p>
+        </div>
+    </div>
+</div>
+
+<div class="transaction-table">
+    <h2>Income</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <td>Sources</td>
+                <td>January</td>
+                <td>February</td>
+                <td>March</td>
+                <td>April</td>
+                <td>May</td>
+                <td>June</td>
+                <td>July</td>
+                <td>August</td>
+                <td>September</td>
+                <td>October</td>
+                <td>November</td>
+                <td>December</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Revenue</td>
+                <td>{{ invoice_monthly_amounts.1|floatformat:"2" }}</td>
+                <td>{{ invoice_monthly_amounts.2|floatformat:"2" }}</td>
+                <td>{{ invoice_monthly_amounts.3|floatformat:"2" }}</td>
+                <td>{{ invoice_monthly_amounts.4|floatformat:"2" }}</td>
+                <td>{{ invoice_monthly_amounts.5|floatformat:"2" }}</td>
+                <td>{{ invoice_monthly_amounts.6|floatformat:"2" }}</td>
+                <td>{{ invoice_monthly_amounts.7|floatformat:"2" }}</td>
+                <td>{{ invoice_monthly_amounts.8|floatformat:"2" }}</td>
+                <td>{{ invoice_monthly_amounts.9|floatformat:"2" }}</td>
+                <td>{{ invoice_monthly_amounts.10|floatformat:"2" }}</td>
+                <td>{{ invoice_monthly_amounts.11|floatformat:"2" }}</td>
+                <td>{{ invoice_monthly_amounts.12|floatformat:"2" }}</td>
+            </tr>
+            <tr>
+                <td>Invoice</td>
+                <td>{{ payment_monthly_amounts.1|floatformat:"2" }}</td>
+                <td>{{ payment_monthly_amounts.2|floatformat:"2" }}</td>
+                <td>{{ payment_monthly_amounts.3|floatformat:"2" }}</td>
+                <td>{{ payment_monthly_amounts.4|floatformat:"2" }}</td>
+                <td>{{ payment_monthly_amounts.5|floatformat:"2" }}</td>
+                <td>{{ payment_monthly_amounts.6|floatformat:"2" }}</td>
+                <td>{{ payment_monthly_amounts.7|floatformat:"2" }}</td>
+                <td>{{ payment_monthly_amounts.8|floatformat:"2" }}</td>
+                <td>{{ payment_monthly_amounts.9|floatformat:"2" }}</td>
+                <td>{{ payment_monthly_amounts.10|floatformat:"2" }}</td>
+                <td>{{ payment_monthly_amounts.11|floatformat:"2" }}</td>
+                <td>{{ payment_monthly_amounts.12|floatformat:"2" }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="transaction-table">
+    <h2>Expense</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <td>Sources</td>
+                <td>January</td>
+                <td>February</td>
+                <td>March</td>
+                <td>April</td>
+                <td>May</td>
+                <td>June</td>
+                <td>July</td>
+                <td>August</td>
+                <td>September</td>
+                <td>October</td>
+                <td>November</td>
+                <td>December</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Payment</td>
+                <td>{{ monthly_expense_payments.1|floatformat:"2" }}</td>
+                <td>{{ monthly_expense_payments.2|floatformat:"2" }}</td>
+                <td>{{ monthly_expense_payments.3|floatformat:"2" }}</td>
+                <td>{{ monthly_expense_payments.4|floatformat:"2" }}</td>
+                <td>{{ monthly_expense_payments.5|floatformat:"2" }}</td>
+                <td>{{ monthly_expense_payments.6|floatformat:"2" }}</td>
+                <td>{{ monthly_expense_payments.7|floatformat:"2" }}</td>
+                <td>{{ monthly_expense_payments.8|floatformat:"2" }}</td>
+                <td>{{ monthly_expense_payments.9|floatformat:"2" }}</td>
+                <td>{{ monthly_expense_payments.10|floatformat:"2" }}</td>
+                <td>{{ monthly_expense_payments.11|floatformat:"2" }}</td>
+                <td>{{ monthly_expense_payments.12|floatformat:"2" }}</td>
+            </tr>
+            <tr>
+                <td>Bill</td>
+                <td>{{ monthly_expense_bill.1|floatformat:"2" }}</td>
+                <td>{{ monthly_expense_bill.2|floatformat:"2" }}</td>
+                <td>{{ monthly_expense_bill.3|floatformat:"2" }}</td>
+                <td>{{ monthly_expense_bill.4|floatformat:"2" }}</td>
+                <td>{{ monthly_expense_bill.5|floatformat:"2" }}</td>
+                <td>{{ monthly_expense_bill.6|floatformat:"2" }}</td>
+                <td>{{ monthly_expense_bill.7|floatformat:"2" }}</td>
+                <td>{{ monthly_expense_bill.8|floatformat:"2" }}</td>
+                <td>{{ monthly_expense_bill.9|floatformat:"2" }}</td>
+                <td>{{ monthly_expense_bill.10|floatformat:"2" }}</td>
+                <td>{{ monthly_expense_bill.11|floatformat:"2" }}</td>
+                <td>{{ monthly_expense_bill.12|floatformat:"2" }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="transaction-table">
+    <h2>Profit & Loss</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <td>Sources</td>
+                <td>January</td>
+                <td>February</td>
+                <td>March</td>
+                <td>April</td>
+                <td>May</td>
+                <td>June</td>
+                <td>July</td>
+                <td>August</td>
+                <td>September</td>
+                <td>October</td>
+                <td>November</td>
+                <td>December</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Profit</td>
+                {% for month in monthly_profit %}
+                <td>{{ month|floatformat:"2" }}</td>
+                {% endfor %}
+            </tr>
+            <tr>
+                <td>Loss</td>
+                {% for month in monthly_loss %}
+                <td>{{ month|floatformat:"2" }}</td>
+                {% endfor %}
+            </tr>
+            
+        </tbody>
+    </table>
+</div>
+</div>
+
+{% endblock main_content %}

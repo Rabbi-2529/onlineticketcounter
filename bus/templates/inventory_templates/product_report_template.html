@@ -1,0 +1,224 @@
+{% extends 'inventory_templates/inventory_base.html' %}
+{% load static %}
+
+{% block custom_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.css">
+<link rel="stylesheet" href="{% static "dist/css/add_product.css" %}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.9/dist/flatpickr.min.css">
+<style>
+    /* Add custom CSS for spacing and form design */
+    .form-container {
+        margin-bottom: 20px; /* Add space between form and table */
+        padding: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .form-container .form-row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+</style>
+{% endblock custom_css %}
+
+{% block main_content %}
+<div class="container-xl px-4 mt-4">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header d-flex justify-content-center">
+                        <h3 class="card-title py-2">Product Report</h3>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="form-container">
+                            <!-- Add a form for generating the Product Report -->
+                            <form method="GET" action="{% url 'generate_product_report' %}">
+                                {% csrf_token %}
+                                <div class="form-row">
+                                    <div class="form-group col-md-4">
+                                        <label for="warehouse_select">Select Warehouse</label>
+                                        <select id="warehouse_select" name="warehouse_id" class="form-control">
+                                            <option value="" selected>All Warehouses</option>
+                                            {% for warehouse in all_warehouses %}
+                                                <option value="{{ warehouse.id }}">{{ warehouse.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-4" style="margin-top: 10px;">
+                                        <button type="submit" class="save-btn" name="generate_report" style="margin-top: 20px;">Generate Report</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Display product data in a table -->
+                        <div class="table-responsive">
+                            <table id="productlist" class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Product Name</th>
+                                        <th>Category</th>
+                                        <th>Brand</th>
+                                        <th>Item Price</th>
+                                        <th>Unit Quantity</th>
+                                        <th>Tax</th>
+                                        <th>Discount</th>
+                                        <th>Stock Alert</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for product in all_products %}
+                                        <tr>
+                                            <td><span class="badge badge-primary">{{ product.name }}</span></td>
+                                            <td><span class="badge badge-secondary">{{ product.category.name }}</span></td>
+                                            <td><span class="badge badge-success">{{ product.brand.name }}</span></td>
+                                            <td><span class="badge badge-primary">{{ product.item_price }}</span></td>
+                                            <td><span class="badge badge-secondary">{{ product.unit_quantity }}</span></td>
+                                            <td><span class="badge badge-success">{{ product.tax }}</span></td>
+                                            <td><span class="badge badge-danger">{{ product.discount }}</span></td>
+                                            <td><span class="badge badge-warning">{{ product.stock_alert }}</span></td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock main_content %}
+
+{% block custom_js %}
+<script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.9/dist/flatpickr.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.js"></script>
+<script type="text/javascript" src="{% static "dist/js/select_dropdown.js" %}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Initialize flatpickr for date picker inputs
+        $('.datepicker').datepicker({
+            format: 'yyyy-mm-dd',
+            todayHighlight: true,
+            toggleActive: true
+        });
+
+        // Add an event listener for warehouse change
+        $('#warehouse_select').on('change', function(e) {
+            // Handle the warehouse change
+            updateProductTable();
+        });
+
+        // Function to update the product table
+        function updateProductTable() {
+            const warehouseId = document.getElementById("warehouse_select").value;
+
+            // Make an AJAX request to the filter_product_report view
+            fetch(`/api/product/?warehouse_id=${warehouseId}`)
+                .then((response) => response.json())
+                .then((data) => {
+                    // Generate table rows and update the table
+                    let table = document.getElementById("productlist");
+                    let tableBody = table.querySelector('tbody');
+                    tableBody.innerHTML = ''; // Clear the table
+
+                    data.forEach((product) => {
+                        // Create a new row for each product
+                        let row = document.createElement('tr');
+
+                        // Create table cells for each column
+                        let productNameCell = document.createElement('td');
+                        productNameCell.textContent = product.product_name;
+                        row.appendChild(productNameCell);
+
+                        let categoryCell = document.createElement('td');
+                        categoryCell.textContent = product.category;
+                        row.appendChild(categoryCell);
+
+                        let brandCell = document.createElement('td');
+                        brandCell.textContent = product.brand;
+                        row.appendChild(brandCell);
+
+                        let itemPriceCell = document.createElement('td');
+                        itemPriceCell.textContent = product.item_price;
+                        row.appendChild(itemPriceCell);
+
+                        let unitQuantityCell = document.createElement('td');
+                        unitQuantityCell.textContent = product.unit_quantity;
+                        row.appendChild(unitQuantityCell);
+
+                        let taxCell = document.createElement('td');
+                        taxCell.textContent = product.tax;
+                        row.appendChild(taxCell);
+
+                        let discountCell = document.createElement('td');
+                        discountCell.textContent = product.discount;
+                        row.appendChild(discountCell);
+
+                        let stockAlertCell = document.createElement('td');
+                        stockAlertCell.textContent = product.stock_alert;
+                        row.appendChild(stockAlertCell);
+
+                        // Add the row to the table
+                        tableBody.appendChild(row);
+                    });
+                });
+        }
+
+        // Initialize the table when the page loads
+        updateProductTable();
+    });
+</script>
+
+
+<script>
+    $(document).ready(function() {
+        $('#productlist').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'copy',
+                    text: 'Copy',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7] // Specify the correct number of columns
+                    }
+                },
+                {
+                    extend: 'csv',
+                    text: 'CSV',
+                    filename: 'Product List',
+                    extension: '.csv',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7] // Specify the correct number of columns
+                    }
+                },
+                {
+                    extend: 'excel',
+                    text: 'Excel',
+                    filename: 'Product List',
+                    extension: '.xlsx',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7] // Specify the correct number of columns
+                    }
+                },
+                {
+                    extend: 'pdf',
+                    text: 'PDF',
+                    filename: 'Product List',
+                    extension: '.pdf',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7] // Specify the correct number of columns
+                    }
+                },
+                'print'
+            ],
+            initComplete: function () {
+                console.log("DataTables initialized!");
+            }
+        });
+    });
+</script>
+{% endblock custom_js %}

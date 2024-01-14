@@ -1,0 +1,582 @@
+{% extends 'hod_template/base_template.html' %} 
+{% load static %}
+{% block custom_css %}
+    
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    
+    <link rel="stylesheet" href="{% static "dist/css/add_route.css" %}">
+
+{% endblock custom_css %}
+
+{% block page_title %}Add Route{% endblock page_title %} {% block main_content %}
+
+<div class="container-xl px-4 mt-4">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <div class="card card-primary">
+                    <div class="card-header d-flex justify-content-center">
+                        <h3 class="card-title">Routes</h3>
+                    </div>
+                    <div class="card-body">
+                        {% if messages %}
+                        <div class="alert alert-success">
+                            <ul>
+                                {% for message in messages %}
+                                <li>{{ message }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+
+                        <form method="POST" class="route-form">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="start_point">Starting Point (District):</label>
+                                <select name="start_point" id="start_point" class="form-control" required onchange="updateBoardingPoints()">
+                                <option value="" selected disabled>Select the start point district name</option>
+                                    {% for district in districts|dictsort:"district_name"  %}
+                                        <option value="{{ district.district_name }}">{{ district.district_name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        
+                            <div class="form-group">
+                                <label for="end_point">End Point (District):</label>
+                                <select name="end_point" id="end_point" class="form-control" required>
+                            
+                                <option value="" selected disabled>Select the end point district name</option>
+                                {% for  district in districts|dictsort:"district_name"  %}
+                                <option value="{{ district.district_name }}">{{ district.district_name }}</option>
+                                {% endfor %}
+                                </select>
+                                <p class="error-message" id="end_point_error" style="color: red; display: none;">Starting point and end point cannot be the same.</p>
+                                <div class="add_intermediate_link mt-4 d-flex justify-content-center" id="add_intermediate_link" style="margin-top: 5px;  cursor: pointer;">
+                                    <a href="#" id="toggle_intermediate_link" class="toggle_intermediate_link d-flex justify-content-center">Add Middle Points</a>
+                                </div>
+                                <div id="intermediate_stops_container" style="display: none; border-bottom: 1px solid #ccc; padding-bottom: 10px;">
+                                <!-- This is your template for intermediate stops -->
+                                <div class="form-group intermediate_stop_template" style="flex: 1;">
+                                    <label for="intermediate_stop_1">Middle Point:</label>
+                                    <div class="input-with-button" style="display: flex; align-items: center;">
+                                    <select name="intermediate_stops" class="intermediate_stop_input form-control" style="flex: 1;">
+                                        <option value="" selected disabled>Select the Middle Point District name</option>
+                                        {% for district in districts|dictsort:"district_name" %}
+                                        <option value="{{ district.district_name }}">{{ district.district_name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <button type="button" class="plus-button" onclick="addIntermediateStop(this)">+</button>
+                                    </div>
+                                </div>
+                                </div>
+                                <br>
+                            <div class="form-group">
+                                <label for="distance">Distance:</label>
+                                <div class="input-with-hint">
+                                <input type="text" name="distance" id="distance" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="travel_time">Travel Time:</label>
+                                <div class="input-group">
+                                <input type="text" class="form-control" id="travel_time" name="travel_time" required placeholder="Enter travel time (HH:MM)">
+                                </div>
+                            </div>
+                            
+                            <div id="boarding_points_container">
+                                <!-- The first boarding point dropdown -->
+                                <div class="boarding_point" style="flex: 1;">
+                                <label for="boarding_point_1">Boarding Point:</label>
+                                <div class="input-with-button" style="display: flex; align-items: center;">
+                                    <select name="boarding_points" id="boarding_points" class="boarding_point_dropdown form-control" style="flex: 1;">
+                                    <!-- Add the options for boarding points here -->
+                                    {% for counter in counters %}
+                                    <option value="{{ counter.name }}">{{ counter.name }}</option>
+                                    {% endfor %}
+                                    </select>
+                                    <button type="button" class="plus-button" onclick="addBoardingPoint(this)">+</button>
+                                </div>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="card-btn d-flex justify-content-center mb-4">
+                                <button type="submit" class="staff-btn">Add Route</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+
+
+{% endblock main_content %}
+{% block custom_js %} 
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
+
+<script>
+/*function showClock() {
+    // Initialize the timepicker on the travel_time input field
+    $('#travel_time').timepicker();
+}*/
+</script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+
+
+
+<script>
+$('#start_point').select2();
+$('#end_point').select2();
+
+// Initialize Select2 for intermediate stops
+$('.intermediate_stop_input').select2();
+
+function checkPoints() {
+    var startPointDropdown = document.getElementById('start_point');
+    var endPointDropdown = document.getElementById('end_point');
+    var intermediateStopsDropdowns = document.querySelectorAll('.intermediate_stop_input');
+    var endPointError = document.getElementById('end_point_error');
+    var intermediatePoints = [startPointDropdown.value];
+    
+    for (var i = 0; i < intermediateStopsDropdowns.length; i++) {
+    intermediatePoints.push(intermediateStopsDropdowns[i].value);
+    }
+
+    var startPointValue = startPointDropdown.value;
+    var endPointValue = endPointDropdown.value;
+
+    if (startPointValue === endPointValue || intermediatePoints.includes(endPointValue)) {
+    endPointDropdown.classList.add('error');
+    endPointError.style.display = 'block';
+    window.alert('Points cannot be the same.');
+    return false;
+    }
+    
+    for (var i = 0; i < intermediateStopsDropdowns.length; i++) {
+    var intermediatePointValue = intermediateStopsDropdowns[i].value;
+    if (startPointValue === intermediatePointValue || endPointValue === intermediatePointValue) {
+        intermediateStopsDropdowns[i].classList.add('error');
+        endPointError.style.display = 'block';
+        window.alert('Points cannot be the same.');
+        return false;
+    }
+    }
+    
+    return true;
+}
+
+document.querySelector('.route-form').addEventListener('submit', function(event) {
+    if (!checkPoints()) {
+    event.preventDefault(); // Prevent form submission
+    }
+});
+
+document.getElementById('start_point').addEventListener('change', function() {
+    var selectedStartPoint = this.value;
+    var endPointDropdown = document.getElementById('end_point');
+    var endPointOptions = endPointDropdown.options;
+
+    for (var i = 0; i < endPointOptions.length; i++) {
+    if (endPointOptions[i].value === selectedStartPoint) {
+        endPointOptions[i].disabled = true;
+    } else {
+        endPointOptions[i].disabled = false;
+    }
+    }
+
+    // Reset the end point selection if it is the same as the start point
+    if (endPointDropdown.value === selectedStartPoint) {
+    endPointDropdown.value = '';
+    }
+});
+</script>
+
+<style>
+.error {
+    border-color: red;
+}
+</style>
+<script>
+// Initialize Select2 for all boarding point dropdowns with the class "boarding_point_dropdown"
+$('.boarding_point_dropdown').select2();
+
+function addBoardingPoint(button) {
+    const container = document.getElementById('boarding_points_container');
+
+    const boardingPointDiv = document.createElement('div');
+    boardingPointDiv.classList.add('boarding_point');
+
+    const label = document.createElement('label');
+    label.textContent = 'Boarding Point:';
+
+    const inputContainer = document.createElement('div');
+    inputContainer.classList.add('input-with-button');
+
+    const select = document.createElement('select');
+    select.name = 'boarding_points';
+    select.classList.add('boarding_point_dropdown', 'form-control');
+    select.style.flex = '1';
+
+    // Add the options for boarding points (counter names)
+    {% for counter in counters %}
+    const option{{ forloop.counter }} = document.createElement('option');
+    option{{ forloop.counter }}.value = '{{ counter.name }}';
+    option{{ forloop.counter }}.textContent = '{{ counter.name }}';
+    select.appendChild(option{{ forloop.counter }});
+    {% endfor %}
+
+    // Remove selected and previous options from new form dropdown
+    if (button) {
+    const prevSelect = button.parentElement.querySelector('select.boarding_point_dropdown');
+    const selectedOption = prevSelect.value;
+    const selectedIndex = Array.from(select.options).findIndex(option => option.value === selectedOption);
+    select.remove(selectedIndex);
+
+    const prevSelectIndex = prevSelect.selectedIndex;
+    if (prevSelectIndex > 0) {
+        select.remove(prevSelectIndex - 1);
+    }
+    }
+
+    const plusButton = document.createElement('button');
+    plusButton.type = 'button';
+    plusButton.classList.add('plus-button');
+    plusButton.textContent = '+';
+
+    plusButton.addEventListener('click', function() {
+    addBoardingPoint(this);
+    });
+
+    inputContainer.appendChild(select);
+    inputContainer.appendChild(plusButton);
+
+    boardingPointDiv.appendChild(label);
+    boardingPointDiv.appendChild(inputContainer);
+
+    if (button) {
+    const minusButton = document.createElement('button');
+    minusButton.type = 'button';
+    minusButton.classList.add('minus-button');
+    minusButton.textContent = '-';
+    minusButton.onclick = function() {
+        removeBoardingPoint(this);
+    };
+
+    button.parentNode.replaceChild(minusButton, button);
+    }
+
+    container.appendChild(boardingPointDiv);
+
+    // Reinitialize Select2 for all boarding point dropdowns with the class "boarding_point_dropdown"
+    $('.boarding_point_dropdown').select2();
+
+    // Update boarding point dropdowns
+    updateBoardingPoints();
+}
+
+function removeBoardingPoint(button) {
+    const container = document.getElementById('boarding_points_container');
+    const boardingPointDiv = button.parentElement.parentElement;
+    container.removeChild(boardingPointDiv);
+
+    // Update boarding point dropdowns
+    updateBoardingPoints();
+}
+
+function updateBoardingPoints() {
+    var start_district = $('#start_point').val();
+    var end_district = $('#end_point').val();
+    var intermediate_district = $('#intermediate_stops_container select[name="intermediate_stops"]').val();
+
+    // Check if intermediate_district is defined before making the AJAX request
+    if (intermediate_district) {
+    var url = `/get_boarding_points/?start_district=${start_district}&end_district=${end_district}&intermediate_district=${intermediate_district}`;
+
+    $.ajax({
+        url: url,
+        type: 'GET',
+        success: function(response) {
+            var boardingPoints = response.boarding_points;
+
+            // Update the boarding point dropdowns with sorted boarding points
+            $('.boarding_point_dropdown').each(function(index) {
+                const select = $(this);
+                const selectedValue = select.val();
+                select.empty();
+                for (var i = 0; i < boardingPoints.length; i++) {
+                    var option = $('<option>').text(boardingPoints[i]);
+                    if (boardingPoints[i] === selectedValue) {
+                        option.attr('selected', 'selected');
+                    }
+                    select.append(option);
+                }
+            });
+
+            // Trigger change event to update Select2
+            $('.boarding_point_dropdown').trigger('change');
+        },
+        error: function(xhr, textStatus, errorThrown) {
+            console.error('Error fetching boarding points:', errorThrown);
+        }
+    });
+    }
+}
+
+// Call the function when the page loads and whenever district values change
+$(document).ready(function() {
+    $('#start_point, #intermediate_stops_container select[name="intermediate_stops"], #end_point').change(updateBoardingPoints);
+});
+</script>
+<script>
+// Get the distance input element
+function addKmHint() {
+    const distanceInput = document.getElementById('distance');
+    const nextField = distanceInput.parentElement.nextElementSibling;
+    if (nextField) {
+    const inputWithHint = distanceInput.parentElement;
+    inputWithHint.innerHTML = `
+        <input type="text" name="distance" id="distance" class="form-control" required>
+        <span class="hint">km</span>
+    `;
+    }
+}
+
+// Call the function on page load
+window.onload = addKmHint;
+
+// Allow only numbers in the "Distance" input field
+const distanceInput = document.getElementById('distance');
+distanceInput.addEventListener('input', function () {
+    // Remove any non-numeric characters from the input value
+    this.value = this.value.replace(/[^0-9]/g, '');
+});
+</script>
+
+
+<script>
+const travelTimeInput = document.getElementById('travel_time');
+
+function addLeadingZero(number) {
+    return number.toString().padStart(2, '0');
+}
+
+function updateTravelTimeInput() {
+    const value = travelTimeInput.value;
+    const parts = value.split(':');
+
+    if (value.indexOf(':') === -1) {
+    if (value.length >= 3) {
+        const hours = value.slice(0, 2);
+        const minutes = value.slice(2);
+        travelTimeInput.value = `${addLeadingZero(hours)}:${addLeadingZero(minutes)}`;
+    } else {
+        travelTimeInput.value = value;
+    }
+    } else {
+    const hours = parseInt(parts[0]);
+    let minutes = parseInt(parts[1]);
+
+    if (!isNaN(hours) && !isNaN(minutes)) {
+        // Limit the minutes to 0 to 59
+        minutes = Math.min(Math.max(minutes, 0), 59);
+        travelTimeInput.value = `${addLeadingZero(hours)}:${addLeadingZero(minutes)}`;
+    } else if (!isNaN(hours)) {
+        travelTimeInput.value = `${addLeadingZero(hours)}:`;
+    }
+    }
+    // Add the " hour" suffix back
+    if (travelTimeInput.value.indexOf(':') !== -1) {
+    travelTimeInput.value += ' hour';
+    }
+}
+
+function removeHourSuffix() {
+    const value = travelTimeInput.value;
+    // Remove the " hour" suffix when the user starts editing the time
+    travelTimeInput.value = value.replace(/ hour$/, '');
+}
+
+travelTimeInput.addEventListener('input', function () {
+    const value = this.value;
+    // Remove any non-numeric characters from the input value
+    this.value = value.replace(/[^0-9:]/g, '');
+    updateTravelTimeInput();
+});
+
+travelTimeInput.addEventListener('focus', function () {
+    removeHourSuffix();
+    // Move the caret to the clicked digit of the input
+    const caretPosition = this.selectionStart;
+    this.setSelectionRange(caretPosition, caretPosition);
+});
+
+travelTimeInput.addEventListener('blur', function () {
+    // Add back the " hour" suffix when the user finishes editing the time
+    updateTravelTimeInput();
+});
+</script>
+
+
+
+
+<script>
+    // Initialize Select2 for all intermediate stop dropdowns with the class "intermediate_stop_input"
+    $('.intermediate_stop_input').select2();
+    
+    function addIntermediateStop(button) {
+        const container = document.getElementById('intermediate_stops_container');
+    
+        const intermediateStopDiv = document.createElement('div');
+        intermediateStopDiv.classList.add('intermediate_stop');
+    
+        const label = document.createElement('label');
+        label.textContent = 'Intermediate Stop:';
+    
+        const inputContainer = document.createElement('div');
+        inputContainer.classList.add('input-with-button');
+    
+        const select = document.createElement('select');
+        select.name = 'intermediate_stops';
+        select.classList.add('intermediate_stop_input', 'form-control');
+        select.style.flex = '1';
+    
+        // Add the default option for intermediate stops
+        const defaultOption = document.createElement('option');
+        defaultOption.value = '';
+        defaultOption.textContent = 'Select the Middle Point District name';
+        select.appendChild(defaultOption);
+    
+        // Add the options for intermediate stops (district names)
+        {% for district in districts|dictsort:"district_name" %}
+            const option{{ forloop.counter }} = document.createElement('option');
+            option{{ forloop.counter }}.value = '{{ district.district_name }}';
+            option{{ forloop.counter }}.textContent = '{{ district.district_name }}';
+            select.appendChild(option{{ forloop.counter }});
+        {% endfor %}
+    
+        const plusButton = document.createElement('button');
+        plusButton.type = 'button';
+        plusButton.classList.add('plus-button');
+        plusButton.textContent = '+';
+    
+        plusButton.addEventListener('click', function() {
+            addIntermediateStop(this);
+        });
+    
+        inputContainer.appendChild(select);
+        inputContainer.appendChild(plusButton);
+    
+        intermediateStopDiv.appendChild(label);
+        intermediateStopDiv.appendChild(inputContainer);
+    
+        if (button) {
+            const minusButton = document.createElement('button');
+            minusButton.type = 'button';
+            minusButton.classList.add('minus-button');
+            minusButton.textContent = '-';
+            minusButton.onclick = function() {
+                removeIntermediateStop(this);
+            };
+    
+            button.parentNode.replaceChild(minusButton, button);
+        }
+    
+        container.appendChild(intermediateStopDiv);
+    
+        // Reinitialize Select2 for all intermediate stop dropdowns with the class "intermediate_stop_input"
+        $('.intermediate_stop_input').select2();
+    }
+    
+    function removeIntermediateStop(button) {
+        const container = document.getElementById('intermediate_stops_container');
+        const intermediateStopDiv = button.parentElement.parentElement;
+        container.removeChild(intermediateStopDiv);
+    }
+    
+    function toggleIntermediateStops() {
+        const intermediateStopsContainer = document.getElementById('intermediate_stops_container');
+        intermediateStopsContainer.style.display = intermediateStopsContainer.style.display === 'none' ? 'block' : 'none';
+    }
+    
+    // Function to initialize the intermediate stops when the DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add a click event listener to the link
+        const addIntermediateLink = document.querySelector('#add_intermediate_link a');
+        addIntermediateLink.addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent the default link behavior
+            toggleIntermediateStops(); // Toggle the visibility of the intermediate stops container
+        });
+    });
+    
+    // Function to initialize the intermediate stops
+    function initializeIntermediateStops() {
+        const addIntermediateLink = document.querySelector('#add_intermediate_link a');
+        addIntermediateLink.addEventListener('click', function(event) {
+            event.preventDefault();
+            toggleIntermediateStops();
+        });
+    }
+    </script>
+
+{% comment %} <script>
+function updateBoardingPoints() {
+    var start_district = $('#start_point').val();
+    var end_district = $('#end_point').val();
+    var intermediate_district = $('#intermediate_stops_container select[name="intermediate_stops"]').val();
+
+    // Check if intermediate_district is defined before making the AJAX request
+    if (intermediate_district) {
+        var url = `/get_boarding_points/?start_district=${start_district}&end_district=${end_district}&intermediate_district=${intermediate_district}`;
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            success: function(response) {
+                var boardingPoints = response.boarding_points;
+                var boardingPointsSelect = $('#boarding_points');
+
+                // Clear previous options
+                boardingPointsSelect.empty();
+
+                // Create an array to hold the sorted boarding points
+                var sortedBoardingPoints = [];
+
+                // Push start and intermediate boarding points to the array
+                sortedBoardingPoints.push(boardingPoints[0]);
+                for (var i = 1; i < boardingPoints.length - 1; i++) {
+                    sortedBoardingPoints.push(boardingPoints[i]);
+                }
+
+                // Push end boarding point to the array
+                sortedBoardingPoints.push(boardingPoints[boardingPoints.length - 1]);
+
+                // Populate the select element with sorted boarding points
+                for (var i = 0; i < sortedBoardingPoints.length; i++) {
+                    var option = $('<option>').text(sortedBoardingPoints[i]);
+                    boardingPointsSelect.append(option);
+                }
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                console.error('Error fetching boarding points:', errorThrown);
+            }
+        });
+    }
+}
+
+// Call the function when the page loads and whenever district values change
+$(document).ready(function() {
+    $('#start_point, #end_point, #intermediate_stops_container select[name="intermediate_stops"]').change(updateBoardingPoints);
+});
+</script> {% endcomment %}
+
+{% endblock custom_js %}

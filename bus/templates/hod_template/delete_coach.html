@@ -1,0 +1,39 @@
+{% extends 'hod_template/base_template.html' %}
+{% load static %}
+<style>
+  .text-black {
+    color: black;
+}
+</style>
+{% block page_title %}{% endblock page_title %}
+
+{% block main_content %}
+<section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <!-- general form elements -->
+          <div class="card card-danger">
+            <div class="card-header">
+              <h3 class="card-title">Delete Coach</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+              <p class="delete-coach text-black">Are you sure you want to delete the coach with model name: <strong>{{ coach.coachmodelname }}</strong>?</p>
+            </div>
+            <!-- /.card-body -->
+            <div class="card-footer">
+              <form method="POST" action="{% url 'delete_coach' coach_id=coach.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Delete</button>
+                <a href="{% url 'manage_coach' %}" class="btn btn-secondary">Cancel</a>
+              </form>
+            </div>
+            <!-- /.card-footer -->
+          </div>
+          <!-- /.card -->
+        </div>
+      </div>
+    </div>
+  </section>
+  {% endblock main_content %} 

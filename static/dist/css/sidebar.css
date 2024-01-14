@@ -1,0 +1,48 @@
+/* .add-staff-txt{
+    position: relative;
+}
+
+.add-staff-txt span{
+    position: absolute;
+    top: 4px;
+    right: -100px;
+}
+
+.staff-show li{
+    line-height: 20px;
+}
+
+nav ul .staff-show.show{
+    display: block;
+} */
+
+
+.sidebar-nav ul ul{
+    display: none;
+}
+
+.counter-manager-show.show{
+    display: block;
+}
+
+.routes-show.show{
+    display: block;
+}
+
+.counter-show.show{
+    display: block;
+}
+
+.coach-show.show{
+    display: block;
+}
+
+.pages-show.show{
+    display: block;
+}
+
+.sidebar-nav ul ul{
+    list-style-type: none;
+}
+
+

@@ -1,0 +1,52 @@
+{% extends 'routes/base.html' %} {% block content%}
+
+<section class="banner-area relative">
+  <div class="overlay overlay-bg"></div>
+  <div class="container">
+    <div class="row fullscreen align-items-center justify-content-between">
+      <div class="col-lg-6 col-md-6 banner-left">
+        <h6 class="text-white">{{ start_point}}  To {{end_point}}</h6>
+        <h1 class="text-white">Magical Travel</h1>
+        <p class="text-white">
+       {{start_point}} to {{end_point}} is a route spread over 265 kilometers
+        </p>
+
+      
+        <div class="tab-content" id="myTabContent">
+          <div
+            class="tab-pane fade show active"
+            id="flight"
+            role="tabpanel"
+            aria-labelledby="flight-tab"
+          >
+   <form action={% url 'result' start_point=start_point end_point=end_point  %} method="get">
+    
+            <input type="date" name="journey_date" id="journey-date-input" required>
+            <input type="submit" value="Search">
+        </form>   
+   {% comment %} <form class="form-wrap" action={% url 'dtc_result' %} method="get">
+    
+    <input
+    type="Date"     
+
+    class="form-control "
+    name="Journey_date"
+    placeholder="Journey Date "
+    onfocus="this.placeholder = ''"
+    onblur="this.placeholder = ''"
+  />
+
+              <button type="submit" class="primary-btn text-uppercase mt-4" value="Search" >Search Buses</button> 
+            </form>  {% endcomment %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="section"><div class="container my-lg-5"><div class="row justify-content-center text-center"><div class="col-lg-8 mb-3"><h2 style="color: rgb(91, 33, 146);">What's Special About {{start_point}}?</h2></div><div class="col-lg-10 mb-5"><div><p><strong>{{fromdescription}}</p></div></div></div><div class="row justify-content-center text-center gy-5"></div></div></div>
+<div class="section bg-white"><div class="container my-lg-5"><div class="row justify-content-center text-center"><div class="col-lg-8 mb-3"><h2 style="color: rgb(91, 33, 146);">What's Special About {{end_point}}?</h2></div><div class="col-lg-10 mb-5"><div><p><strong>{{todescription}}</p></div></div></div><div class="row justify-content-center text-center gy-5"></div></div></div>
+{% endblock content %}
+
+{% block js %}
+
+  {% endblock js %}

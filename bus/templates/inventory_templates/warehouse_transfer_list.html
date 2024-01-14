@@ -1,0 +1,736 @@
+{% extends 'inventory_templates/inventory_base.html' %}
+{% load static %}
+
+{% block custom_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.9/dist/flatpickr.min.css">
+<link rel="stylesheet" href="{% static "dist/css/add_product.css" %}">
+<link rel="stylesheet" href="{% static "dist/css/transfer_list.css" %}">
+<style>
+</style>
+{% endblock custom_css %}
+
+{% block main_content %}
+
+<div class="container-xl px-4 mt-4">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header d-flex justify-content-center">
+                        <h3 class="card-title py-2">Company List</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <div class="add-staff-type-button col-md-6 col-12 mb-2">
+                                <a href="{% url 'add_transfer' %}" class="btn btn-success save-btn">Add Transfer</a>
+                            </div>
+                            <table id="paydetaillist" class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Transfer Date</th>
+                                    <th>Source Warehouse</th>
+                                    <th>Destination Warehouse</th>
+                                    <th>Status</th>
+                                    <th>Payment</th>
+                    
+                                    
+                                    <th>Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    {% for transfer in transfer %}
+                                        <tr>
+                                            <td>{{ transfer.transfer_date }}</td>
+                                            <td>{{ transfer.source_warehouse.name }}</td>
+                                            <td>{{ transfer.destination_warehouse.name }}</td>
+                                            <td>
+                                                <span class="{% if transfer.status == 'Pending' %}badge badge-warning{% elif transfer.status == 'Received' %}badge badge-success{% elif transfer.status == 'Completed' %}badge badge-primary{% elif transfer.status == 'Canceled' %}badge badge-danger{% endif %}">
+                                                    {{ transfer.get_status_display }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="badge
+                                                    {% if transfer.payment_status == 'Paid' %}
+                                                        badge-success
+                                                    {% elif transfer.payment_status == 'Pending' %}
+                                                        badge-warning
+                                                    {% else %}
+                                                        badge-danger
+                                                    {% endif %}">
+                                                    {{ transfer.payment_status }}
+                                                </span>
+                                            </td>
+
+                                            <td>
+                                                <div class="btn-group dropdown">
+                                                    <button class="btn btn-btn-light dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color: black;">
+                                                        Actions
+                                                    </button>
+                                                    <div class="dropdown-menu text-black">
+                                                        <a id="view-payment-link-{{transfer.id}}" class="dropdown-item action-link view-payment-link" href="#" data-transfer-id="{{transfer.id}}" data-purchase-id="{{transfer.purchase.id}}">
+                                                            View Payment
+                                                        </a>                     
+                                                    </div>
+                                                </div>
+
+                                            </td>
+
+                                           
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="update-modal-container" class="update-modal-container">
+    <div class="update-modal col-md-8">
+        <div class="update-modal-content">
+            <span class="x-mark"><i class="fa-solid fa-xmark fa-xl" style="color: #b31b00;"></i></span>
+            <div id="message-container" class="alert">
+
+            </div>
+            <div class="modal-body">
+                <!-- Display Payment Information Here -->
+                <table id="pay-detail-list-view" class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Purchase ID</th>
+                            <th>Payment Date</th>
+                            <th>Amount</th>
+                            <th>Payment Method</th>
+                            <th>Transaction ID</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span id="transfer-id"></span></td>
+                            <td><span id="paymentDate"></span></td>
+                            <td><span id="amounts"></span></td>
+                            <td><span id="paymentMethod"></span></td>
+                            <td><span id="transactionId"></span></td>
+                            <td>
+                                <div class="btn-group">
+                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="actionsDropdown{{ transfer.purchase.payment.id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Actions
+                                    </button>
+                                    <div class="dropdown-menu text-black" >
+                                    
+                                            <a class="dropdown-item action-link edit-payment" id="edit-payment" data-payment-id="" href="#" data-toggle="modal" data-target="#editPaymentModal{{ transfer.purchase.id }}">
+                                                Edit Payment
+                                            </a>
+                                
+                                            {% for payment in payment %}
+                                            <a class="dropdown-item delete-payment" data-id="{{ transfer.purchase.id }}" data-toggle="modal" data-target="#deletePaymenteModal" href="#">Delete</a>
+
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+   
+            </div>
+            
+            <hr>
+        </div>
+        
+    </div>
+</div>
+
+<div id="update-modal-container-edit" class="update-modal-container-edit">
+    <div class="update-modal-edit col-md-8">
+        <div class="update-modal-content-edit">
+            <span class="x-mark-edit"><i class="fa-solid fa-xmark fa-xl" style="color: #b31b00;"></i></span>
+            <div id="message-container" class="alert">
+
+            </div>
+            <div class="modal-header-edit mb-3">
+                <h5 class="modal-title text-black d-flex justify-content-center" id="editPaymentModalLabel">Edit Payment</h5>
+            </div>
+
+            <div class="modal-body-edit p-4">
+
+                <!-- Form for editing payment details -->
+                <form id="" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" id="purchaseId" name="purchase_id" value="">
+                    <div class="form-group">
+                        <label for="payment_date">Payment Date:</label>
+                        <input type="text" class="form-control" id="edit-payment_date" name="payment_date" value="">
+                    </div>
+                    <div class="form-group">
+                        <label for="amount">Amount:</label>
+                        <input type="text" class="form-control" id="edit-payment-amount" name="amount" value="">
+                    </div>
+                    <div class="form-group">
+                        <label for="payment_method">Payment Method:</label>
+                        <input type="text" class="form-control" id="edit-payment_method" name="payment_method" value="">
+                    </div>
+                    <div class="form-group">
+                        <label for="transaction_id">Transaction ID:</label>
+                        <input type="text" class="form-control" id="edit-transaction_id" name="transaction_id" value="">
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <button id="edit-payment-btn" type="submit" class="custom-btn edit-payment-btn" data-payment-id="">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+            
+            <hr>
+        </div>
+        
+    </div>
+</div>
+
+
+
+{% endblock main_content %}
+
+{% block custom_js %}
+<script>
+    var csrf_token = "{{ csrf_token }}";
+
+    $(document).ready(function () {
+        // Click event to open the payment modal
+        $('.view-payment-link').on('click', function (e) {
+            event.preventDefault();
+
+            var transferId = $(this).data('transfer-id');
+            var purchaseId = $(this).data('purchase-id');
+            console.log('purchaseId: ', purchaseId);
+            console.log('transferId: ', transferId);
+
+            fetch('/get_payment_data/' + purchaseId + '/', {
+                method: 'GET'
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        let paymentId = data.payment_data.payment_id
+                        console.log('paymentId: ', paymentId);
+
+                        let purchaseId = data.payment_data.purchase_id
+                        let paymentDate = data.payment_data.payment_date
+                        let amount = data.payment_data.amount
+                        let paymentMethod = data.payment_data.payment_method
+                        let transactionId = data.payment_data.transaction_id
+
+                        $('#transfer-id').text(purchaseId);
+                        $('#paymentDate').text(paymentDate);
+                        $('#amounts').text(amount);
+                        $('#paymentMethod').text(paymentMethod);
+                        $('#transactionId').text(transactionId);
+                        $('#edit-payment').attr('data-payment-id', paymentId);
+                        $('#edit-payment-btn').attr('data-payment-id', paymentId);
+
+                        // Set the id attribute for the form
+                        let formId = 'edit-payment-form-' + paymentId
+                        $("#update-modal-container-edit form").attr("id", formId);
+                        let paymentForm = $('#edit-payment-form-' + paymentId);
+
+                        $('.update-modal-container').addClass('show');
+
+                        $('.edit-payment').on('click', function () {
+                            console.log('clicked edit')
+                            $('#edit-payment_date').val(paymentDate);
+                            $('#edit-payment-amount').val(amount);
+                            $('#edit-payment_method').val(paymentMethod);
+                            $('#edit-transaction_id').val(transactionId);
+
+                            $('.update-modal-container').removeClass('show');
+                            $('.update-modal-container-edit').addClass('show');
+                            console.log('element: ', $('#viewPaymentModal' + purchaseId))
+                            element = $('#viewPaymentModal' + purchaseId)
+                            console.log('paymentForm: ', paymentForm)
+
+                            //element_id = element.attr('id')
+                            //console.log('element id: ' element_id)
+                            $('.modal').modal("hide");
+                            $('#viewPaymentModal' + purchaseId).hide();
+
+                            //let paymentId = paymentId
+                            // Edit Payment Form Submission
+                            $(document).on('submit', paymentForm, function (event) {
+                                event.preventDefault();
+                                //var paymentId = $(this).find('button[type="submit"]').data('payment-id');
+                                var form = $('#edit-payment-form-' + purchaseId)[0];
+                                console.log('payment id form: ', purchaseId)
+
+                                var formData = new FormData(form);
+                                // Perform the form submission via Fetch
+                                fetch('/edit_payment/' + purchaseId + '/', {
+                                    method: 'POST',
+                                    headers: {
+                                        'x-CSRFToken': csrf_token
+                                    },
+                                    body: formData
+                                })
+                                    .then(function (response) {
+                                        if (response.ok) {
+                                            return response.json();
+                                        }
+                                        else {
+                                            throw new Error('Error occurred during form submission');
+                                        }
+                                    })
+
+                                    .then(function (data) {
+                                        if (data.success) {
+                                            // Display success message to the user
+                                            //$('#message-container').text(data.message);
+                                            //$('#message-container').removeClass('error alert-danger').addClass('success alert alert-success');
+                                            $('#editPaymentModal' + paymentId).modal('hide');
+                                            window.location.href = "{% url 'transferlist' %}";
+                                            // Handle success, e.g., update payment details on the page
+                                        }
+                                        else {
+                                            // Display error message to the user
+                                            $('#message-container').text(data.message);
+                                            $('#message-container').removeClass('success alert-success').addClass('error alert alert-danger');
+
+                                        }
+                                    })
+
+                                    .catch(function (error) {
+                                        // Handle any error that occurs during the form submission
+                                    });
+                            });
+
+                            $(".close").click(function () {
+                                // Hide all elements with the class "modal"
+                                console.log('close clicked')
+                                $(".modal").modal('hide');
+                                window.location.href = "{% url 'transferlist' %}";
+                            });
+
+                        })
+                    }
+                    else {
+                        // Handle any errors
+                        alert('Failed to load payment data: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    // Handle any errors
+                    alert('Failed to load payment data.');
+                });
+        })
+
+        $('.x-mark').click(function () {
+            $('.update-modal-container').removeClass('show');
+            //$('.view-coach-modal-container').removeClass('show');
+        });
+        $('.x-mark').click(function() {
+            $('.update-modal-container').removeClass('show');
+            //$('.view-coach-modal-container').removeClass('show');
+        });
+
+        $('.x-mark-edit').click(function() {
+            $('.update-modal-container-edit').removeClass('show');
+            //$('.view-coach-modal-container').removeClass('show');
+        });
+
+        /*$(document).on('click', function(event) {
+            // Check if the update-modal-container has the 'show' class
+            if ($('.update-modal-container').hasClass('show')) {
+                if (!$(event.target).closest('.update-modal').length) {
+                    console.log('outside the div clicked');
+                    $('.update-modal-container').removeClass('show');
+                }
+            }
+        });*/
+
+        $(".make-payment-link").click(function () {
+            // Clear any previous input values in the modal
+            $("#make-payment-date").val("");
+            //$("#make-payment-amount").val("");
+            $("#make-payment-method").val("");
+            $("#make-payment-transaction-id").val("");
+            $("#card_number").val(""); // Clear card number field
+            $("#sale_note").val(""); // Clear sale note field
+            // Get the purchase ID from the data attribute
+            var purchaseId = $(this).data('purchase-id');
+            console.log('purchase_id make: ', purchaseId);
+
+            // Set the purchase ID in a hidden input field in the modal
+            $("#payment-purchase-id").val(purchaseId);
+            
+            // Open the payment modal
+            $("#makePaymentModal" + purchaseId).modal("show");
+            // Populate the payment method dropdown with options
+            const paymentMethodSelect = $("#payment_method");
+            paymentMethodSelect.empty(); // Clear existing options
+
+
+            // Make an AJAX request to fetch payment data
+            fetch('/get_payment_data/' + purchaseId, {
+                method: 'GET'
+            }) // Replace with the actual URL to your Django view
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Populate the modal with the payment data
+                    console.log('data received')
+                    console.log('data.payment_data.payment_date: ', data.payment_data.payment_date)
+                    console.log('data.payment_data.transaction_id: ', data.payment_data.transaction_id)
+
+                    $('#make-payment-date').val(data.payment_data.payment_date);
+                    //$('#make-payment-amount').val(data.payment_data.amount);
+                    $('#make-payment-method').val(data.payment_data.payment_method);
+                    $('#make-payment-transaction-id').val(data.payment_data.transaction_id);
+
+                    /*document.getElementById('make-payment-date').textContent = data.payment_data.payment_date;
+                    document.getElementById('make-payment-amount').textContent =   data.payment_data.amount;
+                    document.getElementById('make-payment-method').textContent =  data.payment_data.payment_method;
+                    document.getElementById('make-payment-transaction-id').textContent =  data.payment_data.transaction_id;*/
+                }
+                else {
+                    // Handle any errors
+                    alert('Failed to load payment data: ' + data.message);
+                }
+                $('#edit-payment').on('click', function(){
+                    console.log('clicked edit')
+                    console.log('element: ', $('#viewPaymentModal' + purchaseId))
+                    element = $('#viewPaymentModal' + purchaseId)
+                    //element_id = element.attr('id')
+                    //console.log('element id: ' element_id)
+                    $('.modal').modal("hide");
+                    $('#viewPaymentModal' + purchaseId).hide();
+
+                    $(".close").click(function() {
+                        // Hide all elements with the class "modal"
+                        console.log('close clicked')
+                        $(".modal").modal('hide');
+                        window.location.href = "{% url 'transferlist' %}";
+                    });
+
+                })
+            })
+            .catch(error => {
+                // Handle any errors
+                alert('Failed to load payment data.');
+            });
+
+
+            // Add payment method options
+            const paymentMethods = [
+                ['Card', 'Card'],
+                ['Cash', 'Cash'],
+                ['Bank', 'Bank'],
+            ];
+            $(".close").click(function() {
+                // Hide all elements with the class "modal"
+                console.log('close clicked')
+                $(".modal").modal('hide');
+                //window.location.href = "{% url 'purchase_list' %}";
+            });
+            for (const method of paymentMethods) {
+                paymentMethodSelect.append(new Option(method[1], method[0]));
+            }
+        });
+
+        // Handle the "Submit Payment" button click
+        $("#submitPayment").click(function () {
+            // Get the values from the input fields
+            var purchaseId = $("#payment-purchase-id").val();
+            var payment_date = $("#make-payment-date").val();
+            var amount = $("#make-payment-amount").val();
+            var payment_method = $("#make-payment-method").val();
+            var transaction_id = $("#make-payment-transaction-id").val();
+            var card_number = $("#card_number").val();
+            var sale_note = $("#sale_note").val();
+            console.log('purchase id inventory: ', purchaseId)
+            
+            // Prepare the data to send
+            var requestData = {
+                payment_date: payment_date,
+                amount: amount,
+                payment_method: payment_method,
+                transaction_id: transaction_id,
+                card_number: card_number,
+                sale_note: sale_note,
+                csrfmiddlewaretoken: csrf_token
+            };
+
+            console.log('purchaseId: ', purchaseId)
+            console.log('payment_date: ', payment_date)
+            console.log('amount: ', amount)
+            console.log('payment_method: ', payment_method)
+            console.log('transaction_id: ', transaction_id)
+            console.log('card_number: ', card_number)
+            console.log('sale_note: ', sale_note)
+            
+            // Make an AJAX request to submit the payment
+            fetch(/make_payment_inventory/${purchaseId}/, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-CSRFToken': '{{csrf_token}}',
+                },
+                body: JSON.stringify(requestData),
+            })
+            .then(response => response.json())
+            .then(response => {
+                if (response.success) {
+                    // Payment was successful, close the modal
+                    $("#makePaymentModal" + purchaseId).modal("hide");
+                    // Optionally, you can display a success message or update the UI
+                    alert(response.message);
+                    window.location.href = "{% url 'transferlist' %}";
+
+                } else {
+                    // Payment failed, you can display an error message
+                    alert(response.message);
+                }
+            })
+            .catch(error => {
+                console.error("Error submitting payment:", error);
+                // Handle AJAX error, if any
+                alert("An error occurred while processing your request.");
+            });
+        });
+                    // Add a click event handler for the close button in modals
+                    document.querySelectorAll('button[id^="makePaymentModalCloseButton"]').forEach(function(closeButton) {
+                        closeButton.addEventListener('click', function() {
+                            // Close the edit modal
+                            var targetModalId = closeButton.closest('.modal').id;
+                            $(targetModalId).modal('hide');
+                            window.location.href = "{% url 'transferlist' %}";
+                        });
+                    });
+                
+                    // Add a click event handler for the "x" (cross) icon in the modal's header
+                    document.querySelectorAll('button.close[data-dismiss="modal"]').forEach(function(closeIcon) {
+                        closeIcon.addEventListener('click', function() {
+                            // Close the edit modal
+                            var targetModalId = closeIcon.closest('.modal').id;
+                            $(targetModalId).modal('hide');
+                            window.location.href = "{% url 'transferlist' %}";
+                        });
+                    });
+                });// Add a click event handler for clicking outside the modal
+                  
+    
+</script>
+<script>
+    $(document).ready(function() {
+        $('#paydetaillist').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'copy',
+                    text: 'Copy',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7] // Specify which columns to include
+                    }
+                },
+                {
+                    extend: 'csv',
+                    text: 'CSV',
+                    filename: 'Product List', // Specify the filename
+                    extension: '.csv',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7] // Specify which columns to include
+                    },
+                    fieldSeparator: ',', // Specify the field separator (comma)
+                    fieldBoundary: '"' // Specify the field boundary character
+                },
+                {
+                    extend: 'excel',
+                    text: 'Excel',
+                    filename: 'Product List', // Specify the filename
+                    extension: '.xlsx',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7] // Specify which columns to include
+                    }
+                },
+                {
+                    extend: 'pdf',
+                    text: 'PDF',
+                    filename: 'Product List', // Specify the filename
+                    extension: '.pdf',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7] // Specify which columns to include
+                    }
+                },
+                'print'
+            ],
+            initComplete: function () {
+                console.log("DataTables initialized!"); // Debugging statement
+            }
+        });
+    });
+</script>
+{% comment %} <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Add a click event handler for the "View Payment" buttons
+        document.querySelectorAll('a[data-toggle="modal"]').forEach(function(button) {
+            button.addEventListener('click', function() {
+                var targetModalId = this.getAttribute('data-target'); // Get the ID of the target modal
+                var purchaseId = targetModalId.replace('#viewPaymentModal', ''); // Extract the purchase ID from modal ID
+    
+                // Make an AJAX request to fetch payment data
+                fetch('/get_payment_data/' + purchaseId) // Replace with the actual URL to your Django view
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Populate the modal with the payment data
+                            document.getElementById('paymentDate').textContent = 'Payment Date: ' + data.payment_data.payment_date;
+                            document.getElementById('amount').textContent = 'Amount: ' + data.payment_data.amount;
+                            document.getElementById('paymentMethod').textContent = 'Payment Method: ' + data.payment_data.payment_method;
+                            document.getElementById('transactionId').textContent = 'Transaction ID: ' + data.payment_data.transaction_id;
+    
+                            // Open the target modal using Bootstrap modal method
+                            $(targetModalId).modal('show');
+                        } else {
+                            // Handle any errors
+                            alert('Failed to load payment data: ' + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        // Handle any errors
+                        alert('Failed to load payment data.');
+                    });
+            });
+        });
+    });
+    </script> {% endcomment %}
+ <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Add a click event handler for the "View Payment" buttons
+        document.querySelectorAll('a[data-action="modal-view-payment"]').forEach(function(button) {
+            button.addEventListener('click', function() {
+                var targetModalId = this.getAttribute('data-target'); // Get the ID of the target modal
+                console.log('targetModalId: ', targetModalId)
+                var purchaseId = targetModalId.replace('#viewPaymentModal', ''); // Extract the purchase ID from modal ID
+                console.log('purchaseId: ', purchaseId)
+    
+                // Make an AJAX request to fetch payment data
+                fetch('/get_payment_data/' + purchaseId, {
+                    method: 'GET'
+                }) // Replace with the actual URL to your Django view
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Populate the modal with the payment data
+                        document.getElementById('paymentDate').textContent = data.payment_data.payment_date;
+                        document.getElementById('amounts').textContent =   data.payment_data.amount;
+                        document.getElementById('paymentMethod').textContent =  data.payment_data.payment_method;
+                        document.getElementById('transactionId').textContent =  data.payment_data.transaction_id;
+                    }
+                    else {
+                        // Handle any errors
+                        alert('Failed to load payment data: ' + data.message);
+                    }
+                    $('#edit-payment').on('click', function(){
+                        console.log('clicked edit')
+                        console.log('element: ', $('#viewPaymentModal' + purchaseId))
+                        element = $('#viewPaymentModal' + purchaseId)
+                        //element_id = element.attr('id')
+                        //console.log('element id: ' element_id)
+                        $('.modal').modal("hide");
+                        $('#viewPaymentModal' + purchaseId).hide();
+
+                        $(".close").click(function() {
+                            // Hide all elements with the class "modal"
+                            console.log('close clicked')
+                            $(".modal").modal('hide');
+                            window.location.href = "{% url 'transferlist' %}";
+                        });
+
+                    })
+                })
+                .catch(error => {
+                    // Handle any errors
+                    alert('Failed to load payment data.');
+                });
+            });
+        });
+    });
+    </script> 
+
+    <script>
+        $(document).ready(function() {
+            $('.delete-payment').click(function() {
+                // Get the purchase ID from the data attribute
+                var paymentId = $(this).data('id');
+                
+                // Display a SweetAlert2 confirmation dialog
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: 'You won\'t be able to revert this!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Send an AJAX request to delete the purchase
+                        $.ajax({
+                            url: /delete_payment/${paymentId}/, // Replace with your URL
+                            type: 'POST',
+                            data: {
+                                csrfmiddlewaretoken: '{{ csrf_token }}' // Replace with your CSRF token
+                            },
+                            success: function(response) {
+                                if (response.success) {
+                                    // Handle a successful delete action
+                                    // For example, you can remove the deleted item from the list
+                                    // No need for alert here, as SweetAlert2 provides a built-in success message
+                                    location.reload(); // Reloading the page as an example
+                                } else {
+                                    // Handle errors
+                                    Swal.fire('Error', response.message, 'error');
+                                }
+                            },
+                            error: function() {
+                                // Handle AJAX errors
+                                Swal.fire('Error', 'An error occurred during the delete process.', 'error');
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+   <script>
+        /*// Edit Payment Form Submission
+        $(document).on('submit', 'form[id^="editPaymentForm"]', function(event) {
+            event.preventDefault();
+            var paymentId = $(this).find('button[type="submit"]').data('payment-id');
+            var form = $(this);
+    
+            $.ajax({
+                url: '/edit_payment/' + paymentId, // Replace with your edit_payment URL
+                type: 'POST',
+                data: form.serialize(),
+                success: function(response) {
+                    if (response.success) {
+                        $('#editPaymentModal' + paymentId).modal('hide');
+                        window.location.href = "{% url 'transferlist' %}";
+                        // Handle success, e.g., update payment details on the page
+                    } else {
+                        // Handle errors or show an alert
+                        alert('Error: ' + response.message);
+                    }
+                },
+                error: function() {
+                    alert('Error: Failed to submit the form.');
+                }
+            });
+        });*/
+    
+        // Delete Payment Confirmation
+     
+    </script>
+{% endblock custom_js %}

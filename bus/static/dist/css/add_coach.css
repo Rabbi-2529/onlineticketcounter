@@ -1,0 +1,320 @@
+.card {
+    border-radius: 20px;
+    /* box-shadow: 0 0.15rem 1.75rem 0 rgb(33 40 50 / 15%); */
+    box-shadow: 12px 16px 22px 9px rgba(0,0,0,0.1);
+}
+
+.card-header{
+    border-top-left-radius: 20px !important;
+    border-top-right-radius: 20px !important;
+    background: rgb(62,7,75);
+    background: linear-gradient(180deg, rgba(62,7,75,1) 0%, rgba(40,10,69,1) 63%);
+}
+
+#selected_points_container {
+    display: none;
+    margin-top: 10px;
+}
+
+.selected-points-container {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-top: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    display: none;
+}
+
+.selected-points-container.show {
+    display: block;
+}
+
+.selected-point-item {
+    display: inline-block;
+    background-color: #f2f2f2;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    padding: 5px 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+.selected-point-item button {
+    margin-left: 5px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: red;
+}
+#selected_route_container {
+    display: none;
+    margin-top: 10px;
+}
+
+.selected-route-container {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.selected-route-item {
+    display: inline-block;
+    margin: 5px;
+    padding: 5px 10px;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+}
+
+.route-price-section{
+    background-color: rgb(233, 233, 233);
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+.remove-route-btn {
+    margin-left: 5px;
+    background-color: #ff0000;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.remove-route-btn:hover {
+    background-color: #cc0000;
+}
+
+.selected-facilities-box {
+    border: 1px solid #ccc;
+    padding: 1. 0px;
+    margin-top: 10px;
+    display: none;
+}
+
+.selected-facilities-box h4 {
+    margin-bottom: 5px;
+}
+
+.selected-facilities-box ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.selected-facilities-box li {
+    margin-bottom: 5px;
+}
+
+.selected-facilities-box {
+    border: 1px solid #ccc;
+    padding: 1. 0px;
+    margin-top: 10px;
+    display: none;
+}
+
+.selected-facilities-box h4 {
+    margin-bottom: 5px;
+}
+
+.selected-facilities-box ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.selected-facilities-box li {
+    margin-bottom: 5px;
+}
+.form-group-box {
+  position: relative;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.form-group-box .caret-icon {
+  position: absolute;
+  top: 12px;
+  right: 10px;
+}
+
+.form-group label{
+    font-size: 14px;
+    font-weight: 500 !important;
+    color: rgb(54, 54, 54);
+}
+
+.form-control {
+    display: block;
+    width: 100%;
+    padding: 0.875rem 1.125rem;
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1;
+    color: #69707a;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgb(235, 235, 235);
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border-radius: 0.35rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.form-control::placeholder{
+    font-weight: 300;
+    color: rgb(187, 187, 187);
+}
+
+.submit-btn {
+    width: auto !important;
+    border: none !important;
+    border-radius: 10px;
+    padding: 0.875em 2em;
+    background: linear-gradient(90deg, #0f0566, transparent) #0a15b4;
+    transition: background-color 0.3s;
+}
+.submit-btn:hover, .submit-btn:focus {
+    background-color: #031b46;
+}
+
+.dropdown-menu-box {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+  background-color: #fff;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  padding: 5px;
+  display: none;
+}
+
+.table-container {
+    margin-top: 20px;
+    overflow-x: scroll;
+}
+
+.table th{
+    font-size: 16px;
+    font-weight: 500 !important;
+    color: rgb(26, 26, 26);
+}
+
+.table td{
+    font-size: 15px;
+    font-weight: 400 !important;
+    color: rgb(48, 48, 48);
+}
+
+.save-btn {
+    width: auto !important;
+    border: none !important;
+    border-radius: 10px;
+    padding: 0.875em 2em;
+    background: linear-gradient(90deg, #0f0566, transparent) #0a15b4;
+    transition: background-color 0.3s;
+}
+
+.save-btn:hover, .staff-btn:focus {
+    background-color: #031b46;
+}
+
+.search-btn {
+    width: auto !important;
+    border: none !important;
+    border-radius: 10px;
+    padding: 7px 7px;
+    background: linear-gradient(90deg, #5381ff, transparent) #00b8c5;
+    transition: background-color 0.3s;
+}
+.search-btn:hover, .search-btn:focus {
+    background-color: #031b46;
+}
+
+/* search field */
+.search-button {
+    padding: 6px 12px;
+    font-size: 12px;
+    background: linear-gradient(90deg, #0f0566, transparent) #0a15b4;
+    border: none !important;
+    transition: background-color 0.3s;
+}
+
+.search-button:hover, .search-button:focus {
+    background-color: #220346;
+}
+
+.search-form {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.search-input {
+    max-width: 200px;
+    height: 40px;
+}
+
+.view-btn{
+    border: none !important;
+    background: linear-gradient(90deg, rgb(218, 5, 218), transparent) #eb47cf;
+    transition: background-color 0.3s;
+}
+
+.view-btn:hover, .view-btn:focus {
+    background-color: #e40044;
+}
+
+.edit-btn{
+    border: none !important;
+    background: linear-gradient(90deg, #3b0149, transparent) #620ab4;
+    transition: background-color 0.3s;
+}
+
+.edit-btn:hover, .edit-btn:focus {
+    background-color: #8c2eca;
+}
+
+.delete-btn{
+    border: none !important;
+    background: linear-gradient(90deg, rgb(218, 5, 51), transparent) #e96900;
+    transition: background-color 0.3s;
+}
+
+.delete-btn:hover, .delete-btn:focus {
+    background-color: #e40000;
+}
+
+.cancel-btn {
+    width: auto !important;
+    border-radius: 10px;
+    padding: 0.875em 2em;
+    background: linear-gradient(90deg, #9134cf, transparent) #1e9dcf;
+    transition: background-color 0.3s;
+}
+.cancel-btn:hover, .submit-btn:focus {
+    background-color: #ff0077;
+}
+
+.table td .view-coach{
+    color: rgb(104, 0, 105) !important;
+}
+

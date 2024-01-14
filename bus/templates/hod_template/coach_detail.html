@@ -1,0 +1,484 @@
+{% extends 'hod_template/base_template.html' %}
+{% load static %}
+{% block custom_css %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/css/bootstrap-datepicker.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="{% static "dist/css/coach_detail.css" %}">
+    
+{% endblock custom_css %}
+
+<!--{% block page_title %}Coach Detail{% endblock page_title %}-->
+
+{% block main_content %}
+    
+    <div class="container-xl px-4 mt-4">
+        <div class="container-fluid">
+            {% if messages %}
+                
+                    {% for message in messages %}
+                        {% if message.tags == 'success' %}
+                            <div class="alert alert-success">
+                                <ul class="messages">
+                                    <li>{{ message|slice:": -1" }}</li>
+                                </ul>
+                            </div>
+                        {% endif %}
+                        
+                    {% endfor %}
+                
+            {% endif %}
+            <div class="row">
+                <form method="POST" action="">
+                    {% csrf_token %}
+                    <div class="col-md-12">
+                        <div class="card card-primary" id="myTabContent">
+                            <div class="card-header d-flex justify-content-center">
+                                <h3 class="card-title">Add Coach</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="table table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center" scope="col">
+                                                    <div class="form-check mark-all-check-label-div d-flex">
+                                                        <label class="form-check-label mark-all-check-label" for="markAllCheckboxes">Mark All</label>
+                                                        <input class="form-check-input mark-all-check" type="checkbox" id="markAllCheckboxes">
+                                                    </div>
+                                                </th>
+                                                <th scope="col">Coach Number</th>
+                                                <th scope="col">Schedule</th>
+                                                <th scope="col">Routes</th>
+                                                <th class="text-center" scope="col">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for coach in coaches %}
+
+                                                <tr class="inner-box">
+                                                    <th scope="row">
+                                                        <!--Checkbox-->
+                                                        <div class="form-check checkbox-div d-flex justify-content-end">
+                                                            <input class="form-check-input" type="checkbox" name="marked_coaches" value="{{ coach.id }}" id="coach{{ coach.id }}">
+                                                        </div>
+                                                    </th>
+                                                    <td>
+                                                        <h5><span>{{ coach.coachnumber }}</span></h5>
+                                                    </td>
+                                                    <td>
+                                                        <!--Schedule-->
+                                                        <p class="mb-2">Journey Date: <b>{{ coach.recent_upcoming_scheduled }}</b></p>
+                                                        <p class="mb-2">Return Date: {{ coach.returndate }}</p>
+                                                    </td>
+                                                    <td>
+                                                        <!--routes-->
+                                                        {% for route in coach.routes.all %}
+                                                        
+                                                            <p>{{ route.start_point }} -  {{ route.end_point }}</p>
+
+                                                        {% endfor %}
+                                                    </td>
+                                                    <td class="">
+                                                        <button type="button" id="coach-details-btn-{{coach.id}}" class="btn btn-info action-btn view-coach-history-btn mx-2 view-btn" data-view-coach-id="{{ coach.id }}">
+                                                            <i class="fas fa-eye"></i>
+                                                        </button>
+                                                    
+                                                        <button type="button" id="update-coach-dates-btn-{{coach.id}}" class="btn btn-primary action-btn update-coach-dates-btn mx-2 edit-btn" data-update-coach-id="{{ coach.id }}">
+                                                            <i class="fas fa-edit"></i>
+                                                        </button>
+                                                    
+                                                        <button type="button" id="delete-coach-btn{{coach.id}}" class="btn btn-danger action-btn mx-2 delete-btn">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="row mt-4">
+                                    <div class="input-group date col-md-4 px-4">
+                                        <p class="col-12">Add a new Journey Date for selected coaches</p>
+                                        <input type="text" name="new_journey_date" id="new_journey_date" class="form-control" readonly>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" id="calendar-icon1"><i class="far fa-calendar-alt"></i></span>
+                                        </div>
+                                    </div>
+                                    <div class="input-group d-flex justify-content-center mb-2 col-md-4">
+                                        <p class="col-12 departure-text text-center">Departure Time</p>
+                                        <input type="time" name="departure_time" placeholder="12:00am">
+                                    </div>
+                                    <div class="input-group date col-md-4 px-4">
+                                        <p class="col-12">Add a new Return Date for selected coaches</p>
+                                        <input type="text" name="new_return_date" id="new_return_date" class="form-control" readonly>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" id="calendar-icon2"><i class="far fa-calendar-alt"></i></span>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+            
+                                <div class="d-flex justify-content-center mt-5">
+                                    <button type="submit" class="btn btn-primary save-btn">Save Changes</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if messages %}
+                
+                        {% for message in messages %}
+                            {% if message.tags == 'error' %}
+                                <div class="alert alert-danger">
+                                    <ul class="messages">
+                                        <li>{{ message|slice:": -1" }}</li>
+                                    </ul>
+                                </div>
+                            {% endif %}
+                            
+                        {% endfor %}
+                
+                    {% endif %}
+
+                    
+                </form>
+                <!-- /col end-->
+            </div>
+            <!-- /row end-->
+        </div>
+    </div>
+
+    <div id="update-modal-container" class="update-modal-container">
+        <div class="update-modal col-md-8">
+            <span class="x-mark"><i class="fa-solid fa-xmark fa-xl" style="color: #b31b00;"></i></span>
+            <div id="coach-update-popup-heading-text" class="d-flex coach-update-heading justify-content-center mt-4">
+                <h5></h5>
+            </div>
+
+            <div id="message-container" class="alert"></div>
+
+            <div id="journey-dates-container" class="mt-4">
+                <!--<div class="row">
+                    <div class="col-6 journey-date-get px-4">
+                        <h5>get</h5>
+                    </div>
+                    <div class="col-6 journey-date-get px-4">
+                        <h5>update</h5>
+                    </div>
+    
+                </div>-->
+            </div>
+
+            <hr>
+        </div>
+    </div>
+
+
+    <!--View coach popup-->
+    <div id="view-coach-modal-container" class="view-coach-modal-container">
+        <div class="view-coach-modal col-md-9">
+            <span class="x-mark"><i class="fa-solid fa-xmark fa-xl" style="color: #b31b00;"></i></span>
+            <div id="coach-view-popup-heading-text" class="d-flex coach-update-heading justify-content-center my-4">
+                <h5>Coach details</h5>
+            </div>
+
+            <div id="coach-view-details" class="row coach-view-details">
+                <!--<div class="coach-card">
+                    <div class="row">
+                        <div class="date-heading d-flex justify-content-center mt-2">
+                            <p class="mb-2"><span>Date: <b>2023/05/08</b></span></p>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="coach-view-text-div ps-2">
+                            <p class="mb-2"><span>Total Seats: <b></b></span></p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="coach-view-text-div d-flex justify-content-center">
+                            <p class="mb-2"><span><b></b></span></p>
+                        </div>
+                    </div>
+                </div>-->
+
+                
+            </div>
+
+            <hr>
+        </div>
+    </div>
+    <!--View coach popup-->
+
+
+    
+{% endblock main_content %}
+
+{% block custom_js %}
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/js/bootstrap-datepicker.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("#new_journey_date").datepicker({
+                format: 'yyyy-mm-dd',
+                autoclose: true
+            });
+
+            $("#new_return_date").datepicker({
+                format: 'yyyy-mm-dd',
+                autoclose: true
+            });
+            
+            // Click event listener for the calendar icon
+            $("#calendar-icon1").click(function() {
+                $("#new_journey_date").datepicker("show");
+            });
+
+            $("#calendar-icon2").click(function() {
+                $("#new_journey_date").datepicker("show");
+            });
+
+            $('#markAllCheckboxes').on('click', function () {
+                const isChecked = $(this).prop('checked');
+                $('[name="marked_coaches"]').prop('checked', isChecked);
+            });
+
+
+            // Update modal popup show
+
+            $(document).on('click', '.update-coach-dates-btn', function() {
+                $('.update-modal-container').addClass('show');
+
+                // Error and Success message Div, remove the text and classes initially
+                $('#message-container').removeClass();
+                $('#message-container').empty();
+                // Access the specific coach ID
+                var coachId = $(this).data('update-coach-id')
+                
+
+                // ajax request to get the journey dates based on id
+                fetch('/update_coach_journey_dates/?coachId=' + coachId, {
+                    method: 'GET',
+                })
+                .then(function(response) {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    else {
+                        throw new Error('Failed to fetch journey dates');
+                    }
+                })
+                .then(function(data) {
+                    // Handle the JSON response
+                    if (data.upcoming_schedule_list_coach.length > 0) {
+                        var coachNumber = data.coach_number
+                        var text = 'Update or change journey dates for Coach Number: ' + coachNumber
+                        $('#coach-update-popup-heading-text h5').text(text);
+                        var journeyDatesContainer = $('#journey-dates-container');
+                        journeyDatesContainer.empty();
+                
+                        data.upcoming_schedule_list_coach.forEach(function(date) {
+                            var form = $('<form>').attr({
+                                id: 'journey-date-form-' + date.pk, // Use the entry primary key as the form ID
+                                method: 'POST'
+                            });
+                            // Create a hidden input field for the CSRF token
+                            var csrfTokenInput = $('<input>').attr({
+                                type: 'hidden',
+                                name: 'csrfmiddlewaretoken',
+                                value: '{{ csrf_token }}' // Include the csrf_token template tag here
+                            });
+
+                            // create the row
+                            var row = $('<div>').addClass('row');
+                            var dateColumn = $('<div>').addClass('col-4 journey-date-get px-4 py-3');
+                            var dateSpan = $('<span>').text('Date: ' + date.fields.journey_date);
+                            dateColumn.append(dateSpan);
+                            var buttonColumn = $('<div>').addClass('col-8 px-3 d-flex');
+
+                            var updateButtonDiv = $('<div>').addClass('col-md-4 update-journey-date-btn-div');
+                            var updateButton = $('<button>').addClass('btn btn-primary edit-btn').attr({
+                                type: 'submit',
+                                'data-coach-id': parseInt(data.coach_id),
+                                'data-current-date': date.fields.journey_date
+                            }).text('Update');
+
+                            // Create a parent div for the input group
+                            var inputGroupDiv = $('<div>').addClass('input-group col-md-8 date px-4 py-3');
+                            var changeDateLabel = $('<p>').addClass('col-12')
+                            var inputElement = $('<input>').attr({
+                                type: 'text',
+                                name: 'new_journey_date-' + date.pk,
+                                id: 'new_journey_date-' + date.pk,
+                                class: 'form-control',
+                                readonly: 'readonly'
+                            });
+                            form.append(row);
+                            var inputGroupAppendDiv = $('<div>').addClass('input-group-append');
+                            var calendarIcon = $('<span>').addClass('input-group-text').attr('id', 'calendar-icon10' + date.pk).html('<i class="far fa-calendar-alt"></i>');
+
+                            // Append the input group elements to the parent div
+                            inputGroupDiv.append(changeDateLabel, inputElement, inputGroupAppendDiv);
+                            inputGroupAppendDiv.append(calendarIcon);
+                            updateButtonDiv.append(updateButton);
+
+                            buttonColumn.append(inputGroupDiv, updateButtonDiv);
+                            row.append(dateColumn, buttonColumn);
+                            journeyDatesContainer.append(form);
+
+
+
+                        });
+                    }
+                    else {
+                        $('#journey-dates-container').text('No journey dates found.');
+                    }
+
+
+                    // datepicker calender for each journey date
+                    if (data.upcoming_schedule_list_coach.length > 0) {
+                
+                        data.upcoming_schedule_list_coach.forEach(function(date) {
+                            
+                            $("#new_journey_date-" + date.pk).datepicker({
+                                format: 'yyyy-mm-dd',
+                                autoclose: true
+                            });
+
+                            $("#calendar-icon10" + date.pk).click(function() {
+                                $("#new_journey_date-" + date.pk).datepicker("show");
+                            });
+                
+                        });
+                    }
+                })
+                
+            });
+
+            $('.x-mark').click(function() {
+                $('.update-modal-container').removeClass('show');
+                $('.view-coach-modal-container').removeClass('show');
+                console.log('clicked')
+            });
+
+            //update journey date for each coach
+            $(document).on('submit', 'form[id^="journey-date-form-"]', function(event) {
+                event.preventDefault(); // Prevent the default form submission
+            
+                // Get the form data
+                var formData = new FormData(this);
+                var coachId = $(this).find('[data-coach-id]').data('coach-id');
+                var currentDate = $(this).find('[data-current-date]').data('current-date');
+                
+
+                formData.append('coachId', coachId);
+                formData.append('currentDate', currentDate)
+            
+                // Perform the form submission via Fetch
+                fetch('/update_each_journey_date/', {
+                    method: 'POST',
+                    headers: {
+                        'x-CSRFToken': '{{csrf_token}}'
+                    },
+                    body: formData
+                })
+                .then(function(response) {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    else {
+                        throw new Error('Error occurred during form submission');
+                    }
+                })
+
+                .then(function(data) {
+                    if (data.success) {
+                        // Display success message to the user
+                        $('#message-container').text(data.message);
+                        $('#message-container').removeClass('error alert-danger').addClass('success alert alert-success');
+                    }
+                    else {
+                        // Display error message to the user
+                        $('#message-container').text(data.message);
+                        $('#message-container').removeClass('success alert-success').addClass('error alert alert-danger');
+
+                    }
+                  })
+
+                .catch(function(error) {
+                    // Handle any error that occurs during the form submission
+                });
+            });
+
+            // View Coach popup
+            $(document).on('click', '.view-coach-history-btn', function(){
+                $('.view-coach-modal-container').addClass('show');
+
+                var coachId = $(this).data('view-coach-id')
+
+                // function to generate the cards containing the details of coach
+                function generateCoachCard(journeyDate, totalSeats, bookedSeats, remainingSeats, occupancy) {
+                    var coachDetailDiv = $('#coach-view-details')
+
+                    var coachCardDiv = $('<div>').addClass('coach-card');
+                    
+                    // Date heading div
+                    var dateHeadingDiv = $('<div>').addClass('row');
+                    var dateHeadingContent = '<div class="date-heading d-flex justify-content-center mt-2">' +
+                                            '<p class="mb-2"><span>Date: <b>' + journeyDate + '</b></span></p>' +
+                                            '</div>';
+                    dateHeadingDiv.html(dateHeadingContent);
+                    coachCardDiv.append(dateHeadingDiv);
+            
+                    // Total seats div
+                    var totalSeatsDiv = $('<div>').addClass('row');
+                    var totalSeatsContent = '<div class="coach-view-text-div ps-2">' +
+                                            '<p class="mb-2"><span>Seats: <b>' + totalSeats + '/' + bookedSeats + '/' + remainingSeats + '</b></span></p>' +
+                                            '</div>';
+                    totalSeatsDiv.html(totalSeatsContent);
+                    coachCardDiv.append(totalSeatsDiv);
+            
+                    // Remaining seats div
+                    var occupancyDiv = $('<div>').addClass('row');
+                    var occupancyDivContent = '<div class="coach-view-text-div d-flex justify-content-center">' +
+                                                '<p class="mb-2"><span class="occupancy-text"><b>' + occupancy + '%' + '</b></span></p>' +
+                                                '</div>';
+                    occupancyDiv.html(occupancyDivContent);
+                    coachCardDiv.append(occupancyDiv);
+                    coachDetailDiv.append(coachCardDiv)
+            
+                    // Append the coach card div to the container
+                    $('.coach-details-container').append(coachCardDiv);
+                }
+
+                fetch('/view_coach_details/?coachId=' + coachId, {
+                    method: 'GET',
+                })
+                .then(function(response) {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    else {
+                        throw new Error('Failed to fetch journey dates');
+                    }
+                })
+                .then(function(data){
+                    if (data.coach_details_list.length > 0) {
+                        var coachDetailDiv = $('#coach-view-details')
+                        coachDetailDiv.empty();
+                        data.coach_details_list.forEach(function(journeyDateDetails) {
+                            generateCoachCard(journeyDateDetails.journey_date, journeyDateDetails.total_seats, journeyDateDetails.booked_seats, journeyDateDetails.remaining_seats, journeyDateDetails.seat_ocuupancy);
+                        });
+                    }
+                    
+                });
+            });
+
+        });
+    </script>
+{% endblock custom_js %}
+
+

@@ -1,0 +1,90 @@
+{% extends 'hod_template/base_template.html' %}
+{% load static %}
+{% block custom_css %}
+    <link rel="stylesheet" href="{% static "dist/css/customer.css" %}">
+{% endblock custom_css %}
+{% block page_title %}Edit Customer{% endblock page_title %}
+
+{% block main_content %}
+<div class="container-xl px-4 mt-4">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="card card-primary">
+                    <div class="card-header d-flex justify-content-center">
+                        <h3 class="card-title">Edit Customer</h3>
+                    </div>
+                    <div class="card-body">
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="d-flex justify-content-center">
+                                <div class="form-group col-md-6 col-12">
+                                    <label for="first_name">First Name</label>
+                                    <input type="text" name="first_name" class="form-control" value="{{ customer.first_name }}" required>
+                                </div>
+                                <div class="form-group col-md-6 col-12">
+                                    <label for="last_name">Last Name</label>
+                                    <input type="text" name="last_name" class="form-control" value="{{ customer.last_name }}" required>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex justify-content-center">
+                                <div class="form-group col-md-6 col-12">
+                                    <label for="email">Email</label>
+                                    <input type="email" name="email" class="form-control" value="{{ customer.email }}" required>
+                                </div>
+                                <div class="form-group col-md-6 col-12">
+                                    <label for="phone">Phone</label>
+                                    <input type="text" name="phone" class="form-control" value="{{ customer.phone }}" required>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex justify-content-center">
+                                <div class="form-group col-md-6 col-12">
+                                    <label for="id_type">ID Type</label>
+                                    <input type="text" name="id_type" class="form-control" value="{{ customer.id_type }}" required>
+                                </div>
+                                <div class="form-group col-md-6 col-12">
+                                    <label for="nid">NID</label>
+                                    <input type="text" name="nid" class="form-control" value="{{ customer.nid }}" required>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex justify-content-center">
+                                <div class="form-group col-md-6 col-12">
+                                    <label for="address">Address</label>
+                                    <textarea name="address" class="form-control" required>{{ customer.address }}</textarea>
+                                </div>
+                                <div class="form-group col-md-6 col-12">
+                                    <label for="state">State</label>
+                                    <input type="text" name="state" class="form-control" value="{{ customer.state }}" required>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex justify-content-center">
+                                <div class="form-group col-md-6 col-12">
+                                    <label for="country">Country</label>
+                                    <input type="text" name="country" class="form-control" value="{{ customer.country }}" required>
+                                    
+                                </div>
+                                <div class="form-group col-md-6 col-12">
+                                    <label for="zip_code">Zip Code</label>
+                                    <input type="text" name="zip_code" class="form-control" value="{{ customer.zip_code }}" required>
+                                </div>
+                            </div>
+                            
+                            <div class="card-btn mt-3 mb-3 d-flex justify-content-center">
+                                <button type="submit" class="btn btn-primary submit-btn">Update Customer</button>
+                            </div>
+                            
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock main_content %}
+
+{% block custom_js %}
+{% endblock custom_js %}

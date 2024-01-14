@@ -1,0 +1,584 @@
+{% extends 'hod_template/base_template.html' %}
+{% load static %}
+{% block custom_css %}
+    <link rel="stylesheet" href="{% static "dist/css/ticket_booking.css" %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.9/dist/flatpickr.min.css">
+{% endblock custom_css %}
+{% block page_title %}Seat Views{% endblock page_title %}
+
+{% block main_content %}
+<section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card card-primary">
+            <div class="card-header">
+              <h3 class="card-title">Ticket Booking</h3>
+            </div>
+            <div class="card-body">
+                {% if messages %}
+                <div class="alert alert-success" style="margin-top: 10px">
+                  {% for message in messages %}
+                  {{ message }}
+                  {% endfor %}
+                </div>
+           {% endif %}
+                    <form action="{% url 'booking_hod' bus_number=bus.bus_number coach_number=coach.coachnumber journey_date=journey_date route_id=route_id route_part_id=route_part_id %}" method="POST"  enctype="multipart/form-data">
+                        {% csrf_token %}
+                       <input type="hidden" id="csrf" name="csrf_bus365" value="{{selected_seat}}">
+                      
+
+                        {% comment %} <input type="hidden" name="aseat" id="aseat" value="1">
+                        <input type="hidden" name="spseat" id="spseat" value="0">
+                        <input type="hidden" name="cseat" id="cseat" value="0"> {% endcomment %}
+                        <input type="hidden" name="selected_seat" value="{{ selected_seat }}">
+                        <input type="hidden" name="selected_price" value="{{ selected_price }}">
+                        <input type="hidden" name="route_part_id" value="{{ route_part_id }}">
+                        {% if selected_boarding_point %}
+                        <input type="hidden" name="boarding_point" value="{{ selected_boarding_point.id }}">
+                        {% else %}
+                        <input type="hidden" name="boarding_point" value="">
+                        {% endif %}
+                        
+                        {% comment %} <input type="hidden" name="pickstand" id="pickstand" value="101">
+                        <input type="hidden" name="dropstand" id="dropstand" value="102">
+                        <input type="hidden" name="totalseat" id="totalseat" value="1"> {% endcomment %}
+                        {% comment %} <input type="hidden" name="journeydate" id="journeydate" value="2023-08-20">
+                        <input type="hidden" name="roundtrip_discount" id="roundtrip_discount" value="0"> {% endcomment %}
+                        <div class="row">
+                        <div class="col-12">
+                        <div class="row">
+                        <div class="col-4 mt-4 form-group">
+                        <label for="login_mobile">Mobile <abbr class="required" title="Required field">*</abbr></label>
+                        <input type="number" name="customer_mobile" id="phone_number" class="form-control" value="" placeholder="Mobile" aria-label="Mobile"  min="1" required>
+                        </div>
+                        <div class="col-4 mt-4 form-group">
+                        <label for="login_email">Email <abbr class="required" title="Required field">*</abbr></label>
+                        <input type="email" name="customer_email" id="id_email" class="form-control" value="" placeholder="Email" aria-label="Email" >
+                        </div>
+                        <div class="col-4 mt-4 form-group">
+                        <label for="first_name">First Name <abbr class="required" title="Required field">*</abbr></label>
+                        <input type="text" name="first_name" class="form-control" id="first_name" value="" placeholder="First Name" aria-label="First name">
+                        </div>
+                        <div class="col-4 mt-2 form-group">
+                        <label for="last_name">Last Name <abbr class="required" title="Required field">*</abbr></label>
+                        <input type="text" name="last_name" class="form-control" id="last_name" value="" placeholder="Last name" aria-label="Last name" >
+                        </div>
+                        <div class="col-4 mt-2 form-group">
+                        <label for="id_type">Id Type</label>
+                        <input type="text" name="id_type" class="form-control" id="id_type" value="" placeholder="Nid/Passport" aria-label="Passport/Nid">
+                        </div>
+                        <div class="col-4 mt-2 form-group">
+                        <label for="id_number">Nid/Passport Number</label>
+                        <input type="text" name="id_number" class="form-control" id="id_number" value="" placeholder="Nid/Passport Number" aria-label="Nid/Passport Number">
+                        </div>
+                        <div class="col-4 mt-2 form-group">
+                        <label for="country_id">Country Name <abbr class="required" title="Required field">*</abbr></label>
+                        <select class="form-select" name="country_id" id="country_id">
+                            <option value="">None</option>
+                            <option value="1">AFGHANISTAN</option>
+                            <option value="2">ALBANIA</option>
+                            <option value="3">ALGERIA</option>
+                            <option value="4">AMERICAN SAMOA</option>
+                            <option value="5">ANDORRA</option>
+                            <option value="6">ANGOLA</option>
+                            <option value="7">ANGUILLA</option>
+                            <option value="8">ANTARCTICA</option>
+                            <option value="9">ANTIGUA AND BARBUDA</option>
+                            <option value="10">ARGENTINA</option>
+                            <option value="11">ARMENIA</option>
+                            <option value="12">ARUBA</option>
+                            <option value="13">AUSTRALIA</option>
+                            <option value="14">AUSTRIA</option>
+                            <option value="15">AZERBAIJAN</option>
+                            <option value="16">BAHAMAS</option>
+                            <option value="17">BAHRAIN</option>
+                            <option value="18">BANGLADESH</option>
+                            <option value="19">BARBADOS</option>
+                            <option value="20">BELARUS</option>
+                            <option value="21">BELGIUM</option>
+                            <option value="22">BELIZE</option>
+                            <option value="23">BENIN</option>
+                            <option value="24">BERMUDA</option>
+                            <option value="25">BHUTAN</option>
+                            <option value="26">BOLIVIA</option>
+                            <option value="27">BOSNIA AND HERZEGOVINA</option>
+                            <option value="28">BOTSWANA</option>
+                            <option value="29">BOUVET ISLAND</option>
+                            <option value="30">BRAZIL</option>
+                            <option value="31">BRITISH INDIAN OCEAN TERRITORY</option>
+                            <option value="32">BRUNEI DARUSSALAM</option>
+                            <option value="33">BULGARIA</option>
+                            <option value="34">BURKINA FASO</option>
+                            <option value="35">BURUNDI</option>
+                            <option value="36">CAMBODIA</option>
+                            <option value="37">CAMEROON</option>
+                            <option value="38">CANADA</option>
+                            <option value="39">CAPE VERDE</option>
+                            <option value="40">CAYMAN ISLANDS</option>
+                            <option value="41">CENTRAL AFRICAN REPUBLIC</option>
+                            <option value="42">CHAD</option>
+                            <option value="43">CHILE</option>
+                            <option value="44">CHINA</option>
+                            <option value="45">CHRISTMAS ISLAND</option>
+                            <option value="46">COCOS (KEELING) ISLANDS</option>
+                            <option value="47">COLOMBIA</option>
+                            <option value="48">COMOROS</option>
+                            <option value="49">CONGO</option>
+                            <option value="50">CONGO, THE DEMOCRATIC REPUBLIC OF THE</option>
+                            <option value="51">COOK ISLANDS</option>
+                            <option value="52">COSTA RICA</option>
+                            <option value="53">COTE D'IVOIRE</option>
+                            <option value="54">CROATIA</option>
+                            <option value="55">CUBA</option>
+                            <option value="56">CYPRUS</option>
+                            <option value="57">CZECH REPUBLIC</option>
+                            <option value="58">DENMARK</option>
+                            <option value="59">DJIBOUTI</option>
+                            <option value="60">DOMINICA</option>
+                            <option value="61">DOMINICAN REPUBLIC</option>
+                            <option value="62">ECUADOR</option>
+                            <option value="63">EGYPT</option>
+                            <option value="64">EL SALVADOR</option>
+                            <option value="65">EQUATORIAL GUINEA</option>
+                            <option value="66">ERITREA</option>
+                            <option value="67">ESTONIA</option>
+                            <option value="68">ETHIOPIA</option>
+                            <option value="69">FALKLAND ISLANDS (MALVINAS)</option>
+                            <option value="70">FAROE ISLANDS</option>
+                            <option value="71">FIJI</option>
+                            <option value="72">FINLAND</option>
+                            <option value="73">FRANCE</option>
+                            <option value="74">FRENCH GUIANA</option>
+                            <option value="75">FRENCH POLYNESIA</option>
+                            <option value="76">FRENCH SOUTHERN TERRITORIES</option>
+                            <option value="77">GABON</option>
+                            <option value="78">GAMBIA</option>
+                            <option value="79">GEORGIA</option>
+                            <option value="80">GERMANY</option>
+                            <option value="81">GHANA</option>
+                            <option value="82">GIBRALTAR</option>
+                            <option value="83">GREECE</option>
+                            <option value="84">GREENLAND</option>
+                            <option value="85">GRENADA</option>
+                            <option value="86">GUADELOUPE</option>
+                            <option value="87">GUAM</option>
+                            <option value="88">GUATEMALA</option>
+                            <option value="89">GUINEA</option>
+                            <option value="90">GUINEA-BISSAU</option>
+                            <option value="91">GUYANA</option>
+                            <option value="92">HAITI</option>
+                            <option value="93">HEARD ISLAND AND MCDONALD ISLANDS</option>
+                            <option value="94">HOLY SEE (VATICAN CITY STATE)</option>
+                            <option value="95">HONDURAS</option>
+                            <option value="96">HONG KONG</option>
+                            <option value="97">HUNGARY</option>
+                            <option value="98">ICELAND</option>
+                            <option value="99">INDIA</option>
+                            <option value="100">INDONESIA</option>
+                            <option value="101">IRAN, ISLAMIC REPUBLIC OF</option>
+                            <option value="102">IRAQ</option>
+                            <option value="103">IRELAND</option>
+                            <option value="104">ISRAEL</option>
+                            <option value="105">ITALY</option>
+                            <option value="106">JAMAICA</option>
+                            <option value="107">JAPAN</option>
+                            <option value="108">JORDAN</option>
+                            <option value="109">KAZAKHSTAN</option>
+                            <option value="110">KENYA</option>
+                            <option value="111">KIRIBATI</option>
+                            <option value="112">KOREA, DEMOCRATIC PEOPLE'S REPUBLIC OF</option>
+                            <option value="113">KOREA, REPUBLIC OF</option>
+                            <option value="114">KUWAIT</option>
+                            <option value="115">KYRGYZSTAN</option>
+                            <option value="116">LAO PEOPLE'S DEMOCRATIC REPUBLIC</option>
+                            <option value="117">LATVIA</option>
+                            <option value="118">LEBANON</option>
+                            <option value="119">LESOTHO</option>
+                            <option value="120">LIBERIA</option>
+                            <option value="121">LIBYAN ARAB JAMAHIRIYA</option>
+                            <option value="122">LIECHTENSTEIN</option>
+                            <option value="123">LITHUANIA</option>
+                            <option value="124">LUXEMBOURG</option>
+                            <option value="125">MACAO</option>
+                            <option value="126">MACEDONIA, THE FORMER YUGOSLAV REPUBLIC OF</option>
+                            <option value="127">MADAGASCAR</option>
+                            <option value="128">MALAWI</option>
+                            <option value="129">MALAYSIA</option>
+                            <option value="130">MALDIVES</option>
+                            <option value="131">MALI</option>
+                            <option value="132">MALTA</option>
+                            <option value="133">MARSHALL ISLANDS</option>
+                            <option value="134">MARTINIQUE</option>
+                            <option value="135">MAURITANIA</option>
+                            <option value="136">MAURITIUS</option>
+                            <option value="137">MAYOTTE</option>
+                            <option value="138">MEXICO</option>
+                            <option value="139">MICRONESIA, FEDERATED STATES OF</option>
+                            <option value="140">MOLDOVA, REPUBLIC OF</option>
+                            <option value="141">MONACO</option>
+                            <option value="142">MONGOLIA</option>
+                            <option value="143">MONTSERRAT</option>
+                            <option value="144">MOROCCO</option>
+                            <option value="145">MOZAMBIQUE</option>
+                            <option value="146">MYANMAR</option>
+                            <option value="147">NAMIBIA</option>
+                            <option value="148">NAURU</option>
+                            <option value="149">NEPAL</option>
+                            <option value="150">NETHERLANDS</option>
+                            <option value="151">NETHERLANDS ANTILLES</option>
+                            <option value="152">NEW CALEDONIA</option>
+                            <option value="153">NEW ZEALAND</option>
+                            <option value="154">NICARAGUA</option>
+                            <option value="155">NIGER</option>
+                            <option value="156">NIGERIA</option>
+                            <option value="157">NIUE</option>
+                            <option value="158">NORFOLK ISLAND</option>
+                            <option value="159">NORTHERN MARIANA ISLANDS</option>
+                            <option value="160">NORWAY</option>
+                            <option value="161">OMAN</option>
+                            <option value="162">PAKISTAN</option>
+                            <option value="163">PALAU</option>
+                            <option value="164">PALESTINIAN TERRITORY, OCCUPIED</option>
+                            <option value="165">PANAMA</option>
+                            <option value="166">PAPUA NEW GUINEA</option>
+                            <option value="167">PARAGUAY</option>
+                            <option value="168">PERU</option>
+                            <option value="169">PHILIPPINES</option>
+                            <option value="170">PITCAIRN</option>
+                            <option value="171">POLAND</option>
+                            <option value="172">PORTUGAL</option>
+                            <option value="173">PUERTO RICO</option>
+                            <option value="174">QATAR</option>
+                            <option value="175">REUNION</option>
+                            <option value="176">ROMANIA</option>
+                            <option value="177">RUSSIAN FEDERATION</option>
+                            <option value="178">RWANDA</option>
+                            <option value="179">SAINT HELENA</option>
+                            <option value="180">SAINT KITTS AND NEVIS</option>
+                            <option value="181">SAINT LUCIA</option>
+                            <option value="182">SAINT PIERRE AND MIQUELON</option>
+                            <option value="183">SAINT VINCENT AND THE GRENADINES</option>
+                            <option value="184">SAMOA</option>
+                            <option value="185">SAN MARINO</option>
+                            <option value="186">SAO TOME AND PRINCIPE</option>
+                            <option value="187">SAUDI ARABIA</option>
+                            <option value="188">SENEGAL</option>
+                            <option value="189">SERBIA AND MONTENEGRO</option>
+                            <option value="190">SEYCHELLES</option>
+                            <option value="191">SIERRA LEONE</option>
+                            <option value="192">SINGAPORE</option>
+                            <option value="193">SLOVAKIA</option>
+                            <option value="194">SLOVENIA</option>
+                            <option value="195">SOLOMON ISLANDS</option>
+                            <option value="196">SOMALIA</option>
+                            <option value="197">SOUTH AFRICA</option>
+                            <option value="198">SOUTH GEORGIA AND THE SOUTH SANDWICH ISLANDS</option>
+                            <option value="199">SPAIN</option>
+                            <option value="200">SRI LANKA</option>
+                            <option value="201">SUDAN</option>
+                            <option value="202">SURINAME</option>
+                            <option value="203">SVALBARD AND JAN MAYEN</option>
+                            <option value="204">SWAZILAND</option>
+                            <option value="205">SWEDEN</option>
+                            <option value="206">SWITZERLAND</option>
+                            <option value="207">SYRIAN ARAB REPUBLIC</option>
+                            <option value="208">TAIWAN, PROVINCE OF CHINA</option>
+                            <option value="209">TAJIKISTAN</option>
+                            <option value="210">TANZANIA, UNITED REPUBLIC OF</option>
+                            <option value="211">THAILAND</option>
+                            <option value="212">TIMOR-LESTE</option>
+                            <option value="213">TOGO</option>
+                            <option value="214">TOKELAU</option>
+                            <option value="215">TONGA</option>
+                            <option value="216">TRINIDAD AND TOBAGO</option>
+                            <option value="217">TUNISIA</option>
+                            <option value="218">TURKEY</option>
+                            <option value="219">TURKMENISTAN</option>
+                            <option value="220">TURKS AND CAICOS ISLANDS</option>
+                            <option value="221">TUVALU</option>
+                            <option value="222">UGANDA</option>
+                            <option value="223">UKRAINE</option>
+                            <option value="224">UNITED ARAB EMIRATES</option>
+                            <option value="225">UNITED KINGDOM</option>
+                            <option value="226">UNITED STATES</option>
+                            <option value="227">UNITED STATES MINOR OUTLYING ISLANDS</option>
+                            <option value="228">URUGUAY</option>
+                            <option value="229">UZBEKISTAN</option>
+                            <option value="230">VANUATU</option>
+                            <option value="231">VENEZUELA</option>
+                            <option value="232">VIET NAM</option>
+                            <option value="233">VIRGIN ISLANDS, BRITISH</option>
+                            <option value="234">VIRGIN ISLANDS, U.S.</option>
+                            <option value="235">WALLIS AND FUTUNA</option>
+                            <option value="236">WESTERN SAHARA</option>
+                            <option value="237">YEMEN</option>
+                            <option value="238">ZAMBIA</option>
+                            <option value="239">ZIMBABWE</option>
+                            </select>
+                       
+                        </div>
+                        <div class="col-4 mt-2 form-group">
+                        <label for="city mt-2 ">City Name </label>
+                        <input type="text" name="state" class="form-control" id="city" value="" placeholder="City Name" aria-label="City Name">
+                        </div>
+                        <div class="col-4 mt-2 form-group">
+                        <label for="zip_code">Zip Code..!! </label>
+                        <input type="text" name="zip_code" class="form-control" id="zip_code" value="" placeholder="Zip Code" aria-label="Zip Code">
+                        </div>
+                        <div class="col-12 mt-2 form-group">
+                        <label for="address">Address <abbr class="required" title="Required field">*</abbr></label>
+                        <textarea class="form-control" name="address" id="address" rows="3"></textarea>
+                        </div> </div>
+                        </div>
+                        <div class="col-5">
+                        <div class="row">
+                        </div>
+                        </div>
+                        </div>
+                        <div class="row ">
+                            <div class="col-4 mt-2 form-group">
+                                <label for="payment_status">Payment Status <abbr class="required" title="Required field">*</abbr></label>
+                                <select class="form-select" name="payment_status" id="payment_status">
+                                    <option value="Unpaid" {% if payment_status == 'Unpaid' %}selected{% endif %}>Unpaid</option>
+                                    <option value="Partial" {% if payment_status == 'Partial' %}selected{% endif %}>Partial</option>
+                                    <option value="Paid" {% if payment_status == 'Paid' %}selected{% endif %}>Paid</option>
+                                </select>
+                            </div>
+                        <div class="col-4 mt-2 form-group">
+                          <label for="payment_method">Payment Method Type</label>
+                          <select name="selected_payment_method" class="form-control custom-select">
+                            {% for method_name in active_payment_method_names %}
+                              <option value="{{ method_name }}">{{ method_name }}</option>
+                            {% endfor %}
+                          </select>
+                        </div>
+                        <div class="col-4 mt-2 form-group" id="grand">
+                            <label for="grandtotal">Amount To Pay</label>
+                            <input type="text" name="grandtotal" id="grandtotal" class="form-control" value="{{ selected_price }}" autocomplete="off" readonly="">
+                        </div>
+                        <div class="col-4 mt-2 form-group" id="amount_paid_group">
+                            <label for="amount_paid">Amount Paid</label>
+                            <input type="text" name="amount_paid" id="amount_paid" class="form-control" placeholder="Amount Paid">
+                            <small id="amount_paid_error"></small>
+                        </div>
+                        
+                        <div class="col-4 mt-2 form-group" id="less">
+                        <label for="discount">Tax Amount</label>
+                        <input type="text" name="discount" id="discount" class="form-control" value="BDT {{tax_amount}} ({{tax_name}})">
+                        </div>
+                        <div class="col-4 mt-2 form-group" id="partial" style="display: none;">
+                        <label for="partialpay">Partial Payment Amount </label>
+                        <input type="text" name="partialpay" id="partialpay" class="form-control" value="" placeholder="Partial Payment Amount" aria-label="Partial Payment Amount">
+                        </div>
+                        <div class="col-4 mt-2 form-group">
+                            <label for="seat">Selected Seat </label>
+                            <input type="text" name="grandtotal" id="grandtotal" class="form-control" value="{{ selected_seat }}" autocomplete="off" readonly="">
+                          
+                        </div>
+                        </div>
+                        <div class="text-danger">
+                        </div>
+                        <br>
+                        <div class="col-12 text-center">
+                            <button type="submit" class="btn btn-success">Submit</button>
+                        </div>
+                        <div style="display:none">
+                            <label>Fill This Field</label>
+                            <input type="text" name="honeypot" value=""></div></form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock main_content %}
+
+{% block custom_js %}
+<script>
+  $(document).ready(function() {
+      $("#id_email").keyup(function() {
+      var email = $(this).val();
+  
+      if (email !== "") {
+          $.ajax({
+          url: "{% url 'check_email_exist' %}",
+          type: "POST",
+          data: { email: email }
+          })
+          .done(function(response) {
+              console.log(response);
+              if (response === "True") {
+              $(".email_error").remove();
+              $("<span class='email_error' style='padding: 5px;color: red;font-weight: bold;'>Email Not Available</span>").insertAfter("#id_email");
+              $("#id_email").addClass("error-field");
+              } else {
+              $(".email_error").remove();
+              $("<span class='email_error' style='padding: 5px;color: green;font-weight: bold;'>Email Available</span>").insertAfter("#id_email");
+              $("#id_email").removeClass("error-field");
+              }
+          })
+          .fail(function() {
+              console.log("failed");
+          });
+      } else {
+          $(".email_error").remove();
+          $("#id_email").removeClass("error-field");
+      }
+      });
+  
+      $("#id_username").keyup(function() {
+      var username = $(this).val();
+  
+      if (username !== "") {
+          $.ajax({
+          url: "{% url 'check_username_exist' %}",
+          type: "POST",
+          data: { username: username }
+          })
+          .done(function(response) {
+              console.log(response);
+              if (response === "True") {
+              $(".username_error").remove();
+              $("<span class='username_error' style='padding: 5px;color: red;font-weight: bold;'>Username Not Available</span>").insertAfter("#id_username");
+              $("#id_username").addClass("error-field");
+              } else {
+              $(".username_error").remove();
+              $("<span class='username_error' style='padding: 5px;color: green;font-weight: bold;'>Username Available</span>").insertAfter("#id_username");
+              $("#id_username").removeClass("error-field");
+              }
+          })
+          .fail(function() {
+              console.log("failed");
+          });
+      } else {
+          $(".username_error").remove();
+          $("#id_username").removeClass("error-field");
+      }
+      });
+  
+      $("#phone_number").on("input", function() {
+      var phoneNumber = $(this).val();
+      var numericPhoneNumber = phoneNumber.replace(/\D/g, ""); // Remove non-digit characters
+  
+      $(this).val(numericPhoneNumber); // Update the input value with the numeric version
+  
+      // Check if the phone number length is not 11
+      if (numericPhoneNumber.length !== 11) {
+          $(".phone_error").remove();
+          $(
+          "<span class='phone_error' style='padding: 5px;color: red;font-weight: bold;'>Phone Number must be 11 digits</span>"
+          ).insertAfter("#phone_number");
+          $("#phone_number").addClass("error-field");
+          return;
+      }
+  
+      // Check if the phone number starts with the allowed prefixes
+      var allowedPrefixes = ["019", "018", "017", "016", "013", "014"];
+      var isValidPrefix = false;
+  
+      for (var i = 0; i < allowedPrefixes.length; i++) {
+          if (numericPhoneNumber.startsWith(allowedPrefixes[i])) {
+          isValidPrefix = true;
+          break;
+          }
+      }
+  
+      if (!isValidPrefix) {
+          $(".phone_error").remove();
+          $(
+          "<span class='phone_error' style='padding: 5px;color: red;font-weight: bold;'>Phone Number must start with 019, 018, 017, 016, 013, or 014</span>"
+          ).insertAfter("#phone_number");
+          $("#phone_number").addClass("error-field");
+          return;
+      }
+  
+      // Phone number is valid, proceed with availability check
+      $(".phone_error").remove();
+      $("#phone_number").removeClass("error-field");
+      $.ajax({
+          url: "{% url 'check_phone_number_exist' %}",
+          type: "POST",
+          data: { phoneNumber: numericPhoneNumber },
+      })
+          .done(function(response) {
+          console.log(response);
+          if (response === "True") {
+              $(
+              "<span class='phone_error' style='padding: 5px;color: red;font-weight: bold;'>Phone Number Not Available</span>"
+              ).insertAfter("#phone_number");
+              $("#phone_number").addClass("error-field");
+          } else {
+              $(
+              "<span class='phone_error' style='padding: 5px;color: green;font-weight: bold;'>Phone Number Available</span>"
+              ).insertAfter("#phone_number");
+              $("#phone_number").removeClass("error-field");
+          }
+          })
+          .fail(function() {
+          console.log("failed");
+          });
+      });
+  
+      // Variables for delay and timeout
+      var delayTimer;
+      var timeout = 300;
+  
+      // Function to handle suggestion request
+  
+  
+      // Function to handle search request
+      function performSearch(query) {
+      $.ajax({
+          url: "/user_list/",
+          type: "GET",
+          data: {
+          query: query
+          },
+          success: function(response) {
+          $("#search-results").html(response);
+          }
+      });
+      }
+  
+      // Event handler for search form submission
+      $("#search-form").on("submit", function(event) {
+      event.preventDefault();
+      var query = $("#search-input").val();
+      performSearch(query);
+      });
+  
+      // Event handler for search input keyup
+      $("#search-input").on("keyup", function(event) {
+      var query = $(this).val();
+      clearTimeout(delayTimer);
+      if (query) {
+          delayTimer = setTimeout(function() {
+          performSuggestion(query);
+          }, timeout);
+      } else {
+          $("#suggestions").empty();
+      }
+      });
+  
+      // Event handler for form submission
+      $("form").on("submit", function(event) {
+      var isValid = true;
+      if ($("#id_email").hasClass("error-field")) {
+          isValid = false;
+      }
+      if ($("#id_username").hasClass("error-field")) {
+          isValid = false;
+      }
+      if ($("#phone_number").hasClass("error-field")) {
+          isValid = false;
+      }
+  
+      if (!isValid) {
+          event.preventDefault();
+          $(".error-field").css("border-color", "red");
+      }
+      });
+  });
+  </script>
+{% endblock custom_js %}

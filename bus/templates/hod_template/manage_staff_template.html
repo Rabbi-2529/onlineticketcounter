@@ -1,0 +1,113 @@
+{% extends 'hod_template/base_template.html' %}
+{% load static %}
+{% block custom_css %}
+    <link rel="stylesheet" href="{% static "dist/css/staff.css" %}">
+{% endblock custom_css %}
+{% block page_title %}Manage Staff{% endblock page_title %}
+{% block main_content %}
+
+<div class="container-xl px-4 mt-4">
+    <div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-center">
+                <h3 class="card-title">Manage Staff</h3>
+            </div>
+            <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                    <th>Serial</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for staff in staffs %}
+                    <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ staff.admin.get_full_name }}</td>
+                    <td>{{ staff.admin.email }}</td>
+                    <td>{{ staff.admin.phone_number }}</td>
+                    <td>
+                        <a
+                        href="{% url 'edit_staff' staff_id=staff.id %}"
+                        class="btn btn-primary btn-sm edit-btn"
+                        ><i class="fas fa-edit"></i> Edit</a
+                    >
+                    <a
+                        href="{% url 'delete_staff' staff_id=staff.id  %}"
+                        class="btn btn-danger btn-sm delete-btn"
+                        ><i class="fas fa-trash-alt"></i> Delete</a
+                    >
+
+                    </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                    <td colspan="5" class="text-center">No staffs found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                </table>
+            </div>
+            <div class="form-group mt-3">
+                {% if messages %}
+                {% for message in messages %}
+                    {% if message.tags == 'error' %}
+                    <div class="alert alert-danger">{{ message }}</div>
+                    {% endif %}
+                    {% if message.tags == 'success' %}
+                    <div class="alert alert-success">{{ message }}</div>
+                    {% endif %}
+                {% endfor %}
+                {% endif %}
+            </div>
+            <div class="d-flex justify-content-center mt-3">
+                <ul class="pagination">
+                {% if staffs.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page=1">First</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{ staffs.previous_page_number }}">Previous</a></li>
+                {% endif %}
+                <li class="page-item active"><a class="page-link" href="?page={{ staffs.number }}">{{ staffs.number }}</a></li>
+                {% if staffs.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{ staffs.next_page_number }}">Next</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{ staffs.paginator.num_pages }}">Last</a></li>
+                {% endif %}
+                </ul>
+            </div>
+            </div>
+        </div>
+        </div>
+    </div>
+    </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const paginationLinks = document.querySelectorAll(".pagination .page-link");
+
+    paginationLinks.forEach(link => {
+      link.addEventListener("click", function(event) {
+        event.preventDefault();
+        const pageUrl = this.getAttribute("href");
+
+        fetch(pageUrl, { headers: { "X-Requested-With": "XMLHttpRequest" } })
+          .then(response => response.text())
+          .then(data => {
+            const parser = new DOMParser();
+            const newDocument = parser.parseFromString(data, "text/html");
+            const newContent = newDocument.querySelector(".card-body");
+
+            const cardBody = document.querySelector(".card-body");
+            cardBody.innerHTML = newContent.innerHTML;
+          });
+      });
+    });
+  });
+</script>
+{% endblock main_content %}

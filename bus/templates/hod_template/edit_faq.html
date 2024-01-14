@@ -1,0 +1,26 @@
+{% extends 'hod_template/base_template.html' %} {% load static %}{% block page_title %} FAQ{% endblock page_title %} {% block main_content %}
+<div class="container">
+    <h2>Edit FAQ</h2>
+    <form method="post" action="{% url 'edit_faq' faq.id %}">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="category">Category</label>
+        <select class="form-control" id="category" name="category">
+          {% for category in category %}
+          <option value="{{ category.id }}" {% if category.id == faq.category.id %}selected{% endif %}>{{ category.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="question">Question</label>
+        <input type="text" class="form-control" id="question" name="question" value="{{ faq.question }}">
+      </div>
+      <div class="form-group">
+        <label for="answer">Answer</label>
+        <textarea class="form-control" id="answer" name="answer" rows="5">{{ faq.answer }}</textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Save Changes</button>
+      <a href="{% url 'faq_list' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+  </div>
+{% endblock main_content %}

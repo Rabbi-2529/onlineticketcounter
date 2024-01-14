@@ -1,0 +1,179 @@
+{% extends 'hod_template/base_template.html' %} {% load static %}{% block page_title %}{% endblock page_title %}
+
+
+
+
+
+
+
+
+{% block main_content %}
+
+  
+  <style>
+    /* Center the form on the page */
+    .center-form {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        
+    }
+    {% comment %} .card {
+        border-radius: 20px;
+        /* box-shadow: 0 0.15rem 1.75rem 0 rgb(33 40 50 / 15%); */
+        box-shadow: 12px 16px 22px 9px rgba(0,0,0,0.1);
+    } {% endcomment %}
+    
+    .card-header {
+        background: linear-gradient(180deg, rgba(62,7,75,1) 0%, rgba(40,10,69,1) 63%);
+    }
+    
+    /* Styling for table headers */
+    .table thead tr th {
+        font-weight: 500;
+        color: rgb(0, 0, 0);
+    }
+    
+    /* Styling for table data cells */
+    .table tbody tr td {
+        font-size: 15px;
+        font-weight: 400;
+        color: rgb(41, 41, 41);
+    }
+    
+    
+    /* Style the card containing the form */
+    .card {
+        max-width: 500px;
+        width: 100%;
+        padding: 20px;
+        border: 1px solid #e0e0e0;
+        border-radius: 20px;
+        /* box-shadow: 0 0.15rem 1.75rem 0 rgb(33 40 50 / 15%); */
+        box-shadow: 12px 16px 22px 9px rgba(0,0,0,0.1);
+        
+        background-color: #fff;
+    }
+    
+    /* Style form labels */
+    label {
+        font-weight: bold;
+        margin-bottom: 5px;
+        display: block;
+    }
+    
+    /* Style form input fields */
+    input[type="text"],
+    input[type="date"],
+    input[type="number"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-bottom: 15px;
+    }
+    
+    /* Style submit button */
+    button[type="submit"] {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+    
+    button[type="submit"]:hover {
+        background-color: #0056b3;
+    }
+    .add {
+        background: linear-gradient(90deg, rgba(24,65,41,1) 0%, rgba(27,105,24,1) 93%);
+        border: none !important;
+    }
+    
+    .add:hover {
+        background: linear-gradient(90deg, rgba(24,65,41,1) 0%, rgba(13,134,88,1) 93%);
+    }
+
+    
+    /* Style input fields */
+    input[type="text"],
+    input[type="date"],
+    input[type="number"],
+    select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-bottom: 15px;
+    }
+    
+    /* Style select dropdown */
+    select {
+        appearance: none;
+        background: transparent;
+        background-image: url('{% static "img/arrow-icon.svg" %}');
+        background-position: right 5px center; /* Adjust the position of the icon */
+        background-repeat: no-repeat;
+        background-size: 15px 15px; /* Adjust the size of the icon */
+        padding-right: 20px; /* Add some space for the icon */
+    }
+    /* Style submit button */
+
+</style>
+
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-5 offset-md-3">
+        <!-- general form elements -->
+        <div class="card card-primary">
+          <div class="card-header">
+            <h3 class="card-title">Add FAQ Category</h3>
+          </div>
+          <!-- /.card-header -->
+          <!-- form start -->
+          <form
+            role="form"
+            action="{% url 'add_category' %}"
+            method="post"
+          >
+            {% csrf_token %}
+            <div class="card-body">
+              <div class="form-group">
+                <label for="category_name">FAQ Category Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="category_name"
+                  placeholder="Enter FAQ Category"
+                  name="name"
+                />
+              </div>
+
+              {% if messages %} 
+              {% for message in messages %} 
+              {% if message.tags == 'error' %}
+              <div class="alert alert-danger" style="margin-top: 10px">
+                {{ message }}
+              </div>
+              {% endif %} {% if message.tags == 'success' %}
+              <div class="alert alert-success" style="margin-top: 10px">
+                {{ message }}
+              </div>
+              {% endif %} {% endfor %} {% endif %}
+            </div>
+            <!-- /.card-body -->
+
+            <button type="submit" class="add">Add Category</button>
+       
+          </form>
+        </div>
+        <!-- /.card -->
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock main_content %} {% block custom_js %} {% endblock custom_js %}

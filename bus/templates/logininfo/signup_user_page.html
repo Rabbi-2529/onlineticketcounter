@@ -1,0 +1,499 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block custom_css %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+    <link rel="stylesheet" href="{% static "dist/css/adminlte.min.css" %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/brands.min.css" integrity="sha512-9YHSK59/rjvhtDcY/b+4rdnl0V4LPDWdkKceBl8ZLF5TB6745ml1AfluEU6dFWqwDw9lPvnauxFgpKvJqp7jiQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/fontawesome.min.css" integrity="sha512-SgaqKKxJDQ/tAUAAXzvxZz33rmn7leYDYfBP+YoMRSENhf3zJyx3SBASt/OfeQwBHA1nxMis7mM3EV/oYT6Fdw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'dist/css/login_user.css' %}">
+    <style>
+
+        
+    </style>
+{% endblock custom_css %}
+{% block content %}
+<section class="about-banner relative">
+  <div class="overlay overlay-bg"></div>
+  <div class="container">
+      <div class="row d-flex align-items-center justify-content-center">
+          <div class="about-content col-lg-12">
+              <!-- Your banner content here -->
+          </div>
+      </div>
+  </div>
+</section>
+
+<div class="container-xl login-container px-4 mt-4">
+<div class="login-box">
+  <div class="login-logo">
+    <a href="../../index2.html"><b>Ticket</b>Booking </a>
+  </div>
+  <!-- /.login-logo -->
+  
+      <p class="login-box-msg">Sign Up to this system</p>
+
+        <form action="/do_user_signup" method="post" id="demo-form">
+            {% csrf_token %}
+            <div class="user-box mx-auto">
+                <div class="user-fields">
+                    <fieldset class="material">
+                        <input type="email" id="emailField" name="email" placeholder="" autocomplete="off" onblur="validateEmail()" required>
+                        <hr>
+                        <label for="emailField">Email</label>
+                        <span class="field-icons"><i class="fa-regular fa-envelope"></i></span>
+                    </fieldset>
+                </div>
+            </div>
+            {% comment %} <div class="input-group mb-3">
+                <input type="email" class="form-control" placeholder="Email" name="email" id="emailField" onblur="validateEmail()"/>
+                <div class="input-group-append">
+                    <div class="input-group-text">
+                    <span class="fas fa-envelope"></span>
+                    </div>
+                </div>
+            </div> {% endcomment %}
+            <div class="col-12 mb-3 px-3">
+                <span id="emailValidationMsg" class="text-danger error-text"></span>
+                {% if errors.email %}
+                    <div class="error">{{ errors.email }}</div>
+                {% endif %}
+            </div>
+
+            {% comment %} <div class="user-box mx-auto">
+                <div class="user-fields">
+                    <fieldset class="material">
+                        <input type="email" id="emailField" name="email" placeholder="" autocomplete="off" onblur="validateEmail()" required>
+                        <hr>
+                        <label for="email_or_phone">Email or Phone</label>
+                    </fieldset>
+                </div>
+            </div> {% endcomment %}
+
+            <div class="user-box mx-auto">
+                <div class="user-fields">
+                    <fieldset class="material">
+                        <input type="text" id="usernameField" name="username" placeholder="" autocomplete="off" onblur="validateUsername()" required>
+                        <hr>
+                        <label for="usernameField">Username</label>
+                        <span class="field-icons"><i class="fa-regular fa-user"></i></span>
+                        <!--<div class="input-group-append">
+                            <div class="input-group-text">
+                            <span class="fas fa-envelope"></span>
+                            </div>
+                        </div>-->
+                    </fieldset>
+                </div>
+            </div>
+
+            {% comment %} <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="Username" name="username" id="usernameField" onblur="validateUsername()"/>
+
+                <div class="input-group-append">
+                    <div class="input-group-text">
+                    <span class="fas fa-envelope"></span>
+                    </div>
+                </div>
+            </div> {% endcomment %}
+
+            <div class="col-12 mb-3 px-3">
+                <span id="usernameValidationMsg" class="text-danger error-text"></span>
+            </div>
+
+            <div class="user-fields">
+                <fieldset class="material">
+                    <input type="text" id="addressField" name="address" placeholder="" autocomplete="off" onblur="validateAddress()" required>
+                    <hr>
+                    <label for="addressField">Address</label>
+                    <span class="field-icons"><i class="fa-solid fa-location-dot"></i></span>
+                    <!--<div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-lock"></span>
+                        </div>
+                    </div>-->
+                </fieldset>
+            </div>
+
+            {% comment %} <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="Address" name="address" id="addressField" onblur="validateAddress()"/>
+                <div class="input-group-append">
+                    <div class="input-group-text">
+                        <span class="fas fa-lock"></span>
+                    </div>
+                </div>
+            </div> {% endcomment %}
+
+            <div class="col-12 mb-3 px-3">
+                <span id="addressValidationMsg" class="text-danger error-text"></span>
+            </div>
+
+            <div class="user-fields">
+                <fieldset class="material">
+                    <input type="tel" id="phoneField" name="phone_number" placeholder="" autocomplete="off" onblur="validatePhone()" required>
+                    <hr>
+                    <label for="phoneField">Phone</label>
+                    <span class="field-icons"><i class="fa-solid fa-phone"></i></span>
+                    <!--<div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-phone"></span>
+                        </div>
+                    </div>-->
+                </fieldset>
+            </div>
+
+            {% comment %} <div class="input-group mb-3">
+                <input type="tel" class="form-control" placeholder="Phone Number" name="phone_number" id="phoneField" onblur="validatePhone()"/>
+                <div class="input-group-append">
+                    <div class="input-group-text">
+                        <span class="fas fa-phone"></span>
+                    </div>
+                </div>
+            </div> {% endcomment %}
+            <div class="col-12 mb-3 px-3">
+                <span id="phoneValidationMsg" class="error msg text-danger error-text"></span>
+            </div>
+
+            <div class="user-fields">
+                <fieldset class="material">
+                    <input type="password" id="passwordField" name="password" placeholder="" autocomplete="off" onblur="validatePassword()" required>
+                    <hr>
+                    <label for="passwordField">Password</label>
+                    <span class="field-eye-icon password-toggle" id="password-toggle-eye">
+                        <i class="fa-regular fa-eye-slash"></i>
+                    </span>
+                    <span class="field-icons"><i class="fa-solid fa-lock"></i></span>
+                    <!--<div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-lock"></span>
+                        </div>
+                    </div>-->
+                </fieldset>
+            </div>
+
+            {% comment %} <div class="input-group mb-3">
+                <input type="password"class="form-control" placeholder="Password" name="password" id="passwordField" onblur="validatePassword()"/>
+                <div class="input-group-append">
+                    <div class="input-group-text">
+                        <span class="fas fa-lock"></span>
+                    </div>
+                </div>
+            </div> {% endcomment %}
+
+            <div class="col-12 mb-3 px-3">
+                <span id="passwordValidationMsg" class="text-danger error-text"></span>
+            </div>
+
+            <div class="user-fields">
+                <fieldset class="material">
+                    <input type="password" id="confirmPasswordField" name="confirm_password" placeholder="" autocomplete="off" onblur="validatePassword()" required>
+                    <hr>
+                    <label for="confirmPasswordField">Confirm Password</label>
+                    <span class="field-icons"><i class="fa-solid fa-lock"></i></span>
+                    <!--<div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-lock"></span>
+                        </div>
+                    </div>-->
+                </fieldset>
+            </div>
+
+            {% comment %} <div class="input-group mb-3">
+                <input type="password" class="form-control" placeholder="Confirm Password" name="confirm_password" id="confirmPasswordField" onblur="validatePassword()"/>
+                <div class="input-group-append">
+                    <div class="input-group-text">
+                        <span class="fas fa-lock"></span>
+                    </div>
+                </div>
+            </div> {% endcomment %}
+
+            <div class="col-12 mb-3 px-3">
+                <span id="confirmPasswordValidationMsg" class="text-danger error-text"></span>
+            </div>
+
+            <div class="row">
+                <!-- /.col -->
+                <div class="col-12 mb-3">
+                    <button type="submit" class="save-btn">Sign Up</button>
+                </div>
+                <!-- /.col -->
+            </div>
+        </form>
+        <br>
+    
+    <!-- /.login-card-body -->
+  </div>
+</div>
+{% endblock content %} {% block js %}
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="{% static "plugins/jquery/jquery.min.js" %}"></script>
+<!-- Bootstrap 4 -->
+<script src="{% static "plugins/bootstrap/js/bootstrap.bundle.min.js" %}"></script>
+<!-- AdminLTE App -->
+<script src="{% static "dist/js/adminlte.min.js" %}"></script>
+<script>
+    $(document).ready(function() {
+        $('.password-toggle').click(function () {
+            console.log('eye icon clicked');
+            var passwordInput = $(this).siblings('input');
+            if (passwordInput.attr('type') === 'password') {
+                passwordInput.attr('type', 'text');
+                $(this).find('i').removeClass('fa-eye-slash').addClass('fa-eye');
+            } else {
+                passwordInput.attr('type', 'password');
+                $(this).find('i').addClass('fa-eye-slash').removeClass('fa-eye');
+            }
+        });
+    });
+</script>
+<script>
+  function checkExistingPhoneNumber(phoneNumber) {
+    const csrftoken = getCookie("csrftoken");
+    return new Promise((resolve, reject) => {
+      $.ajax({
+        url: "/check_existing_phone",
+        method: "POST",
+        data: { phone_number: phoneNumber },
+        headers: {
+          "X-CSRFToken": csrftoken, // Include the CSRF token in the request headers
+        },
+        success: function (response) {
+          // Handle the response from the server
+          if (response.exists) {
+            resolve("Phone number already exists");
+          } else {
+            resolve("");
+          }
+        },
+        error: function () {
+          reject("Error occurred while checking existing phone number");
+        },
+      });
+    });
+  }
+  function checkExistingEmail(email) {
+    const csrftoken = getCookie("csrftoken");
+    return new Promise((resolve, reject) => {
+      // Perform an AJAX request to your backend to check if the email exists
+      // You need to implement the server-side logic to check for existing emails
+      // and return an appropriate response, such as a JSON object
+
+      // Example AJAX request using jQuery
+      $.ajax({
+        url: "/check_existing_email",
+        method: "POST",
+        data: { email: email },
+        headers: {
+          "X-CSRFToken": csrftoken, // Include the CSRF token in the request headers
+        },
+        success: function (response) {
+          // Handle the response from the server
+          if (response.exists) {
+            resolve("Email already exists");
+          } else {
+            resolve("");
+          }
+        },
+        error: function () {
+          reject("Error occurred while checking existing email");
+        },
+      });
+    });
+  }
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+      const cookies = document.cookie.split(";");
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.startsWith(name + "=")) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+
+  // Add event listeners to each input field
+  document
+    .getElementById("emailField")
+    .addEventListener("input", validateEmail);
+  document
+    .getElementById("usernameField")
+    .addEventListener("input", validateUsername);
+  document
+    .getElementById("addressField")
+    .addEventListener("input", validateAddress);
+  document
+    .getElementById("passwordField")
+    .addEventListener("input", validatePassword);
+  document
+    .getElementById("confirmPasswordField")
+    .addEventListener("input", validatePassword);
+  document
+    .getElementById("phoneField")
+    .addEventListener("input", validatePhone);
+
+  // Handle form submission
+  document
+    .getElementById("demo-form")
+    .addEventListener("submit", async function (event) {
+      event.preventDefault();
+
+      const errorMessages = document.querySelectorAll(".validation-msg");
+      errorMessages.forEach(function (errorMessage) {
+        errorMessage.textContent = "";
+      });
+
+      let hasErrors = false;
+
+      try {
+        await validateEmail();
+        await validatePhone();
+        // Add additional field validation functions here
+      } catch (error) {
+        console.log(error);
+        hasErrors = true;
+      }
+
+      if (!hasErrors) {
+        this.submit();
+      }
+    });
+  async function validateEmail() {
+    return new Promise((resolve, reject) => {
+      const emailField = document.getElementById("emailField");
+      const emailValidationMsg = document.getElementById("emailValidationMsg");
+
+      if (!emailField.value) {
+        emailValidationMsg.textContent = "Email is required";
+        reject();
+      } else if (!/\S+@\S+\.\S+/.test(emailField.value)) {
+        emailValidationMsg.textContent = "Email is invalid";
+        reject();
+      } else {
+        // Check if "@" is missing
+        if (!emailField.value.includes("@")) {
+          emailValidationMsg.textContent = "Email Valid";
+          resolve(); // Resolve instead of rejecting
+        } else {
+          checkExistingEmail(emailField.value)
+            .then((errorMsg) => {
+              emailValidationMsg.textContent = errorMsg;
+              if (errorMsg) {
+                reject();
+              } else {
+                resolve();
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+              reject();
+            });
+        }
+      }
+    });
+  }
+
+  async function validateUsername() {
+    // Get the username field and validation message element
+    const usernameField = document.getElementById("usernameField");
+    const usernameValidationMsg = document.getElementById(
+      "usernameValidationMsg"
+    );
+
+    // Check if the username is valid
+    if (!usernameField.value) {
+      usernameValidationMsg.textContent = "Username is required";
+    } else {
+      usernameValidationMsg.textContent = "";
+    }
+  }
+
+  async function validateAddress() {
+    // Get the address field and validation message element
+    const addressField = document.getElementById("addressField");
+    const addressValidationMsg = document.getElementById(
+      "addressValidationMsg"
+    );
+
+    // Check if the address is valid
+    if (!addressField.value) {
+      addressValidationMsg.textContent = "Address is required";
+    } else {
+      addressValidationMsg.textContent = "";
+    }
+  }
+
+  async function validatePassword() {
+    // Get the password fields and validation message elements
+    const passwordField = document.getElementById("passwordField");
+    const confirmPasswordField = document.getElementById(
+      "confirmPasswordField"
+    );
+    const passwordValidationMsg = document.getElementById(
+      "passwordValidationMsg"
+    );
+    const confirmPasswordValidationMsg = document.getElementById(
+      "confirmPasswordValidationMsg"
+    );
+
+    // Check if the password is valid
+    if (!passwordField.value) {
+      passwordValidationMsg.textContent = "Password is required";
+    } else if (passwordField.value.length < 8) {
+      passwordValidationMsg.textContent =
+        "Password must be at least 8 characters long";
+    } else {
+      passwordValidationMsg.textContent = "";
+    }
+
+    // Check if the confirm password is valid
+    if (
+      confirmPasswordField.value &&
+      passwordField.value !== confirmPasswordField.value
+    ) {
+      confirmPasswordValidationMsg.textContent = "Passwords do not match";
+    } else {
+      confirmPasswordValidationMsg.textContent = "";
+    }
+  }
+
+  async function validatePhone() {
+    return new Promise((resolve, reject) => {
+      const phoneField = document.getElementById("phoneField");
+      const phoneValidationMsg = document.getElementById("phoneValidationMsg");
+
+      if (!phoneField.value) {
+        phoneValidationMsg.textContent = "Phone number is required";
+        reject();
+      } else if (!/^(01[9|8|4|5|6])\d{8}$/.test(phoneField.value)) {
+        phoneValidationMsg.textContent =
+          "Invalid phone number. Please enter a valid number.";
+        reject();
+      } else if (!/^\d{11}$/.test(phoneField.value)) {
+        phoneValidationMsg.textContent = "Phone number must be 11 digits";
+        reject();
+      } else {
+        checkExistingPhoneNumber(phoneField.value)
+          .then((errorMsg) => {
+            phoneValidationMsg.textContent = errorMsg;
+            if (errorMsg) {
+              reject();
+            } else {
+              resolve();
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+            reject();
+          });
+      }
+    });
+  }
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+{% endblock js %}

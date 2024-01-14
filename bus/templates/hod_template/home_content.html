@@ -1,0 +1,836 @@
+{% extends 'hod_template/base_template.html' %}
+{% load static %}
+{% block page_title %} Home {% endblock page_title %}
+{% block custom_css %}
+    <link rel="stylesheet" href="{% static "dist/css/home_content.css" %}">
+{% endblock custom_css %}
+ {% block main_content %}
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-3 col-6">
+                    <!-- small box -->
+                    <div class="small-box bg-info card-1">
+                        <div class="inner">
+                            <h3><b>৳</b> {{total_price }}</h3>
+
+                            <p>Total Ticket Sell</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fa-solid fa-ticket fa-xl"></i>
+                        </div>
+                        <a href="" class="small-box-footer"
+                            >More info <i class="fas fa-arrow-circle-right"></i
+                        ></a>
+                    </div>
+                </div>
+                <!-- ./col -->
+                {% if user.user_type == 1 %}
+            <!-- Display this block if user type is 1 (Company) -->
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-success card-2">
+                    <div class="inner">
+                        <h3>{{ staff_count }}</h3>
+                        <p>Total Staffs</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fa-solid fa-person-cane"></i>
+                    </div>
+                    <a href="" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+        {% elif user.user_type == 2 %}
+            <!-- Display this block if user type is 2 (Staff) -->
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-success card-2">
+                    <div class="inner">
+                        <h3>৳{{ credit_balance }}</h3>
+                        <p>Balance</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-wallet "></i>
+                    </div>
+                    <a href="" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+        {% endif %}
+                <!-- ./col -->
+                <div class="col-lg-3 col-6">
+                    <!-- small box -->
+                    <div class="small-box bg-warning card-3">
+                        <div class="inner">
+                            <h3>{{user_count}}</h3>
+
+                            <p>Total Customer</p>
+                        </div>
+                        <div class="icon">
+                            {% comment %} <i class="ion ion-pie-graph"></i> {% endcomment %}
+                            <i class="fa-solid fa-person"></i>
+                        </div>
+                        <a href="" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <!-- ./col -->
+                <div class="col-lg-3 col-6">
+                    <!-- small box -->
+                    <div class="small-box bg-danger card-4">
+                        <div class="inner">
+                            <h3>{{ bus_count }}</h3>
+
+                            <p>Total Buses</p>
+                        </div>
+                        <div class="icon">
+                            {% comment %} <i class="ion ion-pie-graph"></i> {% endcomment %}
+                            <i class="fa-solid fa-bus"></i>
+                        </div>
+                        <a href="" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <!-- ./col -->
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="card card-piechart">
+                        <div class="card-header">
+                            <h3 class="card-title">Customer and Staff Chart</h3>
+
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <canvas
+                                id="pieChart"
+                                style="
+                                  min-height: 250px;
+                                  height: 250px;
+                                  max-height: 250px;
+                                  max-width: 100%;
+                                "
+                            ></canvas>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                </div>
+
+                <!--Sales chart monthly-->
+                <div class="col-lg-6">
+                    <div class="card sales-chart-card">
+                        <div class="card-header border-0">
+                            <div class="d-flex justify-content-between">
+                              <h3 class="card-title">Sales</h3>
+                              <a href="javascript:void(0);">View Report</a>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <p class="d-flex flex-column">
+                                    <span class="text-bold text-lg sales-price">৳ {{ current_year_sales_price }}</span>
+                                    <span class="sales-text">Sales Over Time</span>
+                                </p>
+                                <p class="ml-auto d-flex flex-column text-right">
+                                    <span class="text-success">
+                                      <i class="fas fa-arrow-up"></i> 33.1%
+                                    </span>
+                                    <span class="text-muted">Since last month</span>
+                                </p>
+                            </div>
+                            <!-- /.d-flex -->
+
+                            <div class="position-relative mb-4">
+                                <canvas id="sales-chart" height="200"></canvas>
+                            </div>
+
+                            <div class="d-flex flex-row justify-content-end">
+                                <span class="mr-2">
+                                    <i class="fas fa-square text-primary"></i> This year
+                                </span>
+
+                                <span>
+                                    <i class="fas fa-square text-gray"></i> Last year
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.card -->
+
+      </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="card card-info card-map">
+                        <div class="card-header">
+                            <h3 class="card-title">Map</h3>
+
+                            <div class="card-tools">
+                                <button
+                                    type="button"
+                                    class="btn btn-tool"
+                                    data-card-widget="collapse"
+                                >
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <button
+                                    type="button"
+                                    class="btn btn-tool"
+                                    data-card-widget="remove"
+                                >
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                          <div id="map" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="card card-warning card-customer-overview">
+                        <div class="card-header">
+                            <h3 class="card-title">Customer Overview</h3>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="customerOverviewChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                        </div> 
+                        <!-- /.card-body -->
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="card card-success card-booking">
+                            <div class="card-header">
+                                <h3 class="card-title">Staff Booking Graph</h3>
+                                <div class="card-tools">
+                                    <button
+                                        type="button"
+                                        class="btn btn-tool"
+                                        data-card-widget="collapse"
+                                    >
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <button
+                                        type="button"
+                                        class="btn btn-tool"
+                                        data-card-widget="remove"
+                                    >
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div id="staffBookingGraphContainer" style="height: 400px;">
+                                    <canvas id="staffBookingGraph"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="card card-success card-payment">
+                            <div class="card-header">
+                                <h3 class="card-title">Payment Method</h3>
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart">
+                                    <div id="chart-container"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                
+                  
+            
+
+
+
+                
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card card-info card-route">
+                            <div class="card-header">
+                                <h3 class="card-title">Route By Ticket Booking</h3>
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div id="plotly-graph"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+          
+        </div>
+    </section>
+<!-- /.content -->
+{% endblock main_content %} {% block custom_js %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+<!-- Leaflet JavaScript -->
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<script>
+    $(document).ready(function(){
+
+        var pieData = {
+                labels: [
+                    'Customers',
+                    'Staffs',
+                    'Bus'
+                ],
+                datasets: [
+                    {
+                        data: [{{ customer_count }},{{ staff_count }},{{ bus_count}}],
+                        backgroundColor: ['#4C0080', '#ff6a00', '#19147b'],
+                    }
+                ]
+        };
+
+        var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
+        var pieOptions     = {
+            maintainAspectRatio : false,
+            responsive : true,
+        }
+        //Create pie or douhnut chart
+        // You can switch between pie and douhnut using the method below.
+        var pieChart = new Chart(pieChartCanvas, {
+            type: 'pie',
+            data: pieData,
+            options: pieOptions
+        });
+
+
+        
+        var price_label
+        var month_label
+            
+
+        function monthlySalesChart(currenrYearPrices, lastYearPrices, months, totalPrice) {
+        'use strict';
+        
+        var ticksStyle = {
+            fontColor: '#495057',
+            fontStyle: 'bold'
+        };
+        
+        var mode = 'index';
+        var intersect = true;
+        
+        var $salesChart = $('#sales-chart');
+        var salesChart = new Chart($salesChart, {
+            type: 'bar',
+            data: {
+                    labels: months,
+                    datasets: [
+                            {
+                                    backgroundColor: '#007bff',
+                                    borderColor: '#007bff',
+                                    data: currenrYearPrices
+                            },
+                            {
+                                    backgroundColor: '#ced4da',
+                                    borderColor: '#ced4da',
+                                    data: lastYearPrices
+                            }
+                    ]
+            },
+            options: {
+                maintainAspectRatio: false,
+                tooltips: {
+                    mode: mode,
+                    intersect: intersect
+                },
+                hover: {
+                    mode: mode,
+                    intersect: intersect
+                },
+                legend: {
+                    display: false
+                },
+                scales: {
+                    yAxes: [{
+                        gridLines: {
+                            display: true,
+                            lineWidth: '4px',
+                            color: 'rgba(0, 0, 0, .2)',
+                            zeroLineColor: 'transparent'
+                        },
+                        ticks: $.extend({
+                            beginAtZero: true,
+                            callback: function (value) {
+                                if (value >= 1000) {
+                                    value /= 1000;
+                                    value += 'k';
+                                }
+                                return '৳' + value;
+                            }
+                        }, ticksStyle)
+                    }],
+                    xAxes: [{
+                        display: true,
+                        gridLines: {
+                            display: false
+                        },
+                        ticks: ticksStyle
+                    }]
+                }
+            }
+        });
+        }
+        
+        $(function() {
+            $.ajax({
+                url: '/admin_home_data/',
+                dataType: 'json',
+                success: function(data) {
+                        console.log(data);
+                        currentYear = parseInt(data.current_year)
+                        var lastYear = parseInt(data.last_year);
+
+                        console.log('current_year:', currentYear);
+                        console.log('test: ', data.booking_data[currentYear]);
+                        var lastYearPriceLabel = data.booking_data[lastYear].monthly_sales_price;
+                        var currentYearPriceLabel = data.booking_data[currentYear].monthly_sales_price;
+
+                        var monthLabel = data.booking_data[currentYear].month;
+
+                        console.log('price: ', currentYearPriceLabel);
+                        console.log('month: ', monthLabel);
+                        monthlySalesChart(currentYearPriceLabel, lastYearPriceLabel, monthLabel);
+                },
+                error: function(xhr, status, error) {
+                        console.log('error');
+                }
+            });
+        });
+          
+
+
+    });
+  $(document).ready(function(){
+        /*var pieData = {
+                labels: [
+                    'Customers',
+                    'Staffs',
+                    'Bus'
+                ],
+                datasets: [
+                    {
+                        data: [{{ customer_count }},{{ staff_count }},{{ bus_count}}],
+                        backgroundColor : ['#4C0080', '#ff6a00', '#19147b'],
+                    }
+                ]
+        };
+
+        var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
+        var pieOptions     = {
+            maintainAspectRatio : false,
+            responsive : true,
+        }
+        //Create pie or douhnut chart
+        // You can switch between pie and douhnut using the method below.
+        var pieChart = new Chart(pieChartCanvas, {
+            type: 'pie',
+            data: pieData,
+            options: pieOptions
+        });*/
+
+        //Second Chart for Total Subject in Each Course
+            /*var subject_count_list={{ subject_count_list }}
+            var course_name_list={{ course_name_list|safe }}
+            var donutChartCanvas = $('#donutChart').get(0).getContext('2d')
+            var donutData        = {
+                labels:course_name_list,
+                datasets: [
+                    {
+                        data: subject_count_list,
+                        backgroundColor : ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc', '#d2d6de'],
+                    }
+                ]
+            }
+            var donutOptions     = {
+                maintainAspectRatio : false,
+                responsive : true,
+            }
+            //Create pie or douhnut chart
+            // You can switch between pie and douhnut using the method below.
+            var donutChart = new Chart(donutChartCanvas, {
+                type: 'doughnut',
+                data: donutData,
+                options: donutOptions
+            });*/
+
+
+          //show total student in each course
+          /*var student_count_list_in_course={{ student_count_list_in_course }};
+
+            var pieData2 = {
+                labels:course_name_list,
+                datasets: [
+                    {
+                        data: student_count_list_in_course,
+                        backgroundColor : ['#f56954', '#00a65a','#aa00ff', '#ff3d00'],
+                    }
+                ]
+            };
+
+            var pieChartCanvas2 = $('#pieChart3').get(0).getContext('2d')
+            var pieOptions2     = {
+                maintainAspectRatio : false,
+                responsive : true,
+            }
+            var pieChart = new Chart(pieChartCanvas2, {
+                type: 'pie',
+                data: pieData2,
+                options: pieOptions2
+            });*/
+
+          //show total student in each Subject
+          /*var student_count_list_in_subject={{ student_count_list_in_subject }};
+          var subject_list={{ subject_list|safe }};
+
+            var pieData3  = {
+                labels:subject_list,
+                datasets: [
+                    {
+                        data: student_count_list_in_subject,
+                        backgroundColor : ['#f56954', '#00a65a','#aa00ff', '#ff3d00','#bf360c','#ffff00','#00e676','#40c4ff','#f56954', '#00a65a','#aa00ff', '#ff3d00','#bf360c','#ffff00','#00e676','#40c4ff'],
+                    }
+                ]
+            };
+
+            var pieChartCanvas3 = $('#pieChart4').get(0).getContext('2d')
+            var pieOption3     = {
+                maintainAspectRatio : false,
+                responsive : true,
+            }
+            var pieChart = new Chart(pieChartCanvas3, {
+                type: 'pie',
+                data: pieData3,
+                options: pieOption3
+            });
+
+            ///Staff Leave vs Attendance Bar Chart
+            var attendance_present_list_staff={{ attendance_present_list_staff }};
+            var attendance_absent_list_staff={{ attendance_absent_list_staff }};
+            var staff_name_list={{ staff_name_list|safe }};
+            var barChartData = {
+            labels  : staff_name_list,
+            datasets: [
+                {
+                    label               : 'Leaves',
+                    backgroundColor     : 'rgba(60,141,188,0.9)',
+                    borderColor         : 'rgba(60,141,188,0.8)',
+                    pointRadius          : false,
+                    pointColor          : '#3b8bba',
+                    pointStrokeColor    : 'rgba(60,141,188,1)',
+                    pointHighlightFill  : '#fff',
+                    pointHighlightStroke: 'rgba(60,141,188,1)',
+                    data                : attendance_absent_list_staff
+                },
+                {
+                    label               : 'Attendance',
+                    backgroundColor     : 'rgba(210, 214, 222, 1)',
+                    borderColor         : 'rgba(210, 214, 222, 1)',
+                    pointRadius         : false,
+                    pointColor          : 'rgba(210, 214, 222, 1)',
+                    pointStrokeColor    : '#c1c7d1',
+                    pointHighlightFill  : '#fff',
+                    pointHighlightStroke: 'rgba(220,220,220,1)',
+                    data                : attendance_present_list_staff
+                },
+            ]
+            }
+            var barChartCanvas = $('#barChart1').get(0).getContext('2d')
+            var temp0 = barChartData.datasets[0]
+            var temp1 = barChartData.datasets[1]
+            barChartData.datasets[0] = temp1
+            barChartData.datasets[1] = temp0
+
+            var barChartOptions = {
+                responsive              : true,
+                maintainAspectRatio     : false,
+                datasetFill             : false
+            }
+
+            var barChart = new Chart(barChartCanvas, {
+                type: 'bar',
+                data: barChartData,
+                options: barChartOptions
+            })
+
+            //Student Leaves vs Attendance
+            var attendance_present_list_student={{ attendance_present_list_student }};
+            var attendance_absent_list_student={{ attendance_absent_list_student }};
+            var student_name_list={{ student_name_list|safe }};
+            var barChartData2 = {
+            labels  : student_name_list,
+            datasets: [
+                {
+                    label               : 'Leaves',
+                    backgroundColor     : 'rgba(60,141,188,0.9)',
+                    borderColor         : 'rgba(60,141,188,0.8)',
+                    pointRadius          : false,
+                    pointColor          : '#3b8bba',
+                    pointStrokeColor    : 'rgba(60,141,188,1)',
+                    pointHighlightFill  : '#fff',
+                    pointHighlightStroke: 'rgba(60,141,188,1)',
+                    data                : attendance_absent_list_student
+                },
+                {
+                    label               : 'Attendance',
+                    backgroundColor     : 'rgba(210, 214, 222, 1)',
+                    borderColor         : 'rgba(210, 214, 222, 1)',
+                    pointRadius         : false,
+                    pointColor          : 'rgba(210, 214, 222, 1)',
+                    pointStrokeColor    : '#c1c7d1',
+                    pointHighlightFill  : '#fff',
+                    pointHighlightStroke: 'rgba(220,220,220,1)',
+                    data                : attendance_present_list_student
+                },
+            ]
+            }
+            var barChartCanvas2 = $('#barChart2').get(0).getContext('2d')
+            var temp02 = barChartData2.datasets[0]
+            var temp12 = barChartData2.datasets[1]
+            barChartData2.datasets[0] = temp12
+            barChartData2.datasets[1] = temp02
+
+            var barChartOptions2 = {
+                responsive              : true,
+                maintainAspectRatio     : false,
+                datasetFill             : false
+            }
+
+            var barChart2 = new Chart(barChartCanvas2, {
+                type: 'bar',
+                data: barChartData2,
+                options: barChartOptions2
+            })*/
+
+
+      
+  });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script> 
+
+
+<script>
+    // Fetch data from Django API endpoint
+    fetch('/get_customer_data/')
+        .then(response => response.json())
+        .then(data => {
+            const dailyCustomerCounts = data.daily_customer_counts;
+
+            // Update the customer overview chart
+            var ctx = document.getElementById('customerOverviewChart').getContext('2d');
+            var customerChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: Array.from({ length: dailyCustomerCounts.length }, (_, i) => `Day ${i + 1}`),
+                    datasets: [{
+                        label: "Daily Customer Count",
+                        data: dailyCustomerCounts,
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1,
+                        fill: true,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Day'
+                            }
+                        },
+                        y: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Customer Count'
+                            }
+                        }
+                    }
+                }
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching customer data:', error);
+        });
+</script>
+<script>
+    // Initialize the map
+    var map = L.map('map').setView([23.6850, 90.3563], 7); // Set the initial view to Bangladesh
+  
+    // Add a tile layer to the map (you can replace this with your preferred tile layer)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+  
+    // Load and display GeoJSON data
+    $.getJSON("static/json/bangladesh.geojson", function(data) {
+        L.geoJSON(data, {
+            style: {
+                  // Customize the border color
+                fillOpacity: 0.1 // Customize the fill opacity
+            }
+        }).addTo(map);
+    });
+  
+    // Add map pins (markers) to specific locations
+    var marker = L.marker([23.8103, 90.4125]).addTo(map); // Example location for Dhaka
+    marker.bindPopup("Dhaka"); // Add a popup to the marker
+  
+    // You can add more markers with similar code
+  
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        fetch('/staff_booking_data/')  // Replace with your actual URL
+            .then(response => response.json())
+            .then(data => {
+                var staffData = data.staff_data;
+                var staffNames = staffData.map(staff => staff.name);
+                var staffBookingTotals = staffData.map(staff => staff.total_bookings);
+
+                var ctx = document.getElementById("staffBookingGraph").getContext("2d");
+                var staffBookingChart = new Chart(ctx, {
+                    type: "bar",
+                    data: {
+                        labels: staffNames,
+                        datasets: [{
+                            label: "Total Bookings",
+                            data: staffBookingTotals,
+                            backgroundColor: "rgba(54, 162, 235, 0.6)",
+                            borderColor: "rgba(54, 162, 235, 1)",
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: "Total Bookings"
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: "Staff Names"
+                                }
+                            }
+                        }
+                    }
+                });
+            });
+    });
+</script>
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+    fetch('/route_booking_count_graph/')
+        .then(response => response.json())
+        .then(data => {
+            const routeNames = data.route_data.map(route => route.route_name);
+            const bookingCounts = data.route_data.map(route => route.booking_count);
+
+            const trace = {
+                x: routeNames,
+                y: bookingCounts,
+                type: 'bar'
+            };
+
+            const layout = {
+                title: 'Route Booking Ticket Count',
+                xaxis: {
+                    title: 'Routes'
+                },
+                yaxis: {
+                    title: 'Booking Ticket Count'
+                }
+            };
+
+            Plotly.newPlot('plotly-graph', [trace], layout);
+        })
+        .catch(error => console.error('Error fetching data:', error));
+</script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        fetch('/payment_method_booking_count/')
+            .then(response => response.json())
+            .then(data => {
+                const paymentMethodData = data.payment_method_data;
+
+                // Create data array for the pie chart
+                const pieChartData = paymentMethodData.map((item, index) => ({
+                    name: item.method,
+                    y: item.count,
+                    color: ['#0091D5', '#EA6A47', ' #A5D8DD'][index] // Use different colors for each slice
+                }));
+
+                // Create the pie chart
+                Highcharts.chart('chart-container', {
+                    chart: {
+                        type: 'pie'
+                    },
+                    title: {
+                        text: 'Booking Count by Payment Method'
+                    },
+                    plotOptions: {
+                        pie: {
+                            dataLabels: {
+                                enabled: true,
+                                format: '<b>{point.name}</b>: {point.y}'
+                            },
+                            showInLegend: true
+                        }
+                    },
+                    series: [{
+                        name: 'Booking Count',
+                        data: pieChartData
+                    }]
+                });
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    });
+</script>
+{% endblock custom_js %}

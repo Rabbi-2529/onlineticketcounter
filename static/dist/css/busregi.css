@@ -1,0 +1,22 @@
+#seatPlanContainer{
+    padding-top: 20px;
+    width: 600px;
+}
+
+.seat-row{
+    display: flex;
+    width: 275px;
+}
+
+.seat-row .row-label{
+    width: 10px;
+    padding-top: 6px;
+}
+
+.seat-row .col{
+    width: 35px;
+}
+
+.seat-row .col .seat{
+    width: 35px;
+}

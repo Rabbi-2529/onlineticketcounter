@@ -1,0 +1,113 @@
+{% extends 'root_template/base_template_root.html' %}
+{% load static %}
+{% block page_title %}
+
+{% endblock page_title %}
+{% block custom_css %}
+<link rel="stylesheet" href="{% static 'dist/css/manage_user.css' %}">
+<link rel="stylesheet" href="{% static "dist/css/inventory_sub.css" %}">
+
+{% endblock custom_css %}
+{% block main_content %}
+
+<div class="container-xl px-4 mt-4">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header d-flex justify-content-center">
+                        <h3 class="card-title py-2">Company List</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="paydetaillist" class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Company Name</th>
+                                        <th>Name</th>
+                                        <th>Mobile Number</th>
+                                        <th>Email</th>
+
+                                        <th>Users</th>
+                                        <th>Passenger</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for company in companies %}
+                                        <tr>
+                                            <td>{{ company.name }}</td>
+                                            <td>{{ company.user_name }}</td>
+                                            <td>{{ company.root_user.phone_number }}</td>
+                                            <td>{{ company.email }}</td>
+                                            <td>{{ company.total_users }}</td>
+                                            <td>{# Define how to display customers associated with this company #}</td>
+                                            <td>
+<div class="dropdown">
+        <button class="btn btn-secondary custom-btn-group dropdown-toggle" type="button" id="actionsDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Actions
+ </button>
+        <div class="dropdown-menu" aria-labelledby="actionDropdown">
+          
+            <a class="dropdown-item action-link"  href="{% url 'suspend_company' company.id %}" >Suspand Company</a>
+
+        </div>
+    </div>
+</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+          
+                        <script>
+                        $(document).ready(function() {
+                            $('#paydetaillist').DataTable({
+                                dom: 'Bfrtip',
+                                buttons: [
+                                    {
+                                        extend: 'copy',
+                                        text: 'Copy',
+                                        exportOptions: {
+                                            columns: [0, 1, 2, 3] // Specify which columns to include
+                                        }
+                                    },
+                                    {
+                                        extend: 'csv',
+                                        text: 'CSV',
+                                        filename: 'Company list', // Specify the filename
+                                        extension: '.csv',
+                                        exportOptions: {
+                                            columns: [0, 1, 2, 3] // Specify which columns to include
+                                        },
+                                        fieldSeparator: ',', // Specify the field separator (comma)
+                                        fieldBoundary: '"' // Specify the field boundary character
+                                    },
+                                    {
+                                        extend: 'excel',
+                                        text: 'Excel',
+                                        filename: 'Company list', // Specify the filename
+                                        extension: '.xlsx',
+                                        exportOptions: {
+                                            columns: [0, 1, 2, 3] // Specify which columns to include
+                                        }
+                                    },
+                                    'pdf',
+                                    'print'
+                                ],
+                                initComplete: function () {
+                                    console.log("DataTables initialized!"); // Debugging statement
+                                }
+                            });
+                        });
+                        </script>
+                        <!-- Add a link to go back to the booking list -->
+                        <a href="{% url 'booking_list' %}" class="btn btn-primary">Back to Booking List</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock main_content %}

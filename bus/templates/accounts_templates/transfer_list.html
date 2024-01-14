@@ -1,0 +1,361 @@
+{% extends 'accounts_templates/accounts_base.html' %}
+{% load static %}
+
+{% block custom_css %}
+<link rel="stylesheet" href="{% static "dist/css/add_product.css" %}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.9/dist/flatpickr.min.css">
+<style>
+    /* Custom status colors */
+    .custom-status-pending {
+        color: orange; /* Adjust the color as needed */
+    }
+
+    .custom-status-received {
+        color: green; /* Adjust the color as needed */
+    }
+
+    .custom-status-completed {
+        color: blue; /* Adjust the color as needed */
+    }
+
+    .custom-status-canceled {
+        color: red; /* Adjust the color as needed */
+    }
+    .make-payment-link,
+    .view-payment-link{
+        color: black !important;
+    }
+    .delete-purchase {
+        color: black !important;
+    }
+    .btn-btn-light {
+        border-color: black;
+      }
+      .btn-btn-light {
+        border-color: black;
+        color: black; /* Set the default text color */
+        transition: border-color 0.4s, color 0.4s; /* Add a smooth transition for the color change */
+      }
+      
+      .btn-btn-light:hover {
+        border-color: blue;
+        color: blue; /* Change the text color to blue on hover */
+      }
+
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1050;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+
+    
+    /* CSS */
+    .custom-btn {
+      background-color: #EA4C89 !important;
+      border-radius: 8px;
+      border-style: none;
+      box-sizing: border-box;
+      color: #FFFFFF !important;
+      cursor: pointer;
+      display: inline-block;
+      font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      height: 40px;
+      line-height: 20px;
+      list-style: none;
+      margin: 0;
+      outline: none;
+      padding: 10px 16px;
+      position: relative;
+      text-align: center;
+      text-decoration: none;
+      transition: color 100ms;
+      vertical-align: baseline;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+    }
+    
+    .custom-btn:hover,
+    .custom-btn:focus {
+      background-color: #F082AC !important;
+    }
+    .round-icon {
+        border: 2px solid white; /* Adjust the border width and color as needed */
+        border-radius: 50%;
+        padding: 2px; /* Adjust padding to control the size of the rounded icon */
+        color: white; /* Set the color of the icon */
+        cursor: pointer;
+        background-color: transparent; /* Make the background transparent */
+    }
+    
+</style>
+{% endblock custom_css %}
+
+{% block main_content %}
+
+<div class="container-xl px-4 mt-4">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header d-flex justify-content-center">
+                        <h3 class="card-title py-2">Company List</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <div class="add-staff-type-button col-md-6 col-12 mb-2">
+                                <a href="{% url 'create_balance_transfer' %}" class="btn btn-success save-btn"> <i class="fas fa-plus round-icon"></i> Creat Transfer</a>
+                            </div>
+                            <table id="paydetaillist" class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>SL</th>
+                                        <th>From Account</th>
+                                        <th>To Account</th>
+                                        <th>Amount</th>
+                                        <th>Note</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for transfer in transfers %}
+                                        <tr>
+                                            <td>{{ forloop.counter }}</td>
+                                            <td>{{ transfer.from_account.account_name }}</td>
+                                            <td>{{ transfer.to_account.account_name }}</td>
+                                            <td><span class="badge badge-info">{{ transfer.initial_balance }}</span></td>
+                                            <td>{{ transfer.note }}</td>
+                                            <td>
+                                                <div class="btn-group dropdown">
+                                                    <button class="btn btn-secondary custom-btn-group dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+                                                        Actions
+                                                    </button>
+                                                    <div class="dropdown-menu text-black">
+                                                        <a class="dropdown-item action-link edit-transfer" href="#" data-toggle="modal" data-target="#editTransferModal{{ transfer.id }}">Update</a>
+                                                        <a class="dropdown-item action-link delete-transfer" data-id="{{ transfer.id }}" data-toggle="modal" data-target="#deleteTransferModal{{ transfer.id }}">Delete</a>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% for transfer in transfers %}
+<div class="modal fade" id="editTransferModal{{ transfer.id }}" tabindex="-1" role="dialog" aria-labelledby="editTransferModalLabel{{transfer.id}}" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" style="color: black  !important;" id="editTransferModalLabel{{ transfer.id }}"> Edit Bank</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+ 
+                <form id="editTransferForm">
+                    {% csrf_token %}
+                    <input type="hidden" id="transferId" name="transfer_id" value="{{ transfer.id }}">
+        
+                    <div class="form-group">
+                        <label for="from_account">From Account</label>
+                        <select class="form-control select2" id="from_account" name="from_account" required>
+                            <option value="" disabled>Select From Account</option>
+                            {% for account in bank_accounts %}
+                                <option value="{{ account.id }}" {% if account.id == transfer.from_account.id %}selected{% endif %}>
+                                    {{ account.account_name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+        
+                    <div class="form-group">
+                        <label for="to_account">To Account</label>
+                        <select class="form-control select2" id="to_account" name="to_account" required>
+                            <option value="" disabled>Select To Account</option>
+                            {% for account in bank_accounts %}
+                                <option value="{{ account.id }}" {% if account.id == transfer.to_account.id %}selected{% endif %}>
+                                    {{ account.account_name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+        
+                    <div class="form-group">
+                        <label for="initial_balance">Amount</label>
+                        <input type="number" class="form-control" id="initial_balance" name="initial_balance" step="0.01" required placeholder="Enter Initial Balance" value="{{ transfer.initial_balance }}">
+                    </div>
+        
+                    <div class="form-group">
+                        <label for="note">Note</label>
+                        <textarea class="form-control" id="note" name="note" rows="3" placeholder="Write a transfer note....">{{ transfer.note }}</textarea>
+                    </div>
+        
+                    <button type="submit" class="custom-btn">Save Changes</button>
+                </form>
+            </div>
+        </div>
+              
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endfor %}
+<script>
+    $(document).ready(function () {
+        // Initialize Select2 for the 'from_account' and 'to_account' selects
+        $('.select2').select2();
+
+        // Handle submission of the edit form
+        $('#editTransferForm').submit(function (event) {
+            event.preventDefault();
+            var transferId = $('#transferId').val();
+            var fromAccount = $('#from_account').val();
+            var toAccount = $('#to_account').val();
+            var initialBalance = $('#initial_balance').val();
+            var note = $('#note').val();
+
+            $.ajax({
+                type: 'POST',
+                url: `/edit_transfer/${transferId}/`,
+                data: {
+                    'from_account': fromAccount,
+                    'to_account': toAccount,
+                    'initial_balance': initialBalance,
+                    'note': note
+                },
+                success: function (response) {
+                    if (response.success) {
+                        // Reload the page or perform any other actions
+                        location.reload();
+
+                        // Extract and log the edited data
+                        var editedData = {
+                            from_account: fromAccount,
+                            to_account: toAccount,
+                            initial_balance: initialBalance,
+                            note: note
+                        };
+                        console.log('Edited Data:', editedData);
+                    } else {
+                        // Handle errors, e.g., display an error message
+                        console.log(response.message);
+                    }
+                }
+            });
+        });
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script>
+        $(document).ready(function() {
+            $('.delete-transfer').click(function() {
+                // Get the purchase ID from the data attribute
+                var transferId = $(this).data('id');
+                
+                // Display a SweetAlert2 confirmation dialog
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: 'You won\'t be able to revert this!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                    
+                        $.ajax({
+                            url: `/delete_transfer/${transferId}/`, 
+                            type: 'POST',
+                            data: {
+                                csrfmiddlewaretoken: '{{ csrf_token }}' 
+                            },
+                            success: function(response) {
+                                if (response.success) {
+                        
+                                    location.reload();
+                                } else {
+                                    
+                                    Swal.fire('Error', response.message, 'error');
+                                }
+                            },
+                            error: function() {
+                             
+                                Swal.fire('Error', 'An error occurred during the delete process.', 'error');
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('#paydetaillist').DataTable({
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'copy',
+                        text: '<i class="fa-solid fa-copy fa-lg"></i>',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7] // Specify which columns to include
+                        }
+                    },
+                    {
+                        extend: 'csv',
+                        text: '<i class="fa-solid fa-file-csv fa-lg"></i>',
+                        filename: 'Transfer List', // Specify the filename
+                        extension: '.csv',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7] // Specify which columns to include
+                        },
+                        fieldSeparator: ',', // Specify the field separator (comma)
+                        fieldBoundary: '"' // Specify the field boundary character
+                    },
+                    {
+                        extend: 'excel',
+                        text: '<i class="fas fa-file-excel  fa-lg"></i>',
+                        filename: 'Transfer List', // Specify the filename
+                        extension: '.xlsx',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7] // Specify which columns to include
+                        }
+                    },
+                    {
+                        extend: 'pdf',
+                        text: '<i class="fa-solid fa-file-pdf fa-lg"></i>',
+                        filename: 'Transfer List', // Specify the filename
+                        extension: '.pdf',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7] // Specify which columns to include
+                        }
+                    },
+                    'print'
+                ],
+                initComplete: function () {
+                    console.log("DataTables initialized!"); // Debugging statement
+                }
+            });
+        });
+    </script>
+
+
+{% endblock main_content %}

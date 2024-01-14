@@ -1,0 +1,184 @@
+{% extends 'hod_template/base_template.html' %}
+{% load static %}
+{% block custom_css %}
+    <link rel="stylesheet" href="{% static "dist/css/staff_type.css" %}">
+    <style>
+        /* Hide the printButtons div when printing */
+        @media print {
+            #printButtons,
+            #footer {
+                display: none;
+            }
+        }
+        .black-text {
+            color: black !important;
+        }
+    </style>
+{% endblock custom_css %}
+
+{% block page_title %}Employee List{% endblock page_title %}
+
+{% block main_content %}
+
+<div class="card-body">
+    <div id="printButtons">
+        <a id="printButton" target="_blank" href="" class="btn btn-success btn-sm mb-2"><i class="fas fa-print"></i></a>
+        <a id="invoiceButton" target="_blank" href="{% url 'pos_invoice_view' booking.id %}" class="btn btn-primary btn-sm mb-2"> Pos Invoice </a>
+    </div>
+
+    <h6 class="text-center" style="color: black !important;">Online Ticket Counter IGL</h6>
+{% comment %} <h6 class="text-center"> {{booking.route_part.start_point}} (<small>10:00 PM</small>) - {{booking.route_part.end_point}} (<small>06:00 AM</small>) </h6> {% endcomment %}
+<h6 class="text-center" style="color: black !important;"> {{booking.route_part.start_point}} (<small>10:00 PM</small>) - {{booking.route_part.end_point}} (<small>06:00 AM</small>) </h6>
+
+    <div class="table-responsive">
+    <table class="table table-bordered" id="">
+    <tbody>
+    <tr>
+    {% comment %} <td>
+    <b>Pick Up Location : </b>
+    {{booking.coach.boarding_point}} (<small>10:00PM</small>)
+    </td>
+    <td>
+    <b>Drop Location : </b>
+    KAMARPARA (<small>06:00AM</small>)
+    </td> {% endcomment %}
+    <td>
+    <b>Booking Date :</b>
+    {{booking.booking_date}}
+    </td>
+    <td>
+    <b>Journey Date :</b>
+    {{ booking.journey_date }}</td>
+    </tr>
+    </tbody>
+    </table>
+    </div>
+    <div class="row">
+        <div class="col text-start">
+            <h6 style="color: black !important;"><b>Passenger Name : </b>{{ booking.customer.first_name }}</h6>
+            <h6 style="color: black !important;"><b>Mobile : </b> {{booking.customer.phone}} </h6>
+            <h6 style="color: black !important;"><b>Email : </b> {{booking.customer.email}}  </h6>
+            <h6 style="color: black !important;"><b>Facilities:</b>
+                {% for facility in booking.coach.facilities.all %}
+                    {{ facility.name }}
+                {% endfor %}
+            </h6>
+        </div>
+    <div class="col text-end" style="color: black !important;">
+    <h6 style="color: black !important;"><b>Booking Id : </b>{{booking.pnr}}</h6>
+    <h6 style="color: black !important;"><b>Trip Start : </b>
+        {{booking.route.start_point}}
+    </h6>
+    <h6 style="color: black !important;"><b>Trip End : </b>
+        {{booking.route.end_point}}
+    </h6>
+    <h6 style="color: black !important;"><b>Payment Status : </b> {{payment.payment_status}} </h6>
+    </div>
+    </div>
+    <div class="table-responsive" style="color: black !important;">
+    <table class="table table-bordered" id="">
+    <thead>
+    <tr>
+    <th scope="col">Total Booked </th>
+    <th scope="col">Child </th>
+    <th scope="col">Special </th>
+    <th scope="col">Seat Number </th>
+    <th scope="col">Amount </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+    <td>
+    {{total_seats_booked_by_user}}</td>
+    <td>
+    </td>
+    <td>
+    </td>
+    <td>
+    {{booking.seat_number}} </td>
+    <td class="text-end">
+    ৳ {{booking.price}} </td>
+    </tr>
+    <tr>
+    <td colspan="4" class="text-end">
+    Discount
+    </td>
+    <td class="text-end">
+    ৳ 0 </td>
+    </tr>
+    <tr>
+    <td colspan="4" class="text-end">
+    Total Tax </td>
+    <td class="text-end">
+    ৳ {{tax_amount}} </td>
+    </tr>
+    <tr>
+    <td colspan="4" class="text-end">
+    Grand Total
+    </td>
+    <td class="text-end">
+    ৳ {{selected_price}}</td>
+    </tr>
+    <tr>
+    <td colspan="4" class="text-end">
+    Total Paid </td>
+    <td class="text-end">
+    ৳ {{payment.amount_paid}} </td>
+    </tr>
+    <tr>
+    <td colspan="4" class="text-end">
+    Total Due </td>
+    <td class="text-end">
+        ৳ {{total_due}} </td>
+    </tr>
+    </tbody>
+    </table>
+    </div>
+    <div class="row">
+    <div class="col-12" style="color: black !important;">
+        <small class="black-text"><p style="color: black !important;"><strong>Lorem Ipsum</strong>&nbsp;is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+    <p style="color: black !important;"><strong>Lorem Ipsum</strong>&nbsp;is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+    <p style="color: black !important;"><strong>Lorem Ipsum</strong>&nbsp;is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.<strong>Lorem Ipsum</strong>&nbsp;is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+    <p style="color: black !important;"><strong>Lorem Ipsum</strong>&nbsp;is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+    </small>
+    </div>
+    </div>
+    </div>
+</div>
+
+{% endblock main_content %}
+
+{% block custom_js %}
+<script>
+  
+    function hideElements() {
+        var printButton = document.getElementById("printButton");
+        var invoiceButton = document.getElementById("invoiceButton");
+
+        if (printButton && invoiceButton) {
+            printButton.style.display = "none";
+            invoiceButton.style.display = "none";
+        }
+    }
+
+   
+    var printButton = document.getElementById("printButton");
+    if (printButton) {
+        printButton.addEventListener("click", function () {
+         
+            hideElements();
+
+         
+            window.print();
+
+           
+            setTimeout(function () {
+                var printButton = document.getElementById("printButton");
+                var invoiceButton = document.getElementById("invoiceButton");
+                printButton.style.display = "inline-block";
+                invoiceButton.style.display = "inline-block";
+            }, 1000);
+        });
+    }
+</script>
+{% endblock custom_js %}

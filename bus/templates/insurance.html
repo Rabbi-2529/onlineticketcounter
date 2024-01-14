@@ -1,0 +1,267 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<!-- #header -->
+<style>
+    h2.black {
+        color: #000;
+        font-size: 22px;
+        font-weight: bold;
+        margin: 0;
+    }
+    
+    /* Partner logo and name styles */
+    img {
+        max-width: 100%;
+        height: auto;
+    }
+    
+    /* Insurance claim information styles */
+    p.green {
+        color: #008000;
+        font-size: 20px;
+        margin: 0;
+    }
+    
+    p.green img {
+        height: 80px;
+        width: 80px;
+    }
+    
+    p.green b {
+        font-size: 40px;
+        font-weight: bold;
+        margin-left: 10px;
+    }
+    
+    /* Visit link styles */
+    a.link {
+        color: #0066cc;
+        text-decoration: underline;
+    }
+    a.link:hover {
+        text-decoration: underline;
+    }
+    /* Rectangle box styles */
+    div.rectangle-box {
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 30px;
+    }
+    
+    p.black {
+        color: #000;
+        font-size: 20px;
+        font-weight: bold;
+        text-align: left;
+    }
+    
+    p.fade-text {
+        color: #999999;
+    }
+    
+    /* Benefit table styles */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    
+    table, th, td {
+        border: 1px solid #ccc;
+    }
+    
+    th, td {
+        padding: 10px;
+        text-align: center;
+    }
+    
+    th {
+        background-color: #f2f2f2;
+    }
+    
+    b.font-price {
+        font-size: 18px;
+    }
+    
+    /* Terms and conditions link styles */
+    p.terms-condition {
+        font-size: 15px !important;
+        color: #999999;
+        text-align: left;
+    }
+    
+    /* Make the link underlined */
+    a.link:hover {
+        text-decoration: underline;
+    }
+</style>
+<!-- start banner Area -->
+
+<!-- End banner Area -->
+
+<!-- Start contact-page Area -->
+<section class="relative about-banner">
+    <div class="overlay overlay-bg"></div>
+    <br>
+    <div class="container">
+      <div class="row d-flex align-items-center justify-content-center">
+        <div class="about-content col-lg-12">
+          <h1 class="text-white">Insurance</h1>
+          <p class="text-white link-nav">
+            <a href={% url "index" %}>Home </a>
+            <span class="lnr lnr-arrow-right"></span>
+            <a href={% url 'contact'%}> Insurance </a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+<section class="contact-page-area section-gap">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <h2 class="black" style="font-size: 22px; font-weight: bolder">
+          Insurance Partner
+        </h2>
+      </div>
+    </div>
+    <br />
+    <div class="row">
+      {% comment %} <div class="col-md-1">
+        <img
+          src={% static "img/logo.png"%}
+       
+          style="height: 80px; width: 120px"
+        />
+      </div> {% endcomment %}
+      <div class="col-md-6">
+        <img
+        src={% static "img/logo.png"%}
+         
+          style="height: 80px"
+        />
+      </div>
+      <div class="col-md-1"></div>
+      <div class="col-md-4">
+        <p class="green" style="font-size: 20px">
+          To claim insurance, please call
+        </p>
+        <p class="green" style="font-size: 40px">
+          <img
+          src={% static "img/phone_1.png"%}
+            alt="Shohoz"
+            style="height: 80px; width: 80px"
+          />
+          <b>6999</b></p>
+        </p>
+      </div>
+    </div>
+    <br />
+    <div class="row">
+      <div class="col-md-12">
+        <a
+          class="link"
+          href="https://iglweb.com/web/"
+          target="_blank"
+          >Visit IGL Web</a
+        >
+      </div>
+    </div>
+    <br />
+    <div class="row">
+      <div class="col-md-8">
+        <div class="rectangle-box" style="padding: 30px">
+          <!-- <div class="container">-->
+          <div class="row" style="padding-bottom: 60px">
+            <div class="col-md-2">
+              <img
+                {% comment %} src="{% static "img/logo.png"%}" {% endcomment %}
+              
+                style="height: 50px; width: 50px"
+              />
+            </div>
+            <div class="col-md-8">
+              <p class="black" style="font-size: 20px; text-align: left">
+                Secure your travel with insurance
+              </p>
+              <p class="fade-text">
+                See all the benefit you get for just ৳10 per passenger
+              </p>
+            </div>
+            <div class="col-md-2"></div>
+          </div>
+          <div class="row">
+            <table>
+              <tbody>
+                <tr>
+                  <td><h4 class="types-title">Accidental Death</h4></td>
+                  <td>
+                    <h4 class="types-title">
+                      Accidental Hospitalization or Indemnity
+                    </h4>
+                  </td>
+                  <td><h4 class="types-title">Natural Death</h4></td>
+                  <td><h4 class="types-title">Covid-19</h4></td>
+                </tr>
+                <tr>
+                  <td>
+                    <p class="fade-p">claim up to</p>
+                    <b class="font-price">BDT 2,00,000</b>
+                  </td>
+                  <td>
+                    <p class="fade-p">claim up to</p>
+                    <b class="font-price">BDT 50,000</b>
+                  </td>
+                  <td>
+                    <p class="fade-p">claim up to</p>
+                    <b class="font-price">BDT 50,000</b>
+                  </td>
+                  <td>
+                    <p class="fade-p">claim up to</p>
+                    <b class="font-price">BDT 5,000</b>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <hr style="border: 0.54px solid #c8c8c8" />
+          <div class="row">
+            <div class="col-md-8">
+              <p
+                style="
+                  font-size: 15px !important;
+                  color: #999999;
+                  text-align: left;
+                "
+              >
+                View insurance
+                <a
+                  class="link"
+                  href={% url "insurance_term"%}
+                  target="_blank"
+                  >terms &amp; conditions</a
+                >
+              </p>
+            </div>
+          </div>
+          <!-- </div> -->
+        </div>
+      </div>
+      <div class="col-md-4"></div>
+    </div>
+  </div>
+</section>
+{% endblock content %}
+<!-- End contact-page Area -->
+
+<!-- start footer Area -->
+
+<!-- End footer Area -->
+{% block js %}
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBhOdIF3Y9382fqJYt5I_sswSrEw5eihAA"></script>
+
+{% endblock js %}

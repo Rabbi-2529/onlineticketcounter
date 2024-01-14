@@ -1,0 +1,113 @@
+{% extends 'hod_template/base_template.html' %}
+{% load static %}
+{% block page_title %}
+Bus Stop List
+{% endblock page_title %}
+{% block custom_css %}
+<link rel="stylesheet" href="{% static "dist/css/bookinglist.css" %}">
+<style>
+
+    {% comment %} /* Style the active list item */
+    .list-group-item.active {
+        background-color: ; /* Change the background color for the active item */
+        color: #fff; /* Set text color to white for active item */
+        border-color: #007bff; /* Change border color for active item */
+    } {% endcomment %}
+
+    /* Style the links inside list items */
+    .list-group-item a {
+        text-decoration: none; /* Remove underlines from links */
+        color: inherit; /* Use the parent's text color */
+    }
+
+    /* Add padding to the list items for spacing */
+    .list-group-item:not(.active) {
+        margin-right: 5px;
+    }
+
+    /* Add a box shadow on hover for non-active items */
+    .list-group-item:not(.active):hover {
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    }
+</style>
+
+
+{% endblock custom_css %}
+{% block main_content %}
+
+
+
+<section class="content">
+    <div class="container-fluid">
+
+        <ul class="list-group d-flex flex-row">
+            {% for day in next_five_days %}
+            <li class="list-group-item-check {% if day == active_date %}active{% endif %}">
+                <a href="{% url 'coach_details_by_date' day %}" class="text-decoration-none text-dark">{{ day }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+<br><br>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Show</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Coach Number</th>
+                                    <th>Type</th>
+                                    <th>Model</th>
+                                    <th>Arrival Time</th>
+                                    <th>Departure Time</th>
+                                    <th>Total Seats</th>
+                                    <th>Booked Seats</th>
+                                    <th>Remaining Seats</th>
+                                    <th>Seat Occupancy</th>
+                                    <th>Status</th>
+                                    <th>Route Parts</th> 
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for coach_details in coach_details_list %}
+                                <tr>
+                                    <td>
+                                        
+                                         
+                                          {{ coach_details.coach.coachnumber }}
+                                  
+                                      </td>
+                                    <td>{{ coach_details.coach.coachtype }}</td>
+                                    <td>{{ coach_details.coach.coachmodelname }}</td>
+                                    <td>{{ coach_details.coach.arrivaltime }}</td>
+                                    <td>{{ coach_details.coach.depraturetime }}</td>
+                                    <td>{{ coach_details.total_seats }}</td>
+                                    <td>{{ coach_details.booked_seats }}</td>
+                                    <td>{{ coach_details.remaining_seats }}</td>
+                                    <td>{{ coach_details.seat_occupancy }}%</td>
+                                    <td>{% if coach_details.status == "Upcoming" %}<span class="badge bg-success">{{ coach_details.status }}</span>{% else %}<span class="badge bg-danger">{{ coach_details.status }}</span>{% endif %}</td>
+                                    <td>
+                                        {% if coach_details.route_parts %}
+                                            {% for route_part in coach_details.route_parts %}
+                                                <a href="{% url 'seat_view' coach_details.coach.bus.bus_number coach_details.coach.coachnumber coach_details.journey_date|date:'Y-m-d' route_part.route.id route_part.start_point.name route_part.end_point.name %}">
+                                                    {{ route_part.start_point.name }} - {{ route_part.end_point.name }}
+                                                </a><br>
+                                            {% endfor %}
+                                        {% else %}
+                                            No route parts available
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock main_content %}

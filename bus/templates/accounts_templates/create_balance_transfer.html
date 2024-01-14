@@ -1,0 +1,122 @@
+{% extends 'accounts_templates/accounts_base.html' %}
+{% load static %}
+
+{% block custom_css %}
+<link rel="stylesheet" href="{% static "dist/css/add_product.css" %}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.9/dist/flatpickr.min.css">
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/js/select2.min.js"></script>
+{% endblock custom_css %}
+
+{% block page_title %}Create Balance Transfer{% endblock page_title %}
+
+{% block main_content %}
+<div class="container-xl px-4 mt-4">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Create Balance Transfer</h3>
+                    </div>
+                    <div class="card-body">
+                        {% if messages %}
+                        <div class="alert alert-success">
+                            {% for message in messages %}
+                            {{ message }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+
+                        <div class="flex-container">
+                            <form method="post">
+                                {% csrf_token %}
+                                <div class="row">
+                                    <div class="col-4 mt-4">
+                                        <div class="form-group">
+                                            <label for="from_account">From Account</label>
+                                            <div class="select_mate" data-mate-select="dropdown-active" >
+                                            <select class="form-control select2" id="from_account" onchange="" onclick="return false;"  name="from_account" required>
+                                                <option value="" disabled selected>Select From Account</option>
+                                                {% for account in bank_accounts %}
+                                                    <option value="{{ account.id }}">{{ account.account_name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                            <p class="selecionado_opcion"  onclick="open_select(this)" ></p><span class="icon_select_mate" ><svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z"/>
+                                                <path d="M0-.75h24v24H0z" fill="none"/>
+                                            </svg></span>
+                                            <div class="cont_list_select_mate">
+                                            <ul class="cont_select_int">  </ul> 
+                                            </div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-4 mt-4">
+                                        <div class="form-group">
+                                            <label for="to_account">To Account</label>
+                                            <div class="select_mate" data-mate-select="dropdown-active" >
+                                            <select class="form-control select2"  onchange="" onclick="return false;" id="to_account" name="to_account" required>
+                                                <option value="" disabled selected>Select To Account</option>
+                                                {% for account in bank_accounts %}
+                                                    <option value="{{ account.id }}">{{ account.account_name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                            <p class="selecionado_opcion"  onclick="open_select(this)" ></p><span class="icon_select_mate" ><svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z"/>
+                                                <path d="M0-.75h24v24H0z" fill="none"/>
+                                            </svg></span>
+                                            <div class="cont_list_select_mate">
+                                            <ul class="cont_select_int">  </ul> 
+                                            </div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-4 mt-4">
+                                        <div class="form-group">
+                                            <label for="initial_balance">Amount</label>
+                                            <input type="number" class="form-control" id="initial_balance" name="initial_balance" step="0.01" required placeholder="Enter Initial Balance">
+                                        </div>
+                                    </div>
+                                    <div class="col-8 mt-4">
+                                        <div class="form-group">
+                                            <label for="note">Note</label>
+                                            <textarea class="form-control" id="note" name="note" rows="3" placeholder="Write a transfer note...."></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-success save-btn">Create Now</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="{% static 'dist/js/select_dropdown.js' %}"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/js/select2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.9/dist/flatpickr.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Initialize Select2
+        $('.select2').select2();
+
+        // Add an event listener to the select elements
+        $('.select2').change(function () {
+            // Get the selected values
+            var fromAccount = $('#from_account').val();
+            var toAccount = $('#to_account').val();
+
+            // Check if the selected values are not empty and not equal
+            if (fromAccount !== '' && toAccount !== '' && fromAccount === toAccount) {
+                // Display an alert or perform any other action to inform the user
+                alert('From Account and To Account cannot be the same.');
+                // You can also reset the selection or handle it in another way
+                $('#to_account').val('').trigger('change');
+            }
+        });
+    });
+</script>
+{% endblock main_content %}

@@ -1,0 +1,617 @@
+{% extends 'accounts_templates/accounts_base.html' %}
+{% load static %}
+
+{% block custom_css %}
+<link rel="stylesheet" href="{% static "dist/css/add_product.css" %}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.9/dist/flatpickr.min.css">
+<style>
+    /* Custom status colors */
+    .custom-status-pending {
+        color: orange; /* Adjust the color as needed */
+    }
+
+    .custom-status-received {
+        color: green; /* Adjust the color as needed */
+    }
+
+    .custom-status-completed {
+        color: blue; /* Adjust the color as needed */
+    }
+
+    .custom-status-canceled {
+        color: red; /* Adjust the color as needed */
+    }
+    .make-payment-link,
+    .view-payment-link{
+        color: black !important;
+    }
+    .delete-purchase {
+        color: black !important;
+    }
+    .btn-btn-light {
+        border-color: black;
+    }
+    .btn-btn-light {
+        border-color: black;
+        color: black; /* Set the default text color */
+        transition: border-color 0.4s, color 0.4s; /* Add a smooth transition for the color change */
+    }
+
+    .btn-btn-light:hover {
+        border-color: blue;
+        color: blue; /* Change the text color to blue on hover */
+    }
+
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1050;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    /* CSS */
+    .custom-btn {
+        background-color: #EA4C89 !important;
+        border-radius: 8px;
+        border-style: none;
+        box-sizing: border-box;
+        color: #FFFFFF !important;
+        cursor: pointer;
+        display: inline-block;
+        font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        height: 40px;
+        line-height: 20px;
+        list-style: none;
+        margin: 0;
+        outline: none;
+        padding: 10px 16px;
+        position: relative;
+        text-align: center;
+        text-decoration: none;
+        transition: color 100ms;
+        vertical-align: baseline;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+    }
+
+    .custom-btn:hover,
+    .custom-btn:focus {
+        background-color: #F082AC !important;
+    }
+    .modal-header {
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-align: start;
+        align-items: flex-start;
+        -ms-flex-pack: justify;
+        justify-content: space-between;
+        padding: 2rem;
+        border-bottom: 0px solid  !important; 
+    }
+            .company-logo {
+                max-height: 73px;
+                position: absolute;
+                top: 14px;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            
+            /* Modal Body and Footer */
+            .modal-body {
+                padding: 20px; /* Padding for modal body */
+            }
+            
+            .modal-footer {
+                background-color: #fff; /* White background for modal footer */
+                border-top: 1px solid #ccc; /* Border at the top of the modal footer */
+                padding: 10px; /* Padding for modal footer */
+            }
+            
+            /* Close Button */
+            .close {
+                color: #fff; /* Text color for close button */
+            }
+            
+            /* Larger Modal Sizes */
+            .modal-lg,
+            .modal-xl {
+                max-width: 1005px;
+            }
+            
+            /* Table Styles */
+            .table {
+                width: 100%;
+                margin-bottom: 1rem;
+                color: #212529;
+                border-collapse: collapse;
+            }
+            
+            .table th,
+            .table td {
+                padding: 0.75rem;
+                vertical-align: top;
+                border-top: 1px solid #dee2e6;
+            }
+            
+            .table thead th {
+                vertical-align: bottom;
+                border-bottom: 2px solid #dee2e6;
+                background-color: #f8f9fa; /* Light gray background color */
+            }
+            
+            .table tbody + tbody {
+                border-top: 2px solid #dee2e6;
+            }
+            
+            .table-sm th,
+            .table-sm td {
+                padding: 0.3rem;
+            }
+            
+            /* Additional Styles for Rows and Columns */
+            .row {
+                margin-bottom: 0.75rem;
+            }
+            
+            .col {
+                padding: -0.25rem;
+                background-color: #f8f9fa;
+            }
+            
+            .col strong {
+                display: block;
+            }
+            .from-section, .to-section {
+                margin-bottom: 54px;
+            }
+            
+            .from-section,
+            .to-section,
+            .form-left,
+            .table-right {
+                float: left;
+                width: 50%;
+            }
+            
+            .from-section, .to-section {
+                padding: 19px;
+            }
+            
+            /* Margin Style */
+            .mt-3,
+            .my-3 {
+                margin-top: 3rem !important;
+            }
+            
+            /* Button Styles */
+            .button {
+                width: inherit;
+                padding-left: 1rem;
+                padding-right: 1rem;
+                display: inline-flex;
+                align-items: center;
+                margin: 0;
+                margin-right: 1rem; /* Adjust this value to set the distance between buttons */
+                font-size: 14px;
+                font-weight: 600;
+                line-height: 38px;
+                background-color: #5f00f9; /* Button background color */
+                color: #fff; /* Button text color */
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+            }
+            
+            .button:hover {
+                background-color: #4c00cc; /* Hover background color */
+            }
+</style>
+{% endblock custom_css %}
+
+{% block main_content %}
+<div class="container-xl px-4 mt-4">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header d-flex justify-content-center">
+                        <h3 class="card-title py-2">Payment Invoices List</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <div class="add-staff-type-button col-md-6 col-12 mb-2">
+                                <a href="{% url 'create_credit_voucher' %}" class="btn btn-success save-btn">Create Voucher</a>
+                            </div>
+                            <table id="invoiceList"  class="table table-bordered">
+                                <br>
+                                <thead>
+                                    <tr>
+
+                                        <th><input type="checkbox" id="select-all-invoices"></th>
+                                        <th>Date</th>
+                                        <th>Account</th>
+                                        <th>Gateway</th>
+                                        <th>Mode</th>
+                                        <th>Cheque</th>
+                                        <th>Reference</th>
+                                        <th>Amount</th>
+                                        <th>Particular</th>
+                                        <th>Actions</th>
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for voucher in credit_vouchers  %}
+                                    <tr class="clickable-row" data-toggle="modal" data-target="#creditDetailsModal{{ voucher.id }}" data-credit-voucher-id="{{ voucher.id }}">
+                                            
+                                            <td><input type="checkbox" name="selected_invoices" value="{{ invoice.id }}"></td>
+                                            <td>{{ voucher.date }}</td>
+                                            <td>{{ voucher.bank }}</td>
+                                            <td>{{ voucher.payment_gateway }}</td>
+                                            <td>{{ voucher.payment_mode }}</td>
+                                            <td>{{ voucher.cheque_number }}</td>
+                                            <td>{{ voucher.reference }}</td>
+                                            <td>{{ voucher.amount }}</td>
+                                            <td>{{ voucher.particular }}</td>
+                                            <td>
+                                                <div class="btn-group dropdown">
+                                                    <button class="btn btn-secondary custom-btn-group dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        Actions
+                                                    </button>
+                                                    <div class="dropdown-menu text-black">
+                                                        <a class="dropdown-item action-link edit-credit-voucher" href="#" data-toggle="modal" data-target="#editCreditVoucherModal{{ voucher.id }}">Update</a>
+                                                        <a class="dropdown-item action-link delete-credit-voucher" data-id="{{ voucher.id }}" data-toggle="modal" data-target="#deleteCreditVoucherModal{{ voucher.id }}">Delete</a>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{% for voucher in credit_vouchers  %}
+
+    <div class="modal fade" id="creditDetailsModal{{ voucher.id }}" tabindex="-1" role="dialog"
+    aria-labelledby="creditDetailsModal{{ voucher.id }}" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <img src="{% static 'img/logo.png' %}" alt="Company Logo" class="company-logo mx-auto d-block mb-3">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+
+
+{% for voucher in credit_vouchers  %}
+<div class="modal fade" id="editCreditVoucherModal{{ voucher.id }}" tabindex="-1" role="dialog"
+    aria-labelledby="editCreditVoucherModal{{ voucher.id }}" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editCreditVoucherModal{{ voucher.id }}">Edit</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+     
+                <form id="editInvoiceForm">
+                    {% csrf_token %}
+                    <input type="hidden" id="voucherId" name="voucher_id" value="{{ voucher.id }}">
+
+                    <div class="form-group">
+                        <label for="status">Status</label>
+                        <select class="form-control" id="status" name="status" required>
+                            <option value="pending" {% if invoice.status == 'pending' %}selected{% endif %}>Pending</option>
+                            <option value="completed" {% if invoice.status == 'completed' %}selected{% endif %}>Completed</option>
+                            <option value="failed" {% if invoice.status == 'failed' %}selected{% endif %}>Failed</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="invoice_number">Invoice Number</label>
+                        <input type="text" class="form-control" id="invoice_number" name="invoice_number" required
+                            placeholder="Enter Invoice Number" value="{{ invoice.invoice_number }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="account">Account</label>
+                        <select class="form-control" id="account" name="account" required>
+                            {% for bank_account in bank_accounts %}
+                                <option value="{{ bank_account.id }}" {% if bank_account.id == invoice.account.id %}selected{% endif %}>
+                                    {{ bank_account.account_name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="payment_type">Payment Type</label>
+                        <select class="form-control" id="payment_type" name="payment_type" required>
+                            <option value="credit_card" {% if invoice.payment_type == 'credit_card' %}selected{% endif %}>Credit Card</option>
+                            <option value="bank_transfer" {% if invoice.payment_type == 'bank_transfer' %}selected{% endif %}>Bank Transfer</option>
+                            <option value="cash" {% if invoice.payment_type == 'cash' %}selected{% endif %}>Cash</option>
+                            <option value="check" {% if invoice.payment_type == 'check' %}selected{% endif %}>Check</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="amount">Amount</label>
+                        <input type="number" class="form-control" id="amount" name="amount" step="0.01" required
+                            placeholder="Enter Amount" value="{{ invoice.amount }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="date">Date</label>
+                        <input type="date" class="form-control" id="date" name="date" required
+                            placeholder="Select Date" value="{{ invoice.date }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reference">Reference</label>
+                        <input type="text" class="form-control" id="reference" name="reference" required
+                            placeholder="Enter Reference" value="{{ invoice.reference }}">
+                    </div>
+
+                    <button type="submit" class="custom-btn">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="deleteInvoicenModal{{ invoice.id }}" tabindex="-1" role="dialog"
+    aria-labelledby="deleteInvoiceModalLabel{{ invoice.id }}" aria-hidden="true">
+  
+        {% comment %} <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteTransactionModal{{ transaction.id }}">Confirm Deletion</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete this payment (Payment ID: {{ transaction.id}})?</p>
+                </div>transaction
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirmTransactionBank{{ transaction.id }}" data-payment-id="{{ transaction.id }}">Delete</button>
+                </div>
+            </div> {% endcomment %}
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endblock main_content %}
+
+{% block custom_js %}
+<script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.9/dist/flatpickr.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#select-all-invoices').click(function() {
+            $('input[name="selected_invoices"]').prop('checked', this.checked);
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        flatpickr("#date", {
+            dateFormat: "Y-m-d",
+        });
+
+
+        $(document).on('submit', '#editInvoiceForm', function (e) {
+            e.preventDefault();
+            let form = $(this);
+            let url = form.attr('action');
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: form.serialize(),
+                success: function (data) {
+                    if (data.success) {
+                        alert(data.message);
+                        location.reload(); 
+                    } else {
+                        alert(data.message);
+                    }
+                }
+            });
+        });
+
+
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script>
+    $(document).ready(function() {
+        $('.delete-invoice').click(function() {
+            // Get the transaction ID from the data attribute
+            var invoiceId = $(this).data('id');
+            
+            // Display a SweetAlert2 confirmation dialog
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You won\'t be able to revert this!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                  
+                    $.ajax({
+                        url: `/delete_invoice/${invoiceId}/`, 
+                        type: 'POST',
+                        data: {
+                            csrfmiddlewaretoken: '{{ csrf_token }}'
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                            
+                                location.reload(); 
+                            } else {
+                                // Handle errors
+                                Swal.fire('Error', response.message, 'error');
+                            }
+                        },
+                        error: function() {
+                            // Handle AJAX errors
+                            Swal.fire('Error', 'An error occurred during the delete process.', 'error');
+                        }
+                    });
+                }
+            });
+        });
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        $('#invoiceList').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'copy',
+                    text: 'Copy',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7]
+                    }
+                },
+                {
+                    extend: 'csv',
+                    text: 'CSV',
+                    filename: 'invoice List', 
+                    extension: '.csv',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7] // Specify which columns to include
+                    },
+                    fieldSeparator: ',', // Specify the field separator (comma)
+                    fieldBoundary: '"' // Specify the field boundary character
+                },
+                {
+                    extend: 'excel',
+                    text: 'Excel',
+                    filename: 'invoice List', // Specify the filename
+                    extension: '.xlsx',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7] // Specify which columns to include
+                    }
+                },
+                {
+                    extend: 'pdf',
+                    text: 'PDF',
+                    filename: 'invoice List', // Specify the filename
+                    extension: '.pdf',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7] // Specify which columns to include
+                    }
+                },
+                'print'
+            ],
+            initComplete: function () {
+                console.log("DataTables initialized!"); // Debugging statement
+            }
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+
+        $('#invoiceList').on('click', '.clickable-row', function () {
+            var creditVoucherId = $(this).data('credit-voucher-id');
+            loadcreditVoucherDetails(creditVoucherId);
+        });
+
+        function loadcreditVoucherDetails(creditVoucherId) {
+            $.ajax({
+                type: 'GET',
+                url: `/get_credit_voucher_details/${creditVoucherId}/`,
+                success: function (data) {
+                    console.log('Received data:', data);
+                    if ('error' in data) {
+                        console.error(data.error);
+                    
+                    } else {
+                     
+                        updatecreditVoucherModalContent(creditVoucherId, data);
+                        // Show the modal
+                        $('#creditDetailsModal' + creditVoucherId).modal('show');
+                    }
+                },
+                error: function () {
+                    console.error('An error occurred while fetching credit voucher details.');
+                 
+                }
+            });
+        }
+
+
+        function updatecreditVoucherModalContent(creditVoucherId, data) {
+            console.log('Updating modal content with data:', data);
+
+            var modalContent = '';
+            modalContent += '<div class="from-section">';
+              
+                modalContent += `<p style="color: rgb(13 15 2) !important; font-size: 17px; margin-top: 0; margin-bottom: 0rem;"><strong>Name :</strong> <span style="    color: rgb(97 97 97 / var(--tw-text-opacity));      font-weight: 400; font-size: 14px;">${data.payment_details.purchase_details.purchase_warehouse || 'N/A'}</span></p>`;
+                modalContent += `<p style="color: black !important; font-size: 17px; margin-top: 0; margin-bottom: 0rem;"><strong>Email :</strong> <span style=" color: rgb(97 97 97 / var(--tw-text-opacity)); font-size: 14px;font-weight: 400;">${data.payment_details.purchase_details.purchase_warehouse_email || 'N/A'}</span></p>`;
+                modalContent += `<p style="color: black !important; font-size: 17px; margin-top: 0; margin-bottom: 0rem;"><strong>Phone :</strong> <span style=" color: rgb(97 97 97 / var(--tw-text-opacity));font-weight: 400; font-size: 14px;">${data.payment_details.purchase_details.purchase_warehouse_phone || 'N/A'}</span></p>`;
+                modalContent += `<p style="color: black !important; font-size: 17px; margin-top: 0; margin-bottom: 0rem;"> <strong>Address :</strong> <span style=" color: rgb(97 97 97 / var(--tw-text-opacity)); font-size: 14px;">${data.payment_details.purchase_details.warehouse_address || 'N/A'}</span></p>`;
+                modalContent += '</div>';
+                modalContent += '<div class="to-section">';
+                   
+                    modalContent += `<p style="color: black !important; font-size: 17px; margin-top: 0; margin-bottom: 0rem;"><strong>Name : </strong> <span style="color: rgb(97 97 97 / var(--tw-text-opacity)) !important;   font-size: 14px;">${data.payment_details.purchase_details.purchase_supplier_name || 'N/A'}</span></p>`;
+                    modalContent += `<p style="color: black !important; font-size: 17px; margin-top: 0; margin-bottom: 0rem;"><strong>Email: </strong> <span style="color: rgb(97 97 97 / var(--tw-text-opacity)) !important;  font-size: 14px;">${data.payment_details.purchase_details.purchase_supplier_email || 'N/A'}</span></p>`;
+                    modalContent += `<p style="color: black !important; font-size: 17px; margin-top: 0; margin-bottom: 0rem;"><strong>Voucher : </strong> <span style="color: rgb(97 97 97 / var(--tw-text-opacity)) !important;   font-size: 14px;">${data.voucher_number || 'N/A'}</span></p>`;
+                    modalContent += `<p style="color: black !important; font-size: 17px; margin-top: 0; margin-bottom: 0rem;"><strong>Phone : </strong> <span style="color: rgb(97 97 97 / var(--tw-text-opacity)) !important;   font-size: 14px;">${data.payment_details.purchase_details.purchase_supplier_phone || 'N/A'}</span></p>`;
+                    modalContent += '</div>';
+
+
+            modalContent += '<table class="table table-bordered" style="border-color: rgb(239, 240, 242) !important;">';
+            modalContent += '<tr style="background-color: #5f00f9;color: white; !important"><th style="color: white;">Date</th><th style="color: white;">Product</th><th style="color: white;">Particular</th><th style="color: white;">Amount</th></tr>';
+            modalContent += '<tr>';
+            modalContent += `<td>${data.date || 'N/A'}</td>`;
+            modalContent += `<td>${data.payment_details.purchase_details.purchase_product || 'N/A'}</td>`;
+
+            modalContent += `<td>${data.particular || 'N/A'}</td>`;
+            modalContent += `<td>${data.amount || 'N/A'}</td>`;
+            modalContent += '</tr>';
+
+
+            modalContent += '</table>';
+            modalContent += `<p style="color: black !important; font-size: 17px; margin-top: 0; margin-bottom: 0rem;"><strong>Note: </strong> <span style="color: rgb(97 97 97 / var(--tw-text-opacity)) !important;   font-size: 14px;">Cash (credit) voucher</span></p>`;
+
+            // Update modal body with the dynamically generated content
+            $('#creditDetailsModal' + creditVoucherId + ' .modal-body').html(modalContent);
+        }
+    });
+</script>
+{% endblock custom_js %}

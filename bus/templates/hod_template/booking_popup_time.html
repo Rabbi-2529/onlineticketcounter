@@ -1,0 +1,53 @@
+{% extends 'hod_template/base_template.html' %}
+{% load static %}
+{% block custom_css %}
+    <link rel="stylesheet" href="{% static "dist/css/add_coach.css" %}">
+{% endblock custom_css %}
+{% block main_content %}
+    <div class="container-xl px-4 mt-4">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- general form elements -->
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">Booking Popup Times</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Popup Time (HH:MM)</th>
+                                    <th>Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    {% if duration_minutes %}
+                                    <tr>
+                                        <td>{{ duration_minutes }} minutes</td>
+                                        <td>
+                                            <a href="{% url 'set_popup_time' %}" class="btn btn-success btn-sm set-btn">
+                                                <i class="bi bi-clock"></i> Set
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% else %}
+                                    <tr>
+                                        <td>No popup duration available.</td>
+                                        <td>
+                                            <!-- Handle the case where there is no duration -->
+                                        </td>
+                                    </tr>
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                            <br>
+                        </div>
+                    </div>
+                    <!-- /.card -->
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock main_content %}

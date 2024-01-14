@@ -1,0 +1,189 @@
+{% extends 'hod_template/base_template.html' %}
+{% load static %}
+{% block page_title %}
+Booking List
+{% endblock page_title %}
+{% block custom_css %}
+<link rel="stylesheet" href="{% static "dist/css/allbooking.css" %}">
+
+
+{% endblock custom_css %}
+{% block main_content %}
+
+<div class="container-xl px-4 mt-4">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header d-flex justify-content-center">
+                        <h3 class="card-title py-2">Booking List</h3>
+                        
+                    </div>
+                    <div class="card-body">
+                        {% if messages %}
+                        <div class="messages">
+                            {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+
+                        <div class="table-responsive">
+                            <table id="paydetaillist" class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>User</th>
+                                        <th>Coach</th>
+                             
+                                        <th>Customer</th>
+                                        <th>Seat Number</th>
+                                       
+                                   
+                                        <th>Journey Date</th>
+                                        <th>PNR</th>
+                                        <th>Payment Status</th> <!-- Display Payment Status -->
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for booking, payment_status in booking_status_list %}
+                                    <tr>
+                                        <td>{{ booking.id }}</td>
+                                        <td>{{ booking.user.username }}</td>
+                                        <td>{{ booking.coach }}</td>
+                                      
+                                        <td>{{ booking.customer }}</td>
+                                        <td>{{ booking.seat_number }}</td>
+                                       
+                                       
+                                        <td>{{ booking.journey_date }}</td>
+                                        <td>{{ booking.pnr }}</td>
+                                        <td>{{ payment_status }}</td> <!-- Display Payment Status for this Booking -->
+                                        <td>
+                                            <div class="btn-column">
+                                                <a href="{% url 'cancel_booking' booking.id %}" class="btn-action btn-cancel btn-red">
+                                                    <i class="fas fa-times"></i> Cancel
+                                                </a>
+                                                {% if payment_status == 'Paid' %}
+                                                <!-- Show Payment Details button if payment status is Paid -->
+                                                <a href="{% url 'payment_details' booking.id %}" class="btn-action btn-invoice btn-blue">
+                                                    <i class="fas fa-file-invoice"></i> Payment Details
+                                                </a>
+                                                {% elif payment_status == 'Partial' or payment_status == 'Unpaid' %}
+                                                <!-- Show Make Payment button if payment status is Partial or No Payment -->
+                                                <a href="{% url 'make_payment' booking.id %}" class="btn-action btn-payment btn-green">
+                                                    <i class="fas fa-credit-card"></i> Make Payment
+                                                </a>
+                                                {% endif %}
+                                                <a href="{% url 'view_invoice' booking.id %}" class="btn-action btn-invoice btn-orange">
+                                                    <i class="fas fa-file-invoice"></i> Invoice
+                                                </a>
+                                                <a href="#" class="btn-action btn-print btn-purple" data-journey-date="{{ booking.journey_date }}"
+                                                    data-coach-number="{{ booking.coach }}"
+                                                    data-seat-number="{{ booking.seat_number }}"
+                                                    data-price="{{ booking.price }}"
+                                                    data-pnr="{{ booking.pnr }}"
+                                                    data-user-name="{{ booking.user.username }}"
+                                                    data-booking-id="{{ booking.id }}">
+                                                    <i class="fas fa-print"></i> 
+                                                </a>
+                                            </div>
+                                            <a href="{% url 'refund_booking' booking.id %}" class="btn-action btn-refund btn-yellow">
+                                                <i class="fas fa-money-bill"></i> Refund
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.querySelectorAll(".btn-print").forEach(function(button) {
+        button.addEventListener("click", function(event) {
+            event.preventDefault();
+    
+            // Extract data attributes from the clicked button
+            const journeyDate = this.getAttribute("data-journey-date");
+            const coachNumber = this.getAttribute("data-coach-number");
+            const seatNumber = this.getAttribute("data-seat-number");
+            const price = this.getAttribute("data-price");
+            const pnr = this.getAttribute("data-pnr");
+            const userName = this.getAttribute("data-user-name");
+            const bookingId = this.getAttribute("data-booking-id");
+    
+            // Construct the URL for generating the PDF
+            const url = `/print_ticket_pdf/${journeyDate}/${coachNumber}/${seatNumber}/${price}/${pnr}/${userName}/${bookingId}/`;
+    
+            // Create an invisible iframe to load the PDF
+            const iframe = document.createElement("iframe");
+            iframe.style.display = "none";
+            iframe.src = url;
+    
+            // Add the iframe to the document
+            document.body.appendChild(iframe);
+    
+            // Wait for the iframe to load the PDF
+            iframe.onload = function() {
+                // Print the PDF
+                iframe.contentWindow.print();
+            };
+    
+            // Remove the iframe after printing
+            iframe.onloadend = function() {
+                document.body.removeChild(iframe);
+            };
+        });
+    });
+    </script>
+    
+    <script>
+        $(document).ready(function() {
+            $('#paydetaillist').DataTable({
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'copy',
+                        text: 'Copy',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3] // Specify which columns to include
+                        }
+                    },
+                    {
+                        extend: 'csv',
+                        text: 'CSV',
+                        filename: 'Bus Booking', // Specify the filename
+                        extension: '.csv',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3] // Specify which columns to include
+                        },
+                        fieldSeparator: ',', // Specify the field separator (comma)
+                        fieldBoundary: '"' // Specify the field boundary character
+                    },
+                    {
+                        extend: 'excel',
+                        text: 'Excel',
+                        filename: 'Bus Boooking', // Specify the filename
+                        extension: '.xlsx',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3] // Specify which columns to include
+                        }
+                    },
+                    'pdf',
+                    'print'
+                ],
+                initComplete: function () {
+                    console.log("DataTables initialized!"); // Debugging statement
+                }
+            });
+        });
+        </script>
+    
+{% endblock main_content %}

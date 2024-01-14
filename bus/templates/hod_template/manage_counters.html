@@ -1,0 +1,155 @@
+{% extends 'hod_template/base_template.html' %}
+{% load static %}
+{% block custom_css %}
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <link rel="stylesheet" href="{% static "dist/css/add_counter.css" %}">
+{% endblock custom_css %}
+{% block main_content %}
+
+<div class="container-xl px-4 mt-4">
+    <div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+        <div class="card card-primary">
+            <div class="card-header">
+            <h3 class="card-title">Manage Counters</h3>
+            </div>
+            <form method="GET" action="{% url 'manage_counters' %}" class="search-form">
+                <div class="card-body row justify-content-between pb-0">
+                    <div class="add-staff-type-button col-md-6 col-12">
+                        <a href="{% url 'add_counter' %}" class="btn btn-primary save-btn">Add Counter</a>
+                    </div>
+                
+                    <div class="form-group mt-2 col-md-6 col-12">
+                        <div class="input-group">
+                            <input
+                            type="text"
+                            name="search_query"
+                            id="search-input"
+                            class="form-control form-control-sm search-input me-0"
+                            placeholder="Search by counter name"
+                            value="{{ search_query }}"
+                            />
+                            <div class="input-group-append">
+                            <button type="submit" class="btn btn-primary search-button">Search</button>
+                            </div>
+                        </div>
+                    </div>
+                
+                </div>
+            </form>
+            <div class="card-body">
+            {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% if counters %}
+            <div class="table-container">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Manager</th>
+                            <th>District</th>
+                            <th>Thana</th>
+                            <th>Address</th>
+                            <th>Phone Numbers</th>
+                            <th>Credit Balance</th> <!-- Add this column -->
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for counter in counters %}
+                        <tr>
+                            <td>{{ counter.id }}</td>
+                            <td>{{ counter.name }}</td>
+                            <td>{{ counter.manager.username }}</td>
+                            <td>{{ counter.district }}</td>
+                            <td>{{ counter.thana }}</td>
+                            <td>{{ counter.get_address|join:", " }}</td>
+                            <td>{{ counter.get_phone_numbers|join:", " }}</td>
+                            <td>{{ counter.credit_balance }}</td> <!-- Display the credit balance here -->
+                            <td>
+                                <a href="{% url 'edit_counter' counter.id %}" class="btn btn-primary btn-sm edit-btn mb-2">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a href="" class="btn btn-danger btn-sm delete-counter mb-2"   data-id="{{ counter.id }}" data-toggle="modal" data-target="#deleteCounterModal">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                               
+                            
+                                <a href="{% url 'counter_details' counter.id %}" class="btn btn-info btn-sm view-btn mb-2">
+                                    <i class="fa-solid fa-eye"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p style="color: black !important;">No counters found.</p>
+            {% endif %}
+            </div>
+        </div>
+        </div>
+    </div>
+    </div>
+</div>
+<!-- /.content -->
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+<script>
+    $(document).ready(function() {
+        $('.delete-counter').click(function() {
+            // Get the purchase ID from the data attribute
+            var counterId = $(this).data('id');
+            
+            // Display a SweetAlert2 confirmation dialog
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You won\'t be able to revert this!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Send an AJAX request to delete the purchase
+                    $.ajax({
+                        url: `/delete_counter/${userId}/`, // Replace with your URL
+                        type: 'POST',
+                        data: {
+                            csrfmiddlewaretoken: '{{ csrf_token }}' // Replace with your CSRF token
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                // Handle a successful delete action
+                                // For example, you can remove the deleted item from the list
+                                // No need for alert here, as SweetAlert2 provides a built-in success message
+                                location.reload(); // Reloading the page as an example
+                            } else {
+                                // Handle errors
+                                Swal.fire('Error', response.message, 'error');
+                            }
+                        },
+                        error: function() {
+                            // Handle AJAX errors
+                            Swal.fire('Error', 'An error occurred during the delete process.', 'error');
+                        }
+                    });
+                }
+            });
+        });
+    });
+</script>
+{% endblock main_content %}

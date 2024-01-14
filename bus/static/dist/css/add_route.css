@@ -1,0 +1,249 @@
+.card {
+    border-radius: 20px;
+    /* box-shadow: 0 0.15rem 1.75rem 0 rgb(33 40 50 / 15%); */
+    box-shadow: 12px 16px 22px 9px rgba(0,0,0,0.1);
+}
+
+.card-header{
+    border-top-left-radius: 20px !important;
+    border-top-right-radius: 20px !important;
+    background: rgb(62,7,75);
+    background: linear-gradient(180deg, rgba(62,7,75,1) 0%, rgba(40,10,69,1) 63%);
+}
+
+.form-group label{
+    font-size: 14px;
+    font-weight: 500 !important;
+    color: rgb(54, 54, 54);
+}
+
+.form-control::placeholder{
+    font-weight: 300;
+    color: rgb(187, 187, 187);
+}
+
+.toggle_intermediate_link {
+    width: auto !important;
+    height: 50px !important;
+    border: none !important;
+    padding-top: 10px;
+    padding-right: 10px;
+    padding-left: 10px;
+    text-decoration: none !important;
+    background: linear-gradient(90deg, #0f0566, transparent) #0a15b4;
+    transition: background-color 0.3s;
+}
+.toggle_intermediate_link:hover, .toggle_intermediate_link:focus {
+    background-color: #031b46;
+}
+
+.form-control {
+    display: block;
+    width: 100%;
+    padding: 0.875rem 1.125rem;
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1;
+    color: #69707a;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgb(235, 235, 235);
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border-radius: 0.35rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.form-container {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Style for form fields */
+.form-field {
+    margin-bottom: 20px;
+}
+.input-with-hint .hint {
+    margin-left: 5px;
+    font-size: 14px;
+    color: #888;
+}
+
+/* Style for labels */
+.form-field label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+/* Style for input fields */
+.form-field input,
+.form-field select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    display: block;
+}
+
+/* Style for error messages */
+.error-message {
+    color: #ff0000;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.select2-container .select2-selection--single {
+    height: 40px !important;
+    border-radius: 5px !important;
+}
+
+#boarding_points_container {
+    max-width: 300px; /* Adjust the width as needed */
+}
+
+#intermediate_stops_container {
+    margin-top: 20px; /* Increase the margin */
+    border-top: 1px solid #ccc;
+    padding-top: 15px; /* Increase the padding */
+}
+
+.input-with-button {
+    display: flex;
+    align-items: center;
+}
+
+.intermediate_stop_input {
+    flex: 1;
+}
+
+.input-with-button {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap; /* Prevent wrapping to a new line */
+}
+
+.input-with-button select {
+    flex: 1; /* Use flex to occupy remaining space */
+    /* Your existing styles for select ... */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px; /* Reduce font size for a smaller text */
+    display: block;
+}
+
+.plus-button {
+    width: 30px;
+    color: #ffffff;
+    border-color: transparent;
+    background-color: rgb(43, 3, 3);
+    margin-left: 5px;
+}
+
+.plus-button:hover {
+    color: rgb(255, 255, 255) !important;
+    background: rgb(58, 167, 54)!important;
+}
+
+.minus-button {
+    width: 30px;
+    color: #ffffff;
+    border-color: transparent;
+    background-color: rgb(182, 0, 0);
+    margin-left: 5px;
+}
+
+.minus-button:hover {
+    color: rgb(221, 214, 214) !important;
+    background: rgb(58, 167, 54)!important;
+}
+#intermediate_stops_container {
+    display: none;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
+    margin-bottom: 10px; /* Add some space after the container */
+}
+
+.staff-btn {
+    width: auto !important;
+    border: none !important;
+    border-radius: 10px;
+    padding: 0.875em 2em;
+    color: rgb(221, 221, 221);
+    background: linear-gradient(90deg, #0f0566, transparent) #0a15b4;
+    transition: background-color 0.3s;
+}
+.staff-btn:hover, .staff-btn:focus {
+    background-color: #031b46;
+}
+
+.table th{
+    font-size: 16px;
+    font-weight: 600 !important;
+    color: rgb(36, 36, 36);
+}
+
+.table td{
+    font-size: 15px;
+    font-weight: 500 !important;
+    color: rgb(48, 48, 48);
+}
+
+.edit-btn{
+    border: none !important;
+    background: linear-gradient(90deg, #3b0149, transparent) #620ab4;
+    transition: background-color 0.3s;
+}
+
+.edit-btn:hover, .edit-btn:focus {
+    background-color: #8c2eca;
+}
+
+.delete-btn{
+    border: none !important;
+    background: linear-gradient(90deg, rgb(218, 5, 51), transparent) #e96900;
+    transition: background-color 0.3s;
+}
+
+.delete-btn:hover, .delete-btn:focus {
+    background-color: #e40000;
+}
+
+.save-btn {
+    width: auto !important;
+    border-radius: 10px;
+    padding: 0.875em 2em;
+    background: linear-gradient(90deg, #0f0566, transparent) #0a15b4;
+    transition: background-color 0.3s;
+}
+.save-btn:hover, .submit-btn:focus {
+    background-color: #031b46;
+}
+
+.cancel-btn {
+    width: auto !important;
+    border-radius: 10px;
+    padding: 0.875em 2em;
+    background: linear-gradient(90deg, #9134cf, transparent) #1e9dcf;
+    transition: background-color 0.3s;
+}
+.cancel-btn:hover, .submit-btn:focus {
+    background-color: #ff0077;
+}
+
+@media(max-width:767px){
+    .container-xl{
+        padding-left: 2px !important;
+        padding-right: 2px !important;
+    }
+    .card{
+        padding-right: 2px;
+        padding-left: 2px;
+    }
+}

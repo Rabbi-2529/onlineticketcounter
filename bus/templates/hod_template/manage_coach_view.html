@@ -1,0 +1,74 @@
+{% extends 'hod_template/base_template.html' %}
+{% load static %}
+{% block custom_css %}
+    <link rel="stylesheet" href="{% static "dist/css/add_coach.css" %}">
+{% endblock custom_css %}
+{% block main_content %}
+
+<div class="container-xl px-4 mt-4">
+    <div class="container-fluid">
+        <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+            <div class="card-header">
+                <h3 class="card-title py-2">Journey Date History</h3>
+                <form method="post" class="form-inline float-right">
+                {% csrf_token %}
+                <div class="form-group mr-2">
+                    <input
+                    type="date"
+                    name="journey_date"
+                    id="journey_date"
+                    class="form-control"
+                    pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
+                    placeholder="YYYY-MM-DD"
+                    required
+                    />
+                </div>
+                <button type="submit" class="btn btn-primary search-btn">Search</button>
+                </form>
+            </div>
+            <div class="card-body">
+                {% if journey_dates %}
+                <table class="table">
+                <thead>
+                    <tr>
+                    <th>Journey Date</th>
+                    <th>Upcoming Schedule</th>
+                    <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for journey_date in journey_dates %}
+                    <tr>
+                    <td>
+                        <a
+                        href="{% url 'seat_booking_details' coach_id=coach.id journey_date_id=journey_date.id %}"
+                        class="view-coach"
+                        >
+                        {{ journey_date.journey_date }}
+                        </a>
+                    </td>
+                    <td>{{ journey_date.is_upcoming_journey }}</td>
+                    <td>
+                        <a
+                        href="{% url 'seat_booking_details' coach_id=coach.id journey_date_id=journey_date.id %}"
+                        class="view-coach"
+                        >
+                        View Seat Booking
+                        </a>
+                    </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                </table>
+                {% else %}
+                <p>No journey dates found for this coach.</p>
+                {% endif %}
+            </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</section>
+{% endblock main_content %}

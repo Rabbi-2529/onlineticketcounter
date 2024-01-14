@@ -1,0 +1,814 @@
+
+{% extends 'base.html' %}
+{% load static %}
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+{% block custom_css %}
+    <link rel="stylesheet" href={% static "css/home.css" %}>
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            padding-top: 50px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+          }
+          
+          /* Style for the modal content (the image) */
+          .modal-content {
+            margin: auto;
+            display: block;
+            max-width: 80%;
+            max-height: 80%;
+          }
+          
+          /* Style for the close button */
+          .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+          }
+    </style>
+{% endblock custom_css %}
+{% block content %}
+
+<section class="banner-area relative">
+
+
+<div class="overlay overlay-bg"></div>
+<div class="container">
+    <div class="row fullscreen align-items-center justify-content-center">
+    <div class="col-lg-6 banner-right">
+        <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="flight" role="tabpanel" aria-labelledby="flight-tab">
+            <form id="search-form" class="form-wrap" action="{% url 'results' %}">
+            {% csrf_token %}
+            <div class="row justify-content-xl-center">
+                <div class="col-md-12 col-sm-6">
+                <div class="form-group">
+                    <div style="text-align: left;">
+                    <label for="start-point-input" style="color: black; font-size: 17px;">From</label>
+                    </div>
+                    <input type="text" name="start_point" id="start-point-input" class="form-control" placeholder="Enter Start Point">
+                    <ul id="start-district-suggestions" class="district-suggestions"></ul>
+                </div>
+                </div>
+                <div class="col-md-12 col-sm-6">
+                <div class="form-group">
+                    <div style="text-align: left;">
+                        <label for="end-point-input" style="color: black; font-size: 14px;">To</label>
+                    </div>
+                    <input type="text" name="end_point" id="end-point-input" class="form-control" placeholder="Enter End Point">
+                    <ul id="end-district-suggestions" class="district-suggestions"></ul>
+                    <p id="error-message" style="color: red; font-size: 12px; display: none;">Error: 'From' and 'To' cities cannot be the same.</p>
+                    <div id="end-district-suggestions" class="district-suggestions"></div>
+                </div>
+                </div>
+                <div class="col-md-12 col-sm-8">
+                <div class="form-group">
+                    <div style="text-align: left;">
+                    <label for="journey-date-input" style="color: black; font-size: 14px;">Date of Journey</label>
+                    </div>
+                    <div class="input-with-calendar">
+                    <input type="text" id="journey-date-input" class="form-control form-control-lg" name="journey_date" required placeholder="DD-MM-YYYY" onfocus="this.placeholder = ''" onblur="this.placeholder = 'DD-MM-YYYY'"  />
+                    <i class="fas fa-calendar input-prefix" id="journey-date-icon"></i>
+                    </div>
+                </div>
+                </div>
+                <div class="col-md-12 col-sm-8">
+                <div class="form-group">
+                    <div style="text-align: left;">
+                    <label for="journey-date-input" style="color: black; font-size: 14px;">Date of Return (Optional)</label>
+                    </div>
+                    <div class="input-with-calendar">
+                    <input type="text" id="return-date-input" class="form-control form-control-lg" name="return_date" required placeholder="DD-MM-YYYY" onfocus="this.placeholder = ''" onblur="this.placeholder = 'DD-MM-YYYY'"  />
+                    <i class="fas fa-calendar input-prefix" id="journey-date-icon"></i>
+                    </div>
+                </div>
+                </div>
+                <div class="col-md-12 text-center">
+                <button type="button" class="primary-btn text-uppercase"  onclick="validateForm()">
+                    {% comment %} <span id="spinner" class="spinner"></span> {% endcomment %}
+                    Search Buses
+                </button>
+                </div>
+            </div>
+            </form>
+        </div>
+        </div>
+    </div>
+    </div>
+</div>
+</section>
+
+<section class="popular-destination-area section-gap">
+<div class="container">
+    <div class="row d-flex justify-content-center">
+    <div class="menu-content pb-70 col-lg-12">
+        <div class="title text-center">
+        <h1 class="mb-10">Popular Destinations</h1>
+        <p>
+            We all live in an age that belongs to the young at heart. Life
+            that is becoming extremely fast, day.
+        </p>
+        </div>
+    </div>
+    </div>
+    <div class="row mb-4">
+    <div class="col-lg-4">
+        <div class="card single-destination relative">
+        <img class="card-img-top" src="{% static 'img/d1.jpg' %}" alt="" />
+        <div class="card-body d-flex justify-content-center card-body-index">
+            <h4 class="card-title">Dhaka</h4>
+        </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card single-destination relative">
+        <img class="card-img-top" src="{% static 'img/d4.jpg' %}" alt="" />
+        <div class="card-body d-flex justify-content-center card-body-index">
+            <h4 class="card-title">Chattogram</h4>
+        </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card single-destination relative">
+        <img class="card-img-top" src="{% static 'img/d5.jpg' %}" alt="" />
+        <div class="card-body d-flex justify-content-center card-body-index">
+            <h4 class="card-title">Khulna</h4>
+        </div>
+        </div>
+    </div>
+    </div>
+    <div class="row mb-4">
+    <div class="col-lg-4">
+        <div class="card single-destination relative">
+        <img class="card-img-top" src="{% static 'img/d7.jpg' %}" alt="" />
+        <div class="card-body d-flex justify-content-center card-body-index">
+            <h4 class="card-title">Mymensingh</h4>
+        </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card single-destination relative">
+        <img class="card-img-top" src="{% static 'img/d9.jpg' %}" alt="" />
+        <div class="card-body d-flex justify-content-center card-body-index">
+            <h4 class="card-title">Sylhet</h4>
+        </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card single-destination relative">
+        <img class="card-img-top" src="{% static 'img/d11.jpg' %}" alt="" />
+        <div class="card-body d-flex justify-content-center card-body-index">
+            <h4 class="card-title">Cox's Bazar</h4>
+        </div>
+        </div>
+    </div>
+    </div>
+</div>
+</section>
+
+<section class="price-area section-gap">
+<div class="container">
+    <div class="row">
+    <div class="col-md-12">
+        <div class="title text-center" style="margin-top: -30px;">
+        <h1 class="mb-10 text-info">OUR COUNTERS</h1>
+        </div>
+    </div>
+    </div>
+
+    <div class="row district_data">
+    {% for i in district_chunks|slice:":6" %}
+        {% for district in i %}
+        <div class="w-auto">
+            <div class="single-price p-1 mb-2">
+            <ul class="price-list text-black mb-1">
+                <li class="d-flex justify-content-between align-items-center">
+                <div class="district-card">
+                    <a href="#" data-toggle="modal" data-target="#{{ district.pk }}" class="district-name">{{ district.name }}</a>
+                </div>
+                <div class="modal fade" id="{{ district.pk }}" tabindex="-1" role="dialog" aria-labelledby="{{ district.pk }}Label" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title" id="{{ district.pk }}Label">{{ district.name }}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>
+                        <div class="modal-body">
+                        {% for counter in district.counter_set.all %}
+                            <p>Counter Name: {{ counter.name }}</p>
+                            <p>Manager Name: {{ counter.manager }}</p>
+                            <p>Address: {{ counter.address }}</p>
+                            <p>Phone Numbers: {{ counter.phone_numbers }}</p>
+                            <hr>
+                        {% empty %}
+                            <p>No counters found.</p>
+                        {% endfor %}
+                        </div>
+                        <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                </li>
+            </ul>
+            </div>
+        </div>
+        {% endfor %}
+    {% endfor %}
+    </div>
+</div>
+</section>
+    <!-- start banner Area -->
+
+    <section class="operators_bus-operators__oF55A" >
+
+
+    
+    <div class="container">
+        <div class="row d-flex justify-content-center">
+        <div class="menu-content pb-70 col-lg-12">
+            <div class="title text-center text-success">
+            {% comment %} <h1 class="mb-10 text-info" >POPULAR BUS ROUTES</h1> {% endcomment %}
+            <br>
+        <div class="col">
+            <div class="col-lg-4 text-black">
+
+
+            {% if routes %}
+            <ul class="operators_bus-list__Dqfo4 ">
+            {% for route in routes %}
+            <li class="text-black"> 
+                <a href="{% url 'popularroutes' %}?start_point={{ route.route.start_point }}&end_point={{ route.route.end_point }}"  class="text-black">
+                {{ route.route }}
+            
+            </a>
+        
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+            {% comment %} <li class="text-black" ><a href="">DHAKA-KHAGRACHARI</a></li><li><a href=""  class="text-black">DHAKA-BANDARBAN</a></li><li><a href=""  class="">DHAKA-TEKNAF</a></li><li><a href=""  class="text-black">DHAKA-RANGAMATI</a></li><li><a href="/popular-routes/dhaka-to-chapainawabganj" class="text-black">DHAKA-CHAPAINAWABGANJ</a></li><li><a href=""  class="text-black">DHAKA-RAJSHAHI</a></li><li><a href="" class="text-black">DHAKA-RANGPUR</a></li><li><a href="/popular-routes/dhaka-to-barisal" class="text-black">DHAKA-BARISAL</a></li><li><a href="/popular-routes/dhaka-to-barguna"  class="text-black">DHAKA-BARGUNA</a></li><li><a href="/popular-routes/dhaka-to-kuakata"class="text-black">DHAKA-KUAKATA</a></li><li><a href="/popular-routes/dhaka-to-satkhira"class="text-black">DHAKA-SATKHIRA</a></li></ul></div><div class="col-lg-4"><ul class="operators_bus-list__Dqfo4 operators_routes__Xn3zT"><li><a href="/popular-routes/dhaka-to-khulna"class="text-black">DHAKA-KHULNA</a></li><li><a href="/popular-routes/dhaka-to-patuakhali"class="text-black">DHAKA-PATUAKHALI</a></li><li><a href="/popular-routes/dhaka-to-thakugaon" class="text-black">DHAKA-THAKURGAON</a></li><li><a href="/popular-routes/dhaka-to-chittagong"class="text-black">DHAKA-CHITTAGONG</a></li><li><a href="/popular-routes/dhaka-to-shyamnagar"class="text-black">DHAKA-SHYAMNAGAR</a></li><li><a href="/popular-routes/dhaka-to-kansat"class="text-black">DHAKA-KANSAT</a></li><li><a href="/popular-routes/dhaka-to-kaptai"class="text-black">DHAKA-KAPTAI</a></li><li><a href="/popular-routes/dhaka-to-benapole"class="text-black">DHAKA-BENAPOLE</a></li><li><a href="/popular-routes/chapainawabganj-to-dhaka"class="text-black">CHAPAINAWABGANJ-DHAKA</a></li><li><a href="/popular-routes/dhaka-to-pathorghata"class="text-black">DHAKA-PATHORGHATA</a></li><li><a href="/popular-routes/dhaka-to-kolkata"class="text-black">DHAKA-KOLKATA</a></li><li><a href="/popular-routes/dhaka-to-panchagarh"class="text-black">DHAKA-PANCHAGARH</a></li></ul></div><div class="col-4"><ul class="operators_bus-list__Dqfo4 operators_routes__Xn3zT"><li><a href="/popular-routes/dhaka-to-vandaria">DHAKA-VANDARIA</a></li><li><a href="/popular-routes/dhaka-to-khepupara">DHAKA-KHEPUPARA</a></li><li><a href="/popular-routes/dhaka-to-paikgasa">DHAKA-PAIKGASA</a></li><li><a href="/popular-routes/dhaka-to-burimari">DHAKA-BURIMARI</a></li></ul> {% endcomment %}
+            
+            
+            </div>
+            </div>
+        </div>
+        </div>
+        </div>
+    </div> 
+    </section>
+
+    <section class="testimonial-area section-gap">
+    <div class="container">
+        <div class="row d-flex justify-content-center">
+            <div class="menu-content pb-70 col-lg-8">
+                <div class="title text-center">
+                    <h1 class="mb-10"> Our Clients</h1>
+                    <p>The French Revolution constituted for the conscience of the dominant aristocratic class a fall from </p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="active-testimonial">
+                <div class="single-testimonial item d-flex flex-row">
+                    <div class="thumb">
+                        <img class="img-fluid" src={% static "img/elements/user1.png"%} alt="">
+                    </div>
+                    <div class="desc">
+                        <p>
+                            Do you want to be even more successful? Learn to love learning and growth. The more effort you put into improving your skills, the bigger the payoff you.		     
+                        </p>
+                        <h4>Harriet Maxwell</h4>
+                        <div class="star">
+            <span class="fa fa-star checked"></span>
+            <span class="fa fa-star checked"></span>
+            <span class="fa fa-star checked"></span>
+            <span class="fa fa-star checked"></span>
+            <span class="fa fa-star"></span>				
+            </div>	
+                    </div>
+                </div>
+                <div class="single-testimonial item d-flex flex-row">
+                    <div class="thumb">
+                        <img class="img-fluid" src={% static "img/elements/user2.png"%} alt="">
+                    </div>
+                    <div class="desc">
+                        <p>
+                            A purpose is the eternal condition for success. Every former smoker can tell you just how hard it is to stop smoking cigarettes. However.
+                        </p>
+                        <h4>Carolyn Craig</h4>
+                        <div class="star">
+            <span class="fa fa-star checked"></span>
+            <span class="fa fa-star checked"></span>
+            <span class="fa fa-star checked"></span>
+            <span class="fa fa-star"></span>
+            <span class="fa fa-star"></span>			
+            </div>	
+                    </div>
+                </div>
+                <div class="single-testimonial item d-flex flex-row">
+                    <div class="thumb">
+                        <img class="img-fluid" src={% static "img/elements/user1.png"%} alt="">
+                    </div>
+                    <div class="desc">
+                        <p>
+                            Do you want to be even more successful? Learn to love learning and growth. The more effort you put into improving your skills, the bigger the payoff you.		     
+                        </p>
+                        <h4>Harriet Maxwell</h4>
+                        <div class="star">
+            <span class="fa fa-star checked"></span>
+            <span class="fa fa-star checked"></span>
+            <span class="fa fa-star checked"></span>
+            <span class="fa fa-star checked"></span>
+            <span class="fa fa-star"></span>				
+            </div>	
+                    </div>
+                </div>
+                <div class="single-testimonial item d-flex flex-row">
+                    <div class="thumb">
+                        <img class="img-fluid" src={% static "img/elements/user2.png"%} alt="">
+                    </div>
+                    <div class="desc">
+                        <p>
+                            A purpose is the eternal condition for success. Every former smoker can tell you just how hard it is to stop smoking cigarettes. However.
+                        </p>
+                        <h4>Carolyn Craig</h4>
+                        <div class="star">
+            <span class="fa fa-star checked"></span>
+            <span class="fa fa-star checked"></span>
+            <span class="fa fa-star checked"></span>
+            <span class="fa fa-star"></span>
+            <span class="fa fa-star"></span>			
+            </div>	
+                    </div>
+                </div>
+                <div class="single-testimonial item d-flex flex-row">
+                    <div class="thumb">
+                        <img class="img-fluid" src={% static "img/elements/user1.png"%} alt="">
+                    </div>
+                    <div class="desc">
+                        <p>
+                            Do you want to be even more successful? Learn to love learning and growth. The more effort you put into improving your skills, the bigger the payoff you.		     
+                        </p>
+                        <h4>Harriet Maxwell</h4>
+                        <div class="star">
+            <span class="fa fa-star checked"></span>
+            <span class="fa fa-star checked"></span>
+            <span class="fa fa-star checked"></span>
+            <span class="fa fa-star checked"></span>
+            <span class="fa fa-star"></span>				
+            </div>	
+                    </div>
+                </div>
+                <div class="single-testimonial item d-flex flex-row">
+                    <div class="thumb">
+                        <img class="img-fluid" src={% static "img/elements/user2.png"%} alt="">
+                    </div>
+                    <div class="desc">
+                        <p>
+                            A purpose is the eternal condition for success. Every former smoker can tell you just how hard it is to stop smoking cigarettes. However.
+                        </p>
+                        <h4>Carolyn Craig</h4>
+                        <div class="star">
+            <span class="fa fa-star checked"></span>
+            <span class="fa fa-star checked"></span>
+            <span class="fa fa-star checked"></span>
+            <span class="fa fa-star"></span>
+            <span class="fa fa-star"></span>			
+            </div>	
+                    </div>
+                </div>		                    		                    
+            </div>
+        </div>
+    </div>
+</section>
+
+    <!-- End testimonial Area -->
+
+    <!-- Start home-about Area -->
+    
+    <!-- End home-about Area -->
+
+    <!-- Start blog Area -->
+
+    <!-- End recent-blog Area -->
+
+    <section class="paymentMethods_clients__b4bzo">
+    <div class="container d-lg-block d-none">
+        <div class="row">
+        <div class="col-12 text-center">
+            <h2 class="paymentMethods_section-title__kgcND">We Accept</h2>
+            <br>
+        </div>
+    
+        <div class="col-lg-10 mx-auto">
+            <div class="row g-3 justify-content-center mb-3">
+            <div class="col-lg-4 col-sm-6 text-center">
+                <div class="card">
+                <div class="ant-image">
+                     <img
+                                        alt="bkash"
+                                        class="ant-image-img"
+                                        style="max-width: 120%"
+                                        src="{% static "img/bk.jpg" %}"
+                                        onclick="openModal('{% static 'img/bk.jpg' %}')"
+                                    >
+                </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-6 text-center">
+                <div class="card">
+                <div class="ant-image">
+                    <img alt="nagad" class="ant-image-img" style="max-width:80%" src="{% static 'img/ng1.jpg' %}">
+                </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-6 text-center">
+                <div class="card">
+                <div class="ant-image">
+                    <img alt="mx" class="ant-image-img" style="max-width:100%" src="{% static 'img/aex.jpg' %}" onclick="openModal('{% static 'img/aex.jpg' %}')">
+                </div>
+                </div>
+            </div>
+            </div>
+            <div class="row g-3 justify-content-center mb-3">
+            <div class="col-lg-4 col-sm-6 text-center">
+                <div class="card">
+                <div class="ant-image">
+                    <img alt="mastercard pt-5" class="ant-image-img" style="max-width:100%" src="{% static 'img/mc1.jpg' %}">
+                </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-6 text-center">
+                <div class="card">
+                <div class="ant-image">
+                    <img alt="visa" class="ant-image-img" style="max-width: 600%; max-height: 500px;" src="{% static 'img/vis2.png' %}" onclick="openModal('{% static 'img/vis2.png' %}')">
+
+                </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-6 text-center">
+                <div class="card">
+                <div class="ant-image">
+                    <img alt="dbblnex" class="ant-image-img" style="max-width:84%" src="{% static 'img/dbdl.jpg' %}">
+                </div>
+                </div>
+            </div>
+            </div>
+        </div>
+        </div>
+    </div>
+    <div id="myModal" class="modal">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <img class="modal-content" id="img01">
+    </div>
+    </section>
+    
+
+
+    
+    {% endblock content %}
+
+
+
+
+{% block js %}
+
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+
+
+    <script>
+    var today = new Date();
+    
+    // Format the date as dd-mm-yyyy
+    var dd = String(today.getDate()).padStart(2, "0");
+    var mm = String(today.getMonth() + 1).padStart(2, "0"); // January is 0!
+    var yyyy = today.getFullYear();
+    
+    today = dd + "-" + mm + "-" + yyyy;
+    
+    // Set the value for the date input field
+    document.getElementById("journey-date-input").value = today;
+    
+    // Helper function to format the date as dd-mm-yyyy
+    
+    
+    // Set minimum selectable date as today
+    
+    /*document.getElementById("start-point-input").addEventListener("input", function() {
+        suggestDistrict(this);
+    });
+    
+    document.getElementById("start-point-input").addEventListener("input", function() {
+        suggestDistrict(this);
+    });*/
+    
+    // Event listener for "From" input field click
+    document.getElementById("start-point-input").addEventListener("click", function() {
+        this.style.borderColor = "blue"; // Change the border color to red
+    });
+    
+    // Event listener for "From" input field blur
+    document.getElementById("start-point-input").addEventListener("blur", function() {
+        this.style.borderColor = ""; // Reset the border color
+    });
+    
+    // Event listener for "To" input field click
+    document.getElementById("end-point-input").addEventListener("click", function() {
+        this.style.borderColor = "blue"; // Change the border color to blue
+    });
+    
+    // Event listener for "To" input field blur
+    document.getElementById("end-point-input").addEventListener("blur", function() {
+        this.style.borderColor = ""; // Reset the border color
+    });
+    </script>
+    
+    
+    
+    <script>
+        let selectedDistrictIndex = -1; // Index of the currently selected suggestion
+        // Function to fetch JSON data from a file
+        async function fetchJsonData() {
+            try {
+                const response = await fetch('/static/json/districts.json'); // Adjust the path to your JSON file
+                if (!response.ok) {
+                    throw new Error('Failed to fetch JSON data');
+                }
+                const jsonData = await response.json();
+                return jsonData.districts.map(district => district.name);
+            } catch (error) {
+                console.error('Error fetching JSON data:', error);
+                return [];
+            }
+        }
+        // Function to suggest district names based on the input value
+        async function suggestDistrict(input) {
+            const inputValue = input.value.toLowerCase();
+            const otherInput = input.id === "start-point-input" ? document.getElementById("end-point-input") : document.getElementById("start-point-input");
+            const districtList = input.id === "start-point-input" ? document.getElementById("start-district-suggestions") : document.getElementById("end-district-suggestions");
+            districtList.innerHTML = '';
+            const districtNames = await fetchJsonData();
+            if (!districtNames || districtNames.length === 0) {
+                console.error('No district names found in JSON data');
+                return;
+            }
+            let count = 0;
+            for (let i = 0; i < districtNames.length; i++) {
+                const district = districtNames[i];
+                if (district.toLowerCase().startsWith(inputValue) && district.toLowerCase() !== otherInput.value.toLowerCase() && count < 5) {
+                    const districtItem = document.createElement("li");
+                    districtItem.textContent = district;
+                    districtItem.classList.add("district-item");
+                    districtItem.onclick = function () {
+                        input.value = district;
+                        districtList.style.display = "none";
+                    };
+                    districtList.appendChild(districtItem);
+                    count++;
+                }
+            }
+            if (districtList.childNodes.length > 0) {
+                districtList.style.display = "block";
+            } else {
+                districtList.style.display = "none";
+            }
+        }
+        // Function to update the active suggestion based on arrow key press
+        function updateActiveSuggestion(direction) {
+            const startDistrictList = document.getElementById("start-district-suggestions");
+            const endDistrictList = document.getElementById("end-district-suggestions");
+            const districtList = startDistrictList.style.display === "block" ? startDistrictList : endDistrictList;
+            const suggestions = districtList.getElementsByTagName("li");
+            const numSuggestions = suggestions.length;
+            if (direction === "up") {
+                if (selectedDistrictIndex > 0) {
+                    suggestions[selectedDistrictIndex].classList.remove("active");
+                    selectedDistrictIndex--;
+                }
+            } else if (direction === "down") {
+                if (selectedDistrictIndex < numSuggestions - 1) {
+                    if (selectedDistrictIndex >= 0) {
+                        suggestions[selectedDistrictIndex].classList.remove("active");
+                    }
+                    selectedDistrictIndex++;
+                }
+            }
+            if (selectedDistrictIndex >= 0 && selectedDistrictIndex < numSuggestions) {
+                suggestions[selectedDistrictIndex].classList.add("active");
+            }
+        }
+        // Function to handle Enter key press
+        function handleEnterKey(input) {
+            const districtList = input.id === "start-point-input" ? document.getElementById("start-district-suggestions") : document.getElementById("end-district-suggestions");
+            const suggestions = districtList.getElementsByTagName("li");
+            if (selectedDistrictIndex > -1 && selectedDistrictIndex < suggestions.length) {
+                input.value = suggestions[selectedDistrictIndex].textContent;
+                districtList.style.display = "none";
+            }
+        }
+        // Function to handle blur event on the input fields
+        function handleInputBlur(input) {
+            // No need to remove active class on blur
+            // It will stay highlighted until another suggestion is selected
+        }
+        // Event listener for input field value change
+        document.getElementById("start-point-input").addEventListener("input", function () {
+            suggestDistrict(this);
+        });
+        document.getElementById("end-point-input").addEventListener("input", function () {
+            suggestDistrict(this);
+        });
+        document.addEventListener("click", function (event) {
+            if (!event.target.classList.contains("form-control")) {
+                const startDistrictList = document.getElementById("start-district-suggestions");
+                const endDistrictList = document.getElementById("end-district-suggestions");
+                startDistrictList.style.display = "none";
+                endDistrictList.style.display = "none";
+            }
+        });
+        // Event listener for mouseover on suggestion items
+        document.addEventListener("mouseover", function (event) {
+            const target = event.target;
+            if (target.tagName.toLowerCase() === "li" && (target.parentNode.id === "start-district-suggestions" || target.parentNode.id === "end-district-suggestions")) {
+                target.classList.add("hovered");
+            }
+        });
+        // Event listener for mouseout from suggestion items
+        document.addEventListener("mouseout", function (event) {
+            const target = event.target;
+            if (target.tagName.toLowerCase() === "li" && (target.parentNode.id === "start-district-suggestions" || target.parentNode.id === "end-district-suggestions")) {
+                target.classList.remove("hovered");
+            }
+        });
+        // Event listener for arrow key press
+        document.addEventListener("keydown", function (event) {
+            const startDistrictList = document.getElementById("start-district-suggestions");
+            const endDistrictList = document.getElementById("end-district-suggestions");
+            if (startDistrictList.style.display === "block" || endDistrictList.style.display === "block") {
+                if (event.key === "ArrowUp") {
+                    event.preventDefault(); // Prevent scrolling on arrow key press
+                    updateActiveSuggestion("up");
+                } else if (event.key === "ArrowDown") {
+                    event.preventDefault(); // Prevent scrolling on arrow key press
+                    updateActiveSuggestion("down");
+                }
+                // Add Enter key handling here
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    handleEnterKey(document.activeElement);
+                }
+            }
+        });
+        // Check if the JSON file is loaded properly
+        fetchJsonData().then(districtNames => {
+            if (!districtNames || districtNames.length === 0) {
+                console.error('JSON file is not loaded properly');
+            } else {
+                console.log('JSON file is loaded successfully');
+            }
+        });
+        </script>
+        {% comment %} <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script> {% endcomment %}
+    <script>
+
+    $(document).ready(function() {
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, "0");
+        var mm = String(today.getMonth() + 1).padStart(2, "0");
+        var yyyy = today.getFullYear();
+        today = dd + "-" + mm + "-" + yyyy;
+    
+        $("#journey-date-input").datepicker({
+        dateFormat: "dd-mm-yy",
+        minDate: today
+        });
+    
+        $("#journey-date-icon").click(function() {
+        $("#journey-date-input").datepicker("show");
+        });
+    });
+    </script>
+    <script>
+    $(document).ready(function() {
+        $("#journey-date-input").datepicker({
+        dateFormat: "dd-mm-yy",
+        showOn: "button",
+        buttonText: "<i class='fas fa-calendar'></i>",
+        buttonImageOnly: true,
+        buttonImage: "",
+        beforeShow: function(input, inst) {
+            setTimeout(function() {
+            inst.dpDiv.css({
+                top: input.offsetTop + input.offsetHeight,
+                left: input.offsetLeft
+            });
+            }, 0);
+        }
+        }).on("keydown paste", function(e) {
+        e.preventDefault();
+        });
+    
+        $("#journey-date-icon").click(function() {
+        $("#journey-date-input").datepicker("show");
+        });
+    });
+    </script>
+    
+    
+    <script>
+    $(document).ready(function() {
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, "0");
+        var mm = String(today.getMonth() + 1).padStart(2, "0");
+        var yyyy = today.getFullYear();
+        today = dd + "-" + mm + "-" + yyyy;
+    
+        $("#return-date-input").datepicker({
+        dateFormat: "dd-mm-yy",
+        minDate: today
+        });
+    
+        $("#return-date-icon").click(function() {
+        $("#return-date-input").datepicker("show");
+        });
+    });
+    </script>
+    <script>
+    $(document).ready(function() {
+        $("#return-date-input").datepicker({
+        dateFormat: "dd-mm-yy",
+        showOn: "button",
+        buttonText: "<i class='fas fa-calendar'></i>",
+        buttonImageOnly: true,
+        buttonImage: "",
+        beforeShow: function(input, inst) {
+            setTimeout(function() {
+            inst.dpDiv.css({
+                top: input.offsetTop + input.offsetHeight,
+                left: input.offsetLeft
+            });
+            }, 0);
+        }
+        }).on("keydown paste", function(e) {
+        e.preventDefault();
+        });
+    
+        $("#return-date-icon").click(function() {
+        $("#return-date-input").datepicker("show");
+        });
+    });
+    </script>
+    
+    <script>
+    function validateForm() {
+        var startCity = document.getElementById("start-point-input").value;
+        var endCity = document.getElementById("end-point-input").value;
+        var errorMessage = document.getElementById("error-message");
+    
+        if (startCity === endCity) {
+        errorMessage.style.display = "block";
+        document.getElementById("end-point-input").classList.add("is-invalid");
+        } else {
+        errorMessage.style.display = "none";
+        document.getElementById("end-point-input").classList.remove("is-invalid");
+        document.getElementById("search-form").submit();
+        }
+    }
+    
+    // Add an event listener to the input fields to remove the danger styling and hide the error message when clicked
+    document.getElementById("start-point-input").addEventListener("click", function () {
+        document.getElementById("error-message").style.display = "none";
+        document.getElementById("end-point-input").classList.remove("is-invalid");
+    });
+    
+    document.getElementById("end-point-input").addEventListener("click", function () {
+        document.getElementById("error-message").style.display = "none";
+        document.getElementById("end-point-input").classList.remove("is-invalid");
+    });
+    </script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.9/dist/flatpickr.min.js"></script>
+
+{% comment %} date {% endcomment %}
+
+
+{% endblock js %}

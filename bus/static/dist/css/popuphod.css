@@ -1,0 +1,274 @@
+.bus-column {
+    width: 400px;
+    margin-left: 20px; /* Add left margin */
+}
+
+.popup-coach p{
+    color: rgb(48, 48, 48) !important
+}
+
+
+.first-column {
+    padding-right: 20px;
+}
+
+.column-no p span {
+    -weight: 600;
+}
+
+/* timer */
+.base-timer {
+    position: relative;
+    width: 50px;
+    height: 50px;
+  }
+  
+  .base-timer__svg {
+    transform: scaleX(-1);
+  }
+  
+  .base-timer__circle {
+    fill: none;
+    stroke: none;
+  }
+  
+  .base-timer__path-elapsed {
+    stroke-width: 7px;
+    stroke: rgb(209, 209, 209);
+  }
+  
+  .base-timer__path-remaining {
+    stroke-width: 7px;
+    stroke-linecap: round;
+    transform: rotate(90deg);
+    transform-origin: center;
+    transition: 0.3s linear all; 
+    fill-rule: nonzero;
+    stroke: currentColor;
+  }
+  
+  .base-timer__path-remaining.green {
+    color: rgb(0, 114, 63);
+  }
+  
+  .base-timer__path-remaining.orange {
+    color: orange;
+  }
+  
+  .base-timer__path-remaining.red {
+    color: red;
+  }
+  
+  .base-timer__label {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+  }
+
+
+/* @keyframes borderAnimation {
+    0% {
+        border-color: green;
+    }
+    50% {
+        border-color: yellow;
+    }
+    100% {
+        border-color: red;
+    }
+}
+
+.timer-div{
+    height: 40px;
+    width: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    border: 2px solid green;
+    animation: borderAnimation 90s linear infinite;
+} */
+
+.seat {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    margin: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.seat-label-div {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    transform: scale(0);
+    pointer-events: none;
+}
+
+.seat-label {
+    position: relative;
+    top: -4px;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    z-index: 1;
+}
+
+.seat-color {
+    color: rgb(172, 164, 164);
+}
+
+.selected {
+    color: rgb(22, 206, 53);
+}
+
+.fa-couch {
+    padding-left: 4px;
+}
+
+/* .fa-couch:hover + .seat-label-div{
+        transform: scale(1.0);
+    } */
+
+/* .fa-couch:hover{
+        color: rgb(22, 206, 53);
+    } */
+
+/* .fa-couch.selected {
+        color: rgb(22, 206, 53);
+    }
+    
+    .fa-couch.selected + .seat-label-div {
+        transform: scale(1.0);
+    } */
+
+.fa-lg {
+    font-size: 25px;
+}
+
+.wheel {
+    width: 80%;
+}
+.move-right {
+    margin-left: 11px; /* Adjust the margin value as needed */
+}
+
+.entry-image {
+    width: 30px;
+}
+.booked-seat i {
+        color: rgb(230, 94, 94);
+    }
+.row-name {
+    width: 40px;
+    height: 40px;
+}
+
+.row-name p {
+    padding-top: 5px;
+}
+
+.row-name p span {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+/* .seat-image{
+        width: 100%;
+        background-color: red;
+    } */
+
+/* Seat View */
+
+.seat-view {
+    margin-top: 80px;
+}
+
+.tab-div p span {
+    font-size: 14px;
+    padding-top: 3%;
+}
+
+.seat-view-table-row td {
+    font-size: 14px;
+}
+
+.dropdown-menu {
+    width: 95%;
+    border: 1px solid rgb(166, 188, 228);
+}
+
+.dropdown-toggle::after {
+    margin-top: 10px;
+}
+
+.dropdown-btn {
+    border: 1px solid rgb(166, 188, 228);
+}
+
+.booked-seat {
+    color: rgb(230, 94, 94);
+}
+
+.popup{
+    z-index: 999999;
+}
+
+.boarding-point-select{
+    height: 50px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+
+}
+
+.form-group label{
+    font-size: 14px;
+    font-weight: 500 !important;
+    color: rgb(54, 54, 54);
+}
+
+.form-control {
+    display: block;
+    width: 100%;
+    padding: 0.875rem 1.125rem;
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1;
+    color: #69707a;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgb(235, 235, 235);
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border-radius: 0.35rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.form-control::placeholder{
+    font-weight: 300;
+    color: rgb(187, 187, 187);
+}
+
+.table th{
+    font-size: 16px;
+    font-weight: 500 !important;
+    color: rgb(26, 26, 26) !important;
+}
+
+.table td{
+    font-size: 15px;
+    font-weight: 400 !important;
+    color: rgb(48, 48, 48) !important;
+}
+
+.seat-view .tab-div span{
+    color: rgb(48, 48, 48) !important;
+}

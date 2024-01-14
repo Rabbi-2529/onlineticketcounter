@@ -1,0 +1,289 @@
+.container-xl{
+    max-width: 1440px;
+}
+
+.container-fluid{
+    margin-top: 10px;
+}
+
+.card {
+    border-radius: 20px;
+    border: none !important;
+    /* box-shadow: 0 0.15rem 1.75rem 0 rgb(33 40 50 / 15%); */
+    /* box-shadow: 12px 16px 22px 9px rgba(0,0,0,0.1); */
+}
+
+.card-header{
+    border-top-left-radius: 20px !important;
+    border-top-right-radius: 20px !important;
+    border: none !important;
+    /* background: rgb(62,7,75);
+    background: linear-gradient(180deg, rgba(62,7,75,1) 0%, rgba(40,10,69,1) 63%); */
+    /* background: rgb(121,143,17);
+    background: linear-gradient(180deg, rgba(121,143,17,1) 0%, rgba(163,166,36,0.8827906162464986) 100%); */
+    /* background: rgb(56,4,80);
+    background: linear-gradient(180deg, rgba(56,4,80,0.5) 0%, rgba(158,49,159,0.5) 100%); */
+    background: rgb(149,152,7);
+    background: radial-gradient(circle, rgba(149,152,7,1) 0%, rgba(43,85,6,1) 100%);
+
+}
+
+.card-header h3{
+    color: rgb(236, 236, 236);
+}
+
+.ticket-detail{
+    margin-bottom: 1.5rem;
+}
+
+.ticket-detail-journey{
+    margin-bottom: 1.5rem;
+}
+ 
+.inner-card-heading-div{
+    border-bottom: 1px solid rgb(57, 6, 122);
+}
+
+.trip-info-div{
+    border-radius: 20px;
+    /* border-bottom: 1px dashed rgb(63, 3, 3); */
+    /* border: 1px solid rgb(229, 227, 230); */
+    /* background-color: rgba(246, 241, 255, 0.8); */
+    background: rgb(149,152,7);
+    background: radial-gradient(circle, rgba(149,152,7,0.2) 0%, rgba(43,85,6,0.2) 100%);
+    box-shadow: -4px -4px 38px 4px rgba(0,0,0,0.1);
+}
+
+.ticket-detail-column{
+    border-radius: 15px;
+    /* background: rgb(4,34,80);
+    background: linear-gradient(90deg, rgba(4,34,80,0.2) 0%, rgba(159,49,145,0.2) 100%); */
+    /* background: rgb(9,9,91);
+    background: linear-gradient(90deg, rgba(9,9,91,0.2) 0%, rgba(109,31,145,0.2) 100%); */
+    /* background: rgb(6,7,85);
+    background: linear-gradient(90deg, rgba(6,7,85,0.1) 37%, rgba(79,23,210,0.1) 100%); */
+    background: rgb(149,152,7);
+    background: radial-gradient(circle, rgba(149,152,7,0.2) 0%, rgba(43,85,6,0.2) 100%);
+}
+
+.passengerRowTemplate{
+    border-bottom: 2px rgb(158, 177, 153);
+    border-left: none;
+    border-top: none;
+    border-right: none;
+    border-bottom-style: dashed;
+}
+
+.passenger-seat-selection-checkbox{
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: rgb(128, 7, 122) !important;
+}
+
+.individual-seat-label{
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 500;
+    color: rgb(128, 7, 122) !important;
+}
+
+.form-check-input{
+    cursor: pointer;
+}
+
+.form-check-input:checked{
+    background-color: rgb(40, 180, 52);
+    border-color: rgb(40, 180, 52);
+}
+
+.form-control {
+    display: block;
+    width: 100%;
+    padding: 0.45rem 1.125rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1;
+    color: rgb(128, 7, 122) !important;
+    /* background-color: #fff; */
+    background: rgb(149,152,7);
+    background: radial-gradient(circle, rgba(231, 231, 198, 0.9) 0%, rgba(200, 228, 175, 0.9) 100%);
+    background-clip: padding-box;
+    border: 1px solid rgb(235, 235, 235);
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border: none;
+    border-radius: 0.35rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.form-control::placeholder{
+    font-weight: 300;
+    color: rgb(104, 104, 104);
+}
+
+.ticket-detail-column .inner-card-heading-div .inner-card-heading{
+    font-size: 15px;
+    font-weight: 600;
+    color: rgb(73, 7, 128) !important;
+}
+
+.ticket-detail-column .inner-card-text-div .inner-card-text{
+    font-size: 14px;
+    font-weight: 500;
+    color: rgb(128, 7, 122) !important;
+}
+
+.information-heading{
+    font-size: 20px;
+    font-weight: 600 !important;
+    font-style: italic;
+    color: rgb(73, 7, 128) !important;
+    border-bottom: 2px solid rgb(71, 32, 97);
+}
+
+.booking-info-heading{
+    font-size: 1rem;
+    font-style: italic;
+    font-weight: 600;
+    color: rgb(73, 7, 128) !important;
+}
+
+.booking-info-text{
+    font-size: 1rem;
+    font-style: italic;
+    font-weight: 600;
+    color: rgb(128, 7, 122) !important;
+}
+
+.visa-img-div{
+    width: auto;
+    padding: 1.5rem;
+    /* padding-right: 1.5rem; */
+}
+
+.payment-img{
+    width: 100px;
+}
+
+.save-btn {
+    width: auto !important;
+    border: none !important;
+    color: rgb(228, 228, 228);
+    border-radius: 10px;
+    padding: 0.875em 2em;
+    background: linear-gradient(90deg, #0f0566, transparent) #0a15b4;
+    transition: background-color 0.3s;
+}
+
+.save-btn:hover, .staff-btn:focus {
+    background-color: #031b46;
+    color: rgb(228, 228, 228);
+}
+
+.radio-container {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.hover-color:hover {
+    color: #d3be03;
+}
+
+.btn-success:hover {
+    background-color: #0c0a8d;
+}
+.success {
+    color: green;
+    font-weight: bold;
+}
+
+.messages {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.messages li {
+    margin-bottom: 10px;
+}
+
+.seat-number-div{
+    max-width: 200px;
+    height: 40px;
+    border-radius: 10px;
+    /* background-color: rgba(105, 5, 92, 0.2); */
+    background-color: rgb(202, 202, 202);
+    transition: 0.3s linear;
+}
+
+.seat-number-div:hover{
+    background-color: rgba(105, 5, 92, 0.4);
+    transform: scale(1.05);
+}
+
+.seat-number-div span{
+    color: rgb(66, 66, 66);
+    transition: 0.3s linear;
+}
+
+.seat-number-div:hover span{
+    color: rgb(214, 214, 214);
+}
+
+/* Gender slelection radio input */
+.gender {
+    display: none;
+  }
+
+.gender + label {
+    z-index: 10;
+    margin: 0 10px 10px 0;
+    padding: 5px 5px;
+    border-radius: 10px;
+    position: relative;
+    font-size: 14px;
+    font-weight: 400 !important;
+    color: rgb(128, 7, 122);
+    /* text-shadow: 0 1px 0 rgba(255, 255, 255, 0.1); */
+    font-weight: bold;
+    background: rgb(149,152,7);
+    background: radial-gradient(circle, rgba(231, 231, 198, 0.9) 0%, rgba(200, 228, 175, 0.9) 100%);
+    border: 1px solid rgb(107, 165, 77);
+    cursor: pointer;
+    transition: all 0.3s linear;
+}
+
+.gender:checked + label {
+    color: rgb(114, 18, 101);
+    background: rgb(149,152,7);
+    background: radial-gradient(circle, rgba(204, 204, 145, 0.9) 0%, rgba(140, 194, 93, 0.9) 100%);
+    transform: scale(1.05);
+}
+/* Gender slelection radio input */
+
+@media(max-width:767px){
+    .container-xl{
+        padding-left: 2px !important;
+        padding-right: 2px !important;
+    }
+
+    .inner-card{
+        padding: 1.5rem 0.2rem !important;
+    }
+
+    .ticket-detail{
+        width: 50%;
+    }
+
+    .ticket-detail-address{
+        width: 100%;
+    }
+}
+
+@media(min-width:768px){
+    .ticket-detail{
+        width: 20%;
+    }
+}

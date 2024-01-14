@@ -1,0 +1,221 @@
+{% extends 'inventory_templates/inventory_base.html' %}
+{% load static %}
+
+{% block custom_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.css">
+<link rel="stylesheet" href="{% static "dist/css/add_product.css" %}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.9/dist/flatpickr.min.css">
+<style>
+    /* Add custom CSS for spacing and form design */
+    .form-container {
+        margin-bottom: 20px; /* Add space between form and table */
+        padding: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .form-container .form-row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
+    .badge-custom-primary {
+        background-color: #007bff;
+        color: #fff;
+    }
+
+    .badge-custom-secondary {
+        background-color: #6c757d;
+        color: #fff;
+    }
+
+    .badge-custom-success {
+        background-color: #28a745;
+        color: #fff;
+    }
+
+    .badge-custom-warning {
+        background-color: #ffc107;
+        color: #000;
+    }
+    /* Add styles for other badges as needed */
+
+</style>
+{% endblock custom_css %}
+
+{% block main_content %}
+<div class="container-xl px-4 mt-4">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header d-flex justify-content-center">
+                        <h3 class="card-title py-2">Purchase Report</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-container">
+                            <!-- Add a form for generating the Purchase Report -->
+                            <form method="GET" action="{% url 'generate_purchase_report' %}">
+                                {% csrf_token %}
+                                <div class="form-row">
+                                    <div class="form-group col-md-4">
+                                        <label for="start_date">Start Date</label>
+                                        <input type="text" id="start_date" name="start_date" class="form-control datepicker" required>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="end_date">End Date</label>
+                                        <input type="text" id="end_date" name="end_date" class="form-control datepicker" required>
+                                    </div>
+                                    <div class="form-group col-md-4 "  style="margin-top: 10px;">
+                                        <button type="submit" class="btn btn-primary" name="generate_report" style="margin-top: 20px;">Generate Report</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Display all purchases in a table -->
+                        <div class="table-responsive">
+                            <table id="paydetaillist" class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>SL</th>
+                                        <th>Product Name</th>
+                                        <th>Quantity</th>
+                                        <th>Supplier</th>
+                                        <th>Warehouse</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for purchase in all_purchases %}
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td><span class="badge badge-custom-primary">{{ purchase.product.name }}</span></td>
+                                        <td><span class="badge badge-custom-secondary">{{ purchase.quantity }}</span></td>
+                                        <td><span class="badge badge-custom-success">{{ purchase.supplier.name }}</span></td>
+                                        <td><span class="badge badge-custom-warning">{{ purchase.warehouse.name }}</span></td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock main_content %}
+
+{% block custom_js %}
+<script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.9/dist/flatpickr.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.js"></script>
+<script type="text/javascript" src="{% static "dist/js/select_dropdown.js" %}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Initialize flatpickr for date picker inputs
+        $(document).ready(function(){
+            $('.datepicker').datepicker({
+                format: 'yyyy-mm-dd',
+                todayHighlight: true,
+                toggleActive: true
+            }).on('changeDate', function() {
+                // Hide the datepicker when a date is selected
+                $(this).datepicker('hide');
+            });
+        });
+
+        // Function to update the purchase table
+        function updatePurchaseTable() {
+            const startDate = document.getElementById("start_date").value;
+            const endDate = document.getElementById("end_date").value;
+
+            // Make an AJAX request to the filter_purchase_report view
+            fetch(`/api/purchases/?start_date=${startDate}&end_date=${endDate}`)
+                .then((response) => response.json())
+                .then((data) => {
+                    // Generate table rows and update the table
+                    let table = document.getElementById("paydetaillist");
+                    let tableBody = table.querySelector('tbody');
+                    tableBody.innerHTML = ''; // Clear the table
+
+                    data.forEach((purchase) => {
+                        // Create a new row for each purchase
+                        let row = document.createElement('tr');
+
+                        // Create table cells for each column
+                        let productNameCell = document.createElement('td');
+                        productNameCell.textContent = purchase.product;
+                        row.appendChild(productNameCell);
+
+                        let quantityCell = document.createElement('td');
+                        quantityCell.textContent = purchase.quantity;
+                        row.appendChild(quantityCell);
+
+                        let supplierCell = document.createElement('td');
+                        supplierCell.textContent = purchase.supplier;
+                        row.appendChild(supplierCell);
+
+                        let warehouseCell = document.createElement('td');
+                        warehouseCell.textContent = purchase.warehouse;
+                        row.appendChild(warehouseCell);
+
+                        // Add the row to the table
+                        tableBody.appendChild(row);
+                    });
+                });
+        }
+
+        // Initialize the table when the page loads
+        updatePurchaseTable();
+    });
+</script>
+
+<script>
+    $(document).ready(function() {
+        $('#paydetaillist').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'copy',
+                    text: 'Copy',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3] // Specify the correct number of columns (0, 1, 2, 3)
+                    }
+                },
+                {
+                    extend: 'csv',
+                    text: 'CSV',
+                    filename: 'payment report',
+                    extension: '.csv',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3] // Specify the correct number of columns (0, 1, 2, 3)
+                    }
+                },
+                {
+                    extend: 'excel',
+                    text: 'Excel',
+                    filename: 'payment report',
+                    extension: '.xlsx',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3] // Specify the correct number of columns (0, 1, 2, 3)
+                    }
+                },
+                {
+                    extend: 'pdf',
+                    text: 'PDF',
+                    filename: 'payment report',
+                    extension: '.pdf',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3] // Specify the correct number of columns (0, 1, 2, 3)
+                    }
+                },
+                'print'
+            ],
+            initComplete: function () {
+                console.log("DataTables initialized!");
+            }
+        });
+    });
+</script>
+{% endblock custom_js %}

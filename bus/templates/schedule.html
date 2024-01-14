@@ -1,0 +1,1137 @@
+{% extends 'base.html' %}
+ 
+{% load static %}
+
+{% block content %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/brands.min.css" integrity="sha512-9YHSK59/rjvhtDcY/b+4rdnl0V4LPDWdkKceBl8ZLF5TB6745ml1AfluEU6dFWqwDw9lPvnauxFgpKvJqp7jiQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/fontawesome.min.css" integrity="sha512-SgaqKKxJDQ/tAUAAXzvxZz33rmn7leYDYfBP+YoMRSENhf3zJyx3SBASt/OfeQwBHA1nxMis7mM3EV/oYT6Fdw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link rel="stylesheet" href={% static "css/schedule.css" %}>
+
+    <!-- start banner Area -->
+    <section class="relative about-banner">
+        <div class="overlay overlay-bg"></div>
+      
+        <div class="container">			
+            <div class="row d-flex align-items-center justify-content-center">
+            
+                <div class="about-content col-lg-12">
+                    <br><br>  <br><br>
+                    <h1 class="text-white">Bus Choice</h1>	
+                    <p class="text-white link-nav">{{start_point}} </a>  <span class="lnr lnr-arrow-right"></span>  {{end_point}}</a></p>
+                    <h4 class="text-white link-nav">{{journey_date}}</h4>
+                </div>	
+            </div>
+        </div>
+    </section>
+    <br>
+    <div>
+        {% if bus_data %}
+            <div class="container-xl px-4 mt-4">
+                <div class="container-fluid">
+                    <div class="row justify-content-center">
+                        <div class="col-md-12 px-0">
+                            <div class="card card-primary mb-4">
+                                <div class="card-header d-flex justify-content-center">
+                                    <h3 class="card-title">Bus Schedule</h3>
+                                </div>
+
+                                <div class="card-body mt-4">
+                                    {% for bus in bus_data %}
+                                        <div class="inner-content py-3 mb-3">
+                                            <div class="row">
+                                                <div class="coach-column coach-details py-auto">
+                                                    <div class="row">
+                                                        <div class="col-line col-12 px-4">
+                                                            <!--<p class="mb-0"><span class="bus-name-text">Coach Name</span></p>-->
+                                                            <p class="mb-0 ps-2"><span class="ticket-name">Coach: {{ bus.coach_number }}</span></p>
+                                                            <p class="mb-0 ps-2"><span class="bus-start-text">Start Point: </span><span class="bus-route-text">{{ bus.start_point }}</span></p>
+                                                            <p class="mb-0 ps-2"><span class="bus-start-text">End Point: </span><span class="bus-route-text">{{ bus.end_point }}</span></p>
+                                                            <p class="mb-0 ps-2 journey-time"><span class="bus-route-text">11:00 AM &rarr; 6:00 PM</span></p>
+                                                        </div>
+                                                        <div class="col-12 px-4">
+                                                            <p><span class="ticket-text">{{booking.booking.id}}</span></p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="departure-column coach-details py-auto">
+                                                    <div class="row">
+                                                        <div class="col-12 px-4">
+                                                            <p class="mb-0"><span class="ticket-name">Departure Time</span></p>
+                                                        </div>
+                                                        <div class="col-12 px-4">
+                                                            <p><span class="ticket-text">11:30 AM</span></p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!--<div class="col-3">
+                                                    <div class="row">
+                                                        <div class="col-12 px-4">
+                                                            <p class="mb-0"><span class="ticket-name">Booking Date</span></p>
+                                                        </div>
+                                                        <div class="col-12 px-4">
+                                                            <p><span class="ticket-name">Aug-24-2023</span></p>
+                                                        </div>
+                                                    </div>
+                                                </div>-->
+
+                                                <div class="arrival-column coach-details py-auto">
+                                                    <div class="row">
+                                                        <div class="col-12 px-4">
+                                                            <p class="mb-0"><span class="ticket-name">Arrival Time</span></p>
+                                                        </div>
+                                                        <div class="col-12 px-4">
+                                                            <p><span class="ticket-text">6:00 PM</span></p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="seat-column coach-details py-auto">
+                                                    <div class="row">
+                                                        <div class="col-12 px-4">
+                                                            <p class="mb-0"><span class="ticket-name">Seats Available</span></p>
+                                                        </div>
+                                                        <div class="col-12 px-4">
+                                                            <p><span class="ticket-text">{{ bus.remaining_seats }}</span></p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="price-column py-auto">
+                                                    <div class="row">
+                                                        <div class="large-price-column col-12 px-4">
+                                                            <p class="mb-0"><span class="ticket-name">Price</span></p>
+                                                        </div>
+                                                        <div class="large-price-column col-12 px-4 d-flex justify-content-between">
+                                                            
+                                                            <span class="price-text">&#2547; {{ bus.price }}</span>
+                                                            <a href="#" class="btn btn-sm view-seats-button" data-bus-number="{{ bus.bus_number }}" data-coach-number="{{ bus.coach_number }}" data-bus-price="{{ bus.price }}" data-journey-date="{{ journey_date }}" data-route="{{ bus.routes.id }}" data-start-point="{{bus.start_point}}" data-end-point="{{bus.end_point}}">
+                                                                View Seats</a>
+                                                        </div>
+
+                                                        <div class="row small-price-column px-4 justify-content-end">
+                                                            <p class="mb-0 w-auto"><span class="ticket-name">{{ bus.remaining_seats }} Seats available</span></p>
+                                                        </div>
+
+                                                        <div class="small-price-column px-4 row justify-content-between">
+                                                            <div class="row mb-2 justify-content-end pe-0">
+                                                                <span class="price-text w-auto pe-0">{{ bus.price }}</span>
+                                                            </div>
+                                                            <div class="row justify-content-end pe-0">
+                                                                <a href="#" class="btn btn-sm view-seats-button" data-bus-number="{{ bus.bus_number }}" data-coach-number="{{ bus.coach_number }}" data-bus-price="{{ bus.price }}" data-journey-date="{{ journey_date }}" data-route="{{ bus.routes.id }}" data-start-point="{{bus.start_point}}" data-end-point="{{bus.end_point}}">
+                                                                    View Seats</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!--<div class="col-lg-2 col-md-3 col-12 mb-md-0 mb-3">
+                                                    <div class="pe-md-4 pt-2">
+                                                        
+                                                    </div>
+                                                </div>-->
+
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        
+            <!--Previous Style-->
+            <!--<div class="table-container">
+                <table id="trips" class="tablesorter tablesorter-default" style=" margin: auto; max-width: 80%;">
+                    <thead style="border-bottom: 5px solid #F7F7F7; color: #828282;">
+                        <tr>
+                            <th class="tbl_th1 th_text_color header">
+                                Operator <span style="font-weight: normal;">(Bus Type)</span>
+                            </th>
+                            <th class="tbl_th3 header" style="color: #828282;">
+                                Dep. Time
+                            </th>
+                            <th class="tbl_th4 header" style="color: #828282;">
+                                Arr. Time
+                            </th>
+                            <th class="tbl_th5 header" style="color: #828282;">
+                                Seats Available
+                            </th>
+                            <th class="tbl_th6 header" style="color: #828282;">
+                                Fare
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for bus in  bus_data %}
+                        <tr id="trip10230489" class="trip-row" data-trip="">
+                            <td class="tbl_col1 border-fix-seat" data-title="Operator">
+                                <ul>
+                                    <li class="op_name shohoz_green"></li>
+                                    <li class="bus_type" style="margin-bottom: 5px;">
+                                        <br>
+                                        <span class="trip_num" style="display:inline-block;padding: 0px 5px;border: 1px solid #a5a3a3; color: #868282;border-radius: 4px;background:#efefef;margin-left: 5px;">Coach: {{bus.coach_number}}</span>
+                                    </li>
+                        
+                                    <li class="bus_type" style="margin-bottom: 5px;">{{bus.coach_model_name}},{{bus.coach_type}}</li>
+                                    <li class="bus_type"><b style="color:#757A7E;">Route:</b> {{bus.routes}}</li>
+                                    <li><b style="color:#757A7E;">Starting Point:</b> {{bus.start_point}}</li>
+                                    <li><b style="color:#757A7E;">Ending Point:</b> {{bus.end_point}}</li>
+                                </ul>
+                            </td>
+                            <td class="tbl_col3 border-fix-seat" data-title="Dep. Time">{{bus.departure_time}}</td>
+                            <td class="tbl_col4 border-fix-seat" data-title="Arr. Time">{{ bus.arrival_time }}</td>
+                            <td class="tbl_col5 border-fix-seat" data-title="Seats Available">{{ bus.remaining_seats }}</td>
+                            <td class="tbl_col6 border-fix-seat" data-title="Fare">
+                            <h3 class="search_price__lHdmm search_purple__ypyVN">{{bus.price}} Tk</h3>
+                            </td>
+                            <td>
+                                <ul>
+                                    <ul>
+                                    <li class="seats-button">
+                                    <a href="#" class="btn btn-default btn-sm btnSubmit seatsLayout bg-success view-seats-button" data-bus-number="{{ bus.bus_number }}" data-coach-number="{{ bus.coach_number }}" data-bus-price="{{ bus.price }}" data-journey-date="{{ journey_date }}" data-route="{{ bus.routes.id }}" data-start-point="{{bus.start_point}}" data-end-point="{{bus.end_point}}">
+                                        View Seats
+                                    
+                                        <div class="view-seats-spinner"></div>
+                                        </a>
+                                        </li>
+                                    </ul>
+                                </ul>
+                            </td>
+                        </tr>
+                        <td id="tbl_offer" colspan="6" style="border-bottom: 15px solid #f7f7f7;">
+                            <span class="tr-bottom-policies shohoz_green"><a href="#">Cancellation Policy</a><span></span></span>
+                            <span class="tr-bottom-policies" style="padding: 0 10px;"><a href="#" class="boarding-link" data-boarding="{{bus.boarding_point}}">Boarding Point</a><span></span></span>
+                    
+                            <span class="tr-bottom-policies" style="padding: 0 10px;"><a href="#" class="dropping-link" data-dropping="{{bus.dropping_point}}">Dropping Point</a><span></span></span>
+                            <span class="tr-bottom-policies" style="padding: 0 10px;"><a href="#" class="facilities-link" data-facilities="{{bus.facilities}}">Facilities</a><span></span></span>
+                        </td>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>-->
+            <!--Previous Style ends-->
+        {% else %}
+            <div class="alert alert-danger alert-dismissible fade show" style="margin-left: 20px; margin-right: 20px;">
+              Sorry, No Buses Available Now.
+            </div>
+        {% endif %}
+        </div>
+
+
+    <div class="popup" id="myPopup" >
+        <div class="popup-content col-lg-10 col-md-11 col-12">
+            
+      
+          {% comment %} <section class="content">
+              <div class="container">
+                  <div class="row">
+                      <div class="col-12">
+                          <!-- Search form -->
+                          <h4>Bus Number: {{ bus.bus_number }}</h4>
+
+                      </div>
+                  </div>
+                  <div class="row">
+                      <div class="bus-column col-lg-3 col-md-5 col-12">
+                          <h3>Seat Plan</h3>
+                          <ul>
+                              {% for seat_type in seat_types %}
+                                {% if seat_type.type == '2:2' %}
+                                    <!-- Render 2:2 seat type -->
+                                    {% for row_num in seat_type.rows %}
+                                        <div class="row w-100">
+                                            <div class="col-6 d-flex">
+                                                <div class="col-4">
+                                                    <div class="seat">
+                                                        <i
+                                                            id="{{ row_num }}1"
+                                                            class="fa-solid fa-couch seat-select fa-lg seat-color"
+                                                        ></i>
+                                                        <div class="d-flex justify-content-center seat-label-div">
+                                                            <span class="seat-label">{{ row_num }}1</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-4">
+                                                    <div class="seat">
+                                                        <i
+                                                            id="{{ row_num }}2"
+                                                            class="fa-solid fa-couch seat-select fa-lg seat-color"
+                                                        ></i>
+                                                        <div class="d-flex justify-content-center seat-label-div">
+                                                            <span class="seat-label">{{ row_num }}2</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-2"></div>
+                                                <div class="col-4">
+                                                    <div class="seat">
+                                                        <i
+                                                            id="{{ row_num }}3"
+                                                            class="fa-solid fa-couch seat-select fa-lg seat-color"
+                                                        ></i>
+                                                        <div class="d-flex justify-content-center seat-label-div">
+                                                            <span class="seat-label">{{ row_num }}3</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-4">
+                                                    <div class="seat">
+                                                        <i
+                                                            id="{{ row_num }}4"
+                                                            class="fa-solid fa-couch seat-select fa-lg seat-color"
+                                                        ></i>
+                                                        <div class="d-flex justify-content-center seat-label-div">
+                                                            <span class="seat-label">{{ row_num }}4</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                {% elif seat_type.type == '1:2' %}
+                                <!-- Render 1:2 seat type -->
+                                {% for row_num in seat_type.rows %}
+                                <div class="row w-100">
+                                  <div class="col-6 d-flex">
+                                    <div class="col-4">
+                                      <div class="seat">
+                                        <i
+                                          id="{{ row_num }}1"
+                                          class="fa-solid fa-couch seat-select fa-lg seat-color"
+                                        ></i>
+                                        <div class="d-flex justify-content-center seat-label-div">
+                                          <span class="seat-label">{{ row_num }}1</span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="col-2"></div>
+                                    <div class="col-2"></div>
+                                    <div class="col-2"></div>
+                                    <div class="col-4">
+                                      <div class="seat">
+                                        <i
+                                          id="{{ row_num }}2"
+                                          class="fa-solid fa-couch seat-select fa-lg seat-color"
+                                        ></i>
+                                        <div class="d-flex justify-content-center seat-label-div">
+                                          <span class="seat-label">{{ row_num }}2</span>
+                                        </div>
+                                      </div>
+                                    </div>
+                  
+                                    <div class="col-4">
+                                      <div class="seat">
+                                        <i
+                                          id="{{ row_num }}3"
+                                          class="fa-solid fa-couch seat-select fa-lg seat-color"
+                                        ></i>
+                                        <div class="d-flex justify-content-center seat-label-div">
+                                          <span class="seat-label">{{ row_num }}3</span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                {% endfor %}
+                                {% elif seat_type.type == '1:1' %}
+                                <!-- Render 1:1 seat type -->
+                                {% for row_num in seat_type.rows %}
+                  
+                                <div class="row w-100">
+                                  <div class="col-0.9"></div>
+                                  <div class="col-5">
+                                    <!-- Right-side seat -->
+                                    <div class="seat">
+                                      <i
+                                        id="{{ row_num }}1"
+                                        class="fa-solid fa-couch seat-select fa-lg seat-color"
+                                      ></i>
+                                      <div class="d-flex justify-content-center seat-label-div">
+                                        <span class="seat-label">{{ row_num }}1</span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="col-1"></div>
+                                  <div class="col-4">
+                                    <!-- Left-side seat -->
+                                    <div class="seat">
+                                      <i
+                                        id="{{ row_num }}2"
+                                        class="fa-solid fa-couch seat-select fa-lg seat-color"
+                                      ></i>
+                                      <div class="d-flex justify-content-center seat-label-div">
+                                        <span class="seat-label">{{ row_num }}2</span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                {% endfor %}
+                                {% elif seat_type.type == 'Mixed' %}
+                                <!-- Render Mixed seat type -->
+                                {% for row_num in seat_type.rows %}
+                                <div class="row w-100">
+                                  <div class="col-2">
+                                    <div class="row-name">
+                                      <p><span>{{ row_num }}</span></p>
+                                    </div>
+                                  </div>
+                                  <div class="col-6 d-flex">
+                                    <div class="col-4">
+                                      <div class="seat">
+                                        <i
+                                          id="{{ row_num }}1"
+                                          class="fa-solid fa-couch seat-select fa-lg seat-color"
+                                        ></i>
+                                        <div class="d-flex justify-content-center seat-label-div">
+                                          <span class="seat-label">{{ row_num }}1</span>
+                                        </div>
+                                      </div>
+                                    </div>
+                  
+                                    <div class="col-4">
+                                      <div class="seat">
+                                        <i
+                                          id="{{ row_num }}2"
+                                          class="fa-solid fa-couch seat-select fa-lg seat-color"
+                                        ></i>
+                                        <div class="d-flex justify-content-center seat-label-div">
+                                          <span class="seat-label">{{ row_num }}2</span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                {% endfor %}
+                                {% endif %}
+                              {% endfor %}
+                          </ul>
+                      </div>
+                      <div class="seat-view col-lg-5 col-md-7 col-12">
+                          <div class="row">
+                              <div class="tab-div col-4 d-flex">
+                                  <span
+                                    ><i
+                                      class="fa-solid fa-couch fa-sm"
+                                      style="color: rgb(172, 164, 164)"
+                                    ></i
+                                  ></span>
+                                  <p class="ms-3"><span>Available Seats</span></p>
+                              </div>
+                              <div class="tab-div col-4 d-flex">
+                                  <span
+                                    ><i
+                                      class="fa-solid fa-couch fa-sm"
+                                      style="color: rgb(230, 94, 94)"
+                                    ></i
+                                  ></span>
+                                  <p class="ms-3"><span>Booked Seats</span></p>
+                              </div>
+                              <div class="tab-div col-4 d-flex">
+                                  <span
+                                    ><i
+                                        class="fa-solid fa-couch fa-sm"
+                                        style="color: rgb(22, 206, 53)"
+                                    ></i
+                                  ></span>
+                                  <p class="ms-3"><span>Selected Seats</span></p>
+                              </div>
+                          </div>
+                          <div class="row">
+                              <div class="table-responsive">
+                                  <table id="seat-view-table" class="table">
+                                      <thead>
+                                          <tr>
+                                              <th class="col-4" scope="col">Seat</th>
+                                              <th class="col-4 ps-2" scope="col">Fare (BDT)</th>
+                                              <th class="col-4 ps-4" scope="col">Class</th>
+                                          </tr>
+                                      </thead>
+                                      <tbody id="seat-view-table" class="w-100">
+                                          <!-- Seat view table content goes here -->
+                                      </tbody>
+                                  </table>
+                              </div>
+                          </div>
+                          <div class="row mt-4">
+                              <div class="col-6">
+                                  <p><span>Total:</span></p>
+                              </div>
+                              <div class="col-6 d-flex justify-content-end">
+                                  <p>Tk <span id="total-fare">650.00</span></p>
+                              </div>
+                          </div>
+                          <div class="row mt-3">
+                              <select id="boardingpoint" name="boardingpoint" class="form-control">
+                                  <option value="0">-- Boarding points --</option>
+                                  <option value="137108507">Abdullahpur Bus Point (06:30 AM)</option>
+                                  <option value="137108531">.Norda Bus Point. (07:00 AM)</option>
+                                  <option value="137108525">Fokirapool Bus Point (07:15 AM)</option>
+                                  <option value="137108526">Sayedabad Bus Point (07:30 AM)</option>
+                                  <option value="137108528">Arambag Bus Point (07:30 AM)</option>
+                              </select>
+                          </div>
+                          <div class="row mt-4">
+                              <button
+                                id="booking-process"
+                                class="btn btn-primary continue-btn col-6"
+                              >
+                                Continue
+                              </button>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </section> {% endcomment %}
+        </div>
+    </div> 
+
+    <section class="popular-destination-area section-gap">
+        <div class="container">
+            <div class="row d-flex justify-content-center">
+                <div class="menu-content pb-70 col-lg-12">
+                    <div class="title text-center">
+                        <h1 class="mb-10">Popular Destinations</h1>
+                        <p>
+                          We all live in an age that belongs to the young at heart. Life
+                          that is becoming extremely fast, day.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-lg-4">
+                    <div class="card single-destination relative">
+                        <img class="card-img-top" src="{% static 'img/d1.jpg' %}" alt="" />
+                        <div class="card-body">
+                            <h4 class="card-title">Dhaka</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card single-destination relative">
+                        <img class="card-img-top" src="{% static 'img/d4.jpg' %}" alt="" />
+                        <div class="card-body">
+                            <h4 class="card-title">Chattogram</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card single-destination relative">
+                        <img class="card-img-top" src="{% static 'img/d5.jpg' %}" alt="" />
+                        <div class="card-body">
+                            <h4 class="card-title">Khulna</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-lg-4">
+                    <div class="card single-destination relative">
+                        <img class="card-img-top" src="{% static 'img/d7.jpg' %}" alt="" />
+                        <div class="card-body">
+                            <h4 class="card-title">Mymensingh</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card single-destination relative">
+                        <img class="card-img-top" src="{% static 'img/d9.jpg' %}" alt="" />
+                        <div class="card-body">
+                            <h4 class="card-title">Sylhet</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card single-destination relative">
+                        <img class="card-img-top" src="{% static 'img/d11.jpg' %}" alt="" />
+                        <div class="card-body">
+                            <h4 class="card-title">Cox's Bazar</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+  
+    <!-- End popular-destination Area -->
+
+    <!-- Start price Area -->
+    {% comment %} <section class="price-area section-gap">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="title text-center" style="margin-top: -30px;">
+                        <h1 class="mb-10 text-info">OUR COUNTERS</h1>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="row distict_data">
+                {% for i in district_chunks|slice:":6" %}
+                    {% for district in i %}
+                        <div class="col-md-2">
+                            <div class="single-price">
+                                <ul class="price-list text-black">
+                                    <li class="d-flex justify-content-between align-items-center">
+                                        <div class="district-card">
+                                            <a href="#" data-toggle="modal" data-target="#{{ district.pk }}" class="district-name">{{ district.name }}</a>
+                                        </div>
+                                        <div class="modal fade" id="{{ district.pk }}" tabindex="-1" role="dialog" aria-labelledby="{{ district.pk }}Label" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="{{ district.pk }}Label">{{ district.name }}</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        {% for counter in district.counter_set.all %}
+                                                            <p>Counter Name: {{ counter.name }}</p>
+                                                            <p>Manager Name: {{ counter.manager }}</p>
+                                                            <p>Address: {{ counter.address }}</p>
+                                                            <p>Phone Numbers: {{ counter.phone_numbers }}</p>
+                                                            <hr>
+                                                        {% empty %}
+                                                            <p>No counters found.</p>
+                                                        {% endfor %}
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    <!-- End price Area -->
+
+    <!-- Start other-issue Area -->
+    <section class="operators_bus-operators__oF55A" >
+        <div class="container">
+        <div class="row d-flex justify-content-center">
+            <div class="menu-content pb-70 col-lg-12">
+            <div class="title text-center text-success">
+                <h1 class="mb-10 text-info" >POPULAR BUS ROUTES</h1>
+            <br>
+            <div class="row">
+            <div class="col-lg-4 text-black"><ul class="operators_bus-list__Dqfo4 ">
+                <li class="text-black"><a href=""  id="dhaka-bus-station-link" class="text-black">
+                <div id="dhaka-bus-station-popup" class="popup">
+                <h2>Dhaka Bus Station</h2>
+                <p>Address: Abdullahpur Bus Stop, Abdullahpur, Dhaka</p>
+                <p>Contact: +880 2-55040862</p>
+                <p>Services: Bus tickets, snacks, restrooms</p>
+                <button id="close-btn">Close</button>
+                </div>
+                DHAKA-COX'S BAZAR</a>
+            </li>
+
+            <li class="text-black" ><a href="/popular-routes/dhaka-to-khagrachari">DHAKA-KHAGRACHARI</a></li><li><a href="/popular-routes/dhaka-to-bandarban"  class="text-black">DHAKA-BANDARBAN</a></li><li><a href="/popular-routes/dhaka-to-teknaf"  class="text-black">DHAKA-TEKNAF</a></li><li><a href="/popular-routes/dhaka-to-rangamati"  class="text-black">DHAKA-RANGAMATI</a></li><li><a href="/popular-routes/dhaka-to-chapainawabganj" class="text-black">DHAKA-CHAPAINAWABGANJ</a></li><li><a href="/popular-routes/dhaka-to-rajshahi"  class="text-black">DHAKA-RAJSHAHI</a></li><li><a href="/popular-routes/dhaka-to-rangpur" class="text-black">DHAKA-RANGPUR</a></li><li><a href="/popular-routes/dhaka-to-barisal" class="text-black">DHAKA-BARISAL</a></li><li><a href="/popular-routes/dhaka-to-barguna"  class="text-black">DHAKA-BARGUNA</a></li><li><a href="/popular-routes/dhaka-to-kuakata"class="text-black">DHAKA-KUAKATA</a></li><li><a href="/popular-routes/dhaka-to-satkhira"class="text-black">DHAKA-SATKHIRA</a></li></ul></div><div class="col-lg-4"><ul class="operators_bus-list__Dqfo4 operators_routes__Xn3zT"><li><a href="/popular-routes/dhaka-to-khulna"class="text-black">DHAKA-KHULNA</a></li><li><a href="/popular-routes/dhaka-to-patuakhali"class="text-black">DHAKA-PATUAKHALI</a></li><li><a href="/popular-routes/dhaka-to-thakugaon" class="text-black">DHAKA-THAKURGAON</a></li><li><a href="/popular-routes/dhaka-to-chittagong"class="text-black">DHAKA-CHITTAGONG</a></li><li><a href="/popular-routes/dhaka-to-shyamnagar"class="text-black">DHAKA-SHYAMNAGAR</a></li><li><a href="/popular-routes/dhaka-to-kansat"class="text-black">DHAKA-KANSAT</a></li><li><a href="/popular-routes/dhaka-to-kaptai"class="text-black">DHAKA-KAPTAI</a></li><li><a href="/popular-routes/dhaka-to-benapole"class="text-black">DHAKA-BENAPOLE</a></li><li><a href="/popular-routes/chapainawabganj-to-dhaka"class="text-black">CHAPAINAWABGANJ-DHAKA</a></li><li><a href="/popular-routes/dhaka-to-pathorghata"class="text-black">DHAKA-PATHORGHATA</a></li><li><a href="/popular-routes/dhaka-to-kolkata"class="text-black">DHAKA-KOLKATA</a></li><li><a href="/popular-routes/dhaka-to-panchagarh"class="text-black">DHAKA-PANCHAGARH</a></li></ul></div><div class="col-4"><ul class="operators_bus-list__Dqfo4 operators_routes__Xn3zT"><li><a href="/popular-routes/dhaka-to-vandaria">DHAKA-VANDARIA</a></li><li><a href="/popular-routes/dhaka-to-khepupara">DHAKA-KHEPUPARA</a></li><li><a href="/popular-routes/dhaka-to-paikgasa">DHAKA-PAIKGASA</a></li><li><a href="/popular-routes/dhaka-to-burimari">DHAKA-BURIMARI</a></li></ul>
+            
+            
+            </div></div>
+            </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-3 col-md-6">
+            
+        </div>
+        </div>
+    </section> {% endcomment %}
+    <!-- End other-issue Area -->
+
+    <!-- Start testimonial Area -->
+    <section class="testimonial-area section-gap">
+        <div class="container">
+            <div class="row d-flex justify-content-center">
+                <div class="menu-content pb-70 col-lg-8">
+                    <div class="title text-center">
+                        <h1 class="mb-10 text-info">OUR FEATURED STORIES
+                        </h1>
+                    
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="active-testimonial">
+                    <div class="single-testimonial item d-flex flex-row">
+                        <div class="thumb">
+                            {% comment %} <img class="img-fluid" src={% static "img/elements/user1.png" %} alt="" /> {% endcomment %}
+                        </div>
+                        <div class="desc">
+                            <p>Great services. I love the way they operate. Easy and simple.</p>
+                            <h4>Sakir Ahmed Niloy</h4>
+                            <p>Best Refund Policy</p>
+                            <div class="star">
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="single-testimonial item d-flex flex-row">
+                        <div class="thumb">
+                            <img class="img-fluid" src={% static "img/elements/user2.png" %} alt="" />
+                        </div>
+                        <div class="desc">
+                            <p>Traveled by both bus and air several times. service is nice as expected. got a refund within 20 m...</p>
+                            <h4>Mou Mohua</h4>
+            
+                            <p>Best Refund Policy </p>
+                            <div class="star">
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star"></span>
+                                <span class="fa fa-star"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="single-testimonial item d-flex flex-row">
+                        <div class="thumb">
+                            <img class="img-fluid" src="img/elements/user1.png" alt="" />
+                        </div>
+                        <div class="desc">
+                            <p>
+                            Do you want to be even more successful? Learn to love learning
+                            and growth. The more effort you put into improving your
+                            skills, the bigger the payoff you.
+                            </p>
+                            <h4>Harriet Maxwell</h4>
+                            <div class="star">
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="single-testimonial item d-flex flex-row">
+                    <div class="thumb">
+                        {% comment %} <img class="img-fluid" src="img/elements/user2.png" alt="" /> {% endcomment %}
+                    </div>
+                    <div class="desc">
+                        <p>
+                        A purpose is the eternal condition for success. Every former
+                        smoker can tell you just how hard it is to stop smoking
+                        cigarettes. However.
+                        </p>
+                        <h4>Carolyn Craig</h4>
+                        <div class="star">
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star"></span>
+                        <span class="fa fa-star"></span>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="single-testimonial item d-flex flex-row">
+                    <div class="thumb">
+                        <img class="img-fluid" src="img/elements/user1.png" alt="" />
+                    </div>
+                    <div class="desc">
+                        <p>
+                        Do you want to be even more successful? Learn to love learning
+                        and growth. The more effort you put into improving your
+                        skills, the bigger the payoff you.
+                        </p>
+                        <h4>Harriet Maxwell</h4>
+                        <div class="star">
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star"></span>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="single-testimonial item d-flex flex-row">
+                    <div class="thumb">
+                        <img class="img-fluid" src="img/elements/user2.png" alt="" />
+                    </div>
+                    <div class="desc">
+                        <p>
+                        A purpose is the eternal condition for success. Every former
+                        smoker can tell you just how hard it is to stop smoking
+                        cigarettes. However.
+                        </p>
+                        <h4>Carolyn Craig</h4>
+                        <div class="star">
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star"></span>
+                        <span class="fa fa-star"></span>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End testimonial Area -->
+
+    <!-- Start home-about Area -->
+    
+    <!-- End home-about Area -->
+
+    <!-- Start blog Area -->
+    <section class="paymentMethods_clients__b4bzo">
+        <div class="container d-lg-block d-none">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h2 class="paymentMethods_section-title__kgcND">We Accept</h2>
+                    <br>
+                </div>
+        
+                <div class="col-lg-10 mx-auto">
+                    <div class="row g-3 justify-content-center mb-3">
+                        <div class="col-lg-4 col-sm-6 text-center">
+                            <div class="card">
+                                <div class="ant-image">
+                                    <img alt="bkash" class="ant-image-img" style="max-width:120%" src="{% static 'img/bk.jpg' %}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-6 text-center">
+                            <div class="card">
+                                <div class="ant-image">
+                                    <img alt="nagad" class="ant-image-img" style="max-width:80%" src="{% static 'img/ng1.jpg' %}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-6 text-center">
+                            <div class="card">
+                                <div class="ant-image">
+                                    <img alt="mx" class="ant-image-img" style="max-width:100%" src="{% static 'img/aex.jpg' %}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row g-3 justify-content-center mb-3">
+                        <div class="col-lg-4 col-sm-6 text-center">
+                        <div class="card">
+                            <div class="ant-image">
+                                <img alt="mastercard pt-5" class="ant-image-img" style="max-width:100%" src="{% static 'img/mc1.jpg' %}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-sm-6 text-center">
+                        <div class="card">
+                            <div class="ant-image">
+                                <img alt="visa" class="ant-image-img" style="max-width: 600%; max-height: 500px;" src="{% static 'img/vis2.png' %}">
+            
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-sm-6 text-center">
+                        <div class="card">
+                            <div class="ant-image">
+                                <img alt="dbblnex" class="ant-image-img" style="max-width:84%" src="{% static 'img/dbdl.jpg' %}">
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+ 
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var viewSeatsButtons = document.querySelectorAll(".view-seats-button");
+            var busPrice;
+            var selectedSeats = [];
+            var bookedSeats = Array.from('{{ booked_seats|escapejs }}');
+            var maxSeats = 10;
+          
+            viewSeatsButtons.forEach(function (button) {
+                button.addEventListener("click", function (event) {
+                    event.preventDefault();
+            
+                    var busNumber = this.getAttribute("data-bus-number");
+                    var coachNumber = this.getAttribute("data-coach-number");
+                    var journeyDate = this.getAttribute("data-journey-date");
+                    var routeId = parseInt(this.getAttribute("data-route"));
+                    var startPoint = this.getAttribute("data-start-point");
+                    var endPoint = this.getAttribute("data-end-point");
+
+                    console.log('routeId: ', routeId);
+                    console.log('journey date: ' + JSON.stringify(journeyDate));
+                    busPrice = parseFloat(this.getAttribute("data-bus-price"));
+            
+                    var popupUrl = "/popupseat/" + busNumber + "/" + coachNumber + "/" + journeyDate + "/" + routeId + "/" + startPoint + "/" + endPoint + "/";
+        
+                    fetch(popupUrl)
+                    .then(function (response) {
+                        return response.text();
+                    })
+                    .then(function (content) {
+                        var popupContent = document.querySelector(".popup-content");
+                        
+                        popupContent.innerHTML = content;
+            
+                        var popup = document.getElementById("myPopup");
+                        popup.style.display = "block";
+            
+                        var seats = document.getElementsByClassName("seat-select");
+
+                        // show the seat number when hovered
+                        //var rowLabels = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T'];
+                        //var seatRows = document.querySelectorAll('.seat-row');
+                        
+                        //var seatNumbers = [];
+
+                        // get the divs with class name `seat-number` for each of the `seatRows``
+                        /*for (var i = 0; i < seatRows.length; i++) {
+                            var seatRow = seatRows[i];
+                            var seatNumbersInRow = seatRow.querySelectorAll('.seat-number');
+                            seatNumbers.push(seatNumbersInRow);
+                        }
+
+                        // for each of the `seat-number` get the icon tag and span tag inside it and assign an id to the icon tag
+                        for (var i = 0; i < seatNumbers.length; i++) {
+                            var rowLabelseat = rowLabels[i]
+                            var seatNumbersInRow = seatNumbers[i];
+                            for (var j = 0; j < seatNumbersInRow.length; j++) {
+                                var seatNumber = seatNumbersInRow[j];
+                                var textSpan;
+                                
+                                if (j < 2) {
+                                    textSpan = rowLabelseat + (j + 1);;  // Leave the text empty to skip numbering
+                                } else {
+                                    textSpan = rowLabelseat + j;  // Add 1 to j to start numbering from 1
+                                }
+
+                                //seatNumber.setAttribute('id', id);
+                                var seatLabel = seatNumber.querySelector('span');
+                                var iconSeatNumber = seatNumber.querySelector('.seat-select');
+
+                                // Assign the id(textSpan) to the iconSeatNumber and the text of teh span tag
+                                if(iconSeatNumber){
+                                iconSeatNumber.setAttribute('id', textSpan);
+                                seatLabel.textContent  = textSpan
+                                }
+                                
+                            }
+                        }*/
+            
+                        
+                        for (var i = 0; i < seats.length; i++) {
+                            seats[i].addEventListener("mouseover", function () {
+                            if (!this.classList.contains("booked-seat") && !this.classList.contains("selected")) {
+                                this.nextElementSibling.style.transform = "scale(1)";
+                                this.style.color = "rgb(22, 206, 53)";
+                            }
+                            });
+            
+                            seats[i].addEventListener("mouseout", function () {
+                            if (!this.classList.contains("booked-seat")) {
+                                if (this.classList.contains("selected")) {
+                                this.nextElementSibling.style.transform = "scale(1)";
+                                this.style.color = "rgb(22, 206, 53)";
+                                } else {
+                                this.nextElementSibling.style.transform = "scale(0)";
+                                this.style.color = "";
+                                }
+                            }
+                            });
+            
+                            seats[i].addEventListener("click", toggleSeat);
+                        }
+            
+                        function toggleSeat() {
+                            if (this.classList.contains("booked-seat")) {
+                                return;
+                            }
+            
+                            if (this.classList.contains("selected")) {
+                                this.classList.remove("selected");
+                
+                                var rowId = document.getElementById("seat-" + this.id);
+                                if (rowId) {
+                                    rowId.remove();
+                                }
+                
+                                var index = selectedSeats.indexOf(this.id);
+                                if (index !== -1) {
+                                selectedSeats.splice(index, 1);
+                                }
+                            }
+                            else {
+                                if (selectedSeats.length < maxSeats) {
+                                this.classList.add("selected");
+                
+                                var tableBody = document.getElementById("seat-view-table");
+                                var seatNumber = this.id;
+                
+                                var newRow = document.createElement("tr");
+                                newRow.id = "seat-" + this.id;
+                
+                                var cell1 = document.createElement("td");
+                                cell1.classList.add("col-4");
+                                cell1.textContent = seatNumber;
+                                newRow.appendChild(cell1);
+                
+                                var cell2 = document.createElement("td");
+                                cell2.classList.add("col-4", "ps-2");
+                                cell2.textContent = busPrice;
+                                newRow.appendChild(cell2);
+                
+                                var cell3 = document.createElement("td");
+                                cell3.classList.add("col-4", "ps-4");
+                                cell3.textContent = "First Class";
+                                newRow.appendChild(cell3);
+                
+                                var cell4 = document.createElement("td");
+                                cell4.classList.add("col-md-1");
+                                var boldText = document.createElement("b");
+                                boldText.textContent = seatNumber;
+                                cell4.appendChild(boldText);
+                                newRow.appendChild(cell4);
+                
+                                tableBody.appendChild(newRow);
+                                console.log('Id: ', this.id)
+                
+                                selectedSeats.push(this.id);
+                                }
+                                else {
+                                    console.log("Maximum seat selection reached.");
+                                }
+                            }
+            
+                            for (var i = 0; i < seats.length; i++) {
+                                if (seats[i].classList.contains("selected")) {
+                                    seats[i].nextElementSibling.style.transform = "scale(1)";
+                                } else if (seats[i].classList.contains("booked-seat")) {
+                                    seats[i].nextElementSibling.style.transform = "scale(1)";
+                                } else {
+                                    seats[i].nextElementSibling.style.transform = "scale(0)";
+                                }
+                            }
+            
+                            var cell2Values = [];
+                            var cell2Elements = tableBody.querySelectorAll("td:nth-child(2)");
+                            var totalAmount = 0;
+            
+                            for (var i = 0; i < cell2Elements.length; i++) {
+                                var cell2Value = parseFloat(cell2Elements[i].textContent);
+                                totalAmount += cell2Value;
+                            }
+            
+                            var totalFare = document.getElementById("total-fare");
+                            totalFare.textContent = totalAmount.toFixed(2);
+                        }
+
+                        // Get the popup and popup content elements
+                        
+                        console.log('popup check: ', popup)
+                        console.log('popup content: ', popupContent)
+
+                        var popUp = $('.popup')
+                        var popupContent = $('.popup-content')
+                        //var popupContent = $('.popup-content');
+                        console.log('popup check: ', popUp)
+                        var closeBtn = $('#close-btn')
+                        console.log('close-btn check: ', closeBtn)
+                        closeBtn.on('click', function () {
+                            popUp.hide();
+                            console.log('Popup closed');
+                        });
+                        
+
+                        // Add a click event listener to the entire document
+                        $(document).on('click', function (event) {
+                            // Check if the clicked element is NOT inside the popup-content
+                            if (!popupContent.has(event.target).length && !popupContent.is(event.target)) {
+                                // Hide the popup
+                                popUp.hide()
+                                console.log('Clicked outside the popup');
+                            }
+                        });
+            
+                        var continueBtn = document.getElementById("booking-process");
+            
+                        function bookingProcess() {
+                            alert("Seat Selection Successful");
+            
+                            var selectedSeatNumber = selectedSeats.join(" ");
+                            var selectedSeatPrice = parseFloat(busPrice) * selectedSeats.length;
+            
+                            var journeyDate = "{{ journey_date }}"; // Replace with the actual journey date value
+                            console.log('journeyDate: ', journeyDate)
+                            var routeId = "{{ route_id }}"; // Replace with the actual route id value
+                            var selectedBoardingPoint = document.getElementById("boardingpoint").value; // Get the selected boarding point
+            
+                            continueBtn.href = continueBtn.href + "?seat=" + selectedSeatNumber + "&price=" + selectedSeatPrice + "&journey_date=" + journeyDate + "&route_id=" + routeId + "&boarding_point=" + selectedBoardingPoint + "&start_point=" + startPoint + "&end_point=" +
+                            endPoint; // Append selected boarding point to the URL
+            
+                            for (var i = 0; i < seats.length; i++) {
+                                if (seats[i].classList.contains("selected")) {
+                                    seats[i].classList.remove("selected");
+                                    seats[i].classList.add("booked-seat");
+                                    seats[i].style.color = "rgb(230, 94, 94)";
+                                    seats[i].style.cursor = "default";
+                                    seats[i].style.pointerEvents = "none";
+                                }
+                            }
+                        }
+                        continueBtn.addEventListener("click", bookingProcess);
+            
+                        for (var i = 0; i < seats.length; i++) {
+                            if (bookedSeats.includes(seats[i].id)) {
+                                seats[i].classList.add("booked-seat");
+                                seats[i].style.color = "rgb(230, 94, 94)";
+                                seats[i].style.cursor = "default";
+                                seats[i].style.pointerEvents = "none";
+                            }
+                        }
+                    })
+                    
+                    .catch(function (error) {
+                        console.log("Error fetching popup content: ", error);
+                    });
+                });
+            });
+        
+        });
+    </script>
+      
+   
+    
+
+        {% comment %} <script>
+          $(document).ready(function() {
+            $('.view-seats-button').click(function(e) {
+              e.preventDefault();
+              var coachNumber = $(this).data('coach-number');
+              // Perform an action to display the seat plan for the coach number
+              
+              // Example: Display an alert with the coach number
+              alert('Showing seat plan for coach number ' + coachNumber);
+            });
+          });
+        </script> {% endcomment %}
+  
+  {% endblock content %}

@@ -1,0 +1,192 @@
+{% extends 'hod_template/base_template.html' %}
+{% load static %}
+{% block page_title %}
+Cancellation Confirmation
+{% endblock page_title %}
+{% block custom_css %}
+<style>
+
+
+/* CSS */
+.button-61 {
+  align-items: center;
+  appearance: none;
+  border-radius: 4px;
+  border-style: none;
+  box-shadow: rgba(0, 0, 0, .2) 0 3px 1px -2px,rgba(0, 0, 0, .14) 0 2px 2px 0,rgba(0, 0, 0, .12) 0 1px 5px 0;
+  box-sizing: border-box;
+  color: #fff;
+  cursor: pointer;
+  display: inline-flex;
+  font-family: Roboto,sans-serif;
+  font-size: .875rem;
+  font-weight: 500;
+  height: 36px;
+  justify-content: center;
+  letter-spacing: .0892857em;
+  line-height: normal;
+  min-width: 64px;
+  outline: none;
+  overflow: visible;
+  padding: 0 16px;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: box-shadow 280ms cubic-bezier(.4, 0, .2, 1);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: middle;
+  will-change: transform,opacity;
+}
+
+.button-61:hover {
+  box-shadow: rgba(0, 0, 0, .2) 0 2px 4px -1px, rgba(0, 0, 0, .14) 0 4px 5px 0, rgba(0, 0, 0, .12) 0 1px 10px 0;
+}
+
+.button-61:disabled {
+  background-color: rgba(0, 0, 0, .12);
+  box-shadow: rgba(0, 0, 0, .2) 0 0 0 0, rgba(0, 0, 0, .14) 0 0 0 0, rgba(0, 0, 0, .12) 0 0 0 0;
+  color: rgba(0, 0, 0, .37);
+  cursor: default;
+  pointer-events: none;
+}
+
+.button-61:not(:disabled) {
+  background-color: #6200ee;
+}
+
+.button-61:focus {
+  box-shadow: rgba(0, 0, 0, .2) 0 2px 4px -1px, rgba(0, 0, 0, .14) 0 4px 5px 0, rgba(0, 0, 0, .12) 0 1px 10px 0;
+}
+
+.button-61:active {
+  box-shadow: rgba(0, 0, 0, .2) 0 5px 5px -3px, rgba(0, 0, 0, .14) 0 8px 10px 1px, rgba(0, 0, 0, .12) 0 3px 14px 2px;
+  background: #A46BF5;
+}
+    
+</style>
+<link rel="stylesheet" href="{% static 'dist/css/manage_user.css' %}">
+{% endblock custom_css %}
+{% block main_content %}
+
+<div class="container-xl px-4 mt-4">
+    <div class="container-fluid">
+      <div class="row justify-content-center">
+        <div class="col-md-12">
+          <div class="card card-primary">
+            <div class="card-header d-flex justify-content-center">
+              <h3 class="card-title py-2">Payment Details</h3>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table id="paydetaillist" class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>PNR</th>
+                      <th>Price</th>
+                      <th>Payment Type</th>
+                      <th>Amount Paid</th>
+                      <th>Date</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for cancel_ticket in approved_cancel_tickets %}
+                    <tr>
+                      <td>{{ forloop.counter }}</td>
+                      <td>{{ cancel_ticket.booking.pnr }}</td>
+                      <td>{{ cancel_ticket.booking.price }}</td>
+                      <td>
+                        {% with payment=cancel_ticket.booking.payment %}
+                        {% if payment %}
+                        {{ payment.payment_type }}
+                        {% else %}
+                        Payment information not available
+                        {% endif %}
+                        {% endwith %}
+                      </td>
+                      <td>
+                        {% with payment=cancel_ticket.booking.payment %}
+                        {% if payment %}
+                        {{ payment.amount_paid }}
+                        {% else %}
+                        N/A
+                        {% endif %}
+                        {% endwith %}
+                      </td>
+                      <td>{{ cancel_ticket.created_at|date:"Y-m-d H:i:s" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                      <td colspan="6">No approved cancel tickets available.</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+              <!-- Add a link to go back to the booking list -->
+              <a href="{% url 'booking_list' %}" class="button-61">
+                <span>&#8592;</span>Back to Booking List</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+{% endblock main_content %}
+{% block custom_js %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.0.3/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.0.3/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.0.3/js/buttons.print.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.0.3/js/buttons.csv.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.0.3/js/buttons.excel.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#paydetaillist').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'copy',
+                    text: 'Copy',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5] // Adjusted to match the number of columns
+                    }
+                },
+                {
+                    extend: 'csv',
+                    text: 'CSV',
+                    filename: 'Payment Details',
+                    extension: '.csv',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5]
+                    },
+                    fieldSeparator: ',',
+                    fieldBoundary: '"'
+                },
+                {
+                    extend: 'excel',
+                    text: 'Excel',
+                    filename: 'Payment Details',
+                    extension: '.xlsx',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5]
+                    }
+                },
+                'pdf',
+                'print'
+            ],
+            initComplete: function () {
+                console.log("DataTables initialized!");
+            }
+        });
+    });
+</script>
+{% endblock custom_js %}

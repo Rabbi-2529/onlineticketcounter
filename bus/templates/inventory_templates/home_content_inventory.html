@@ -1,0 +1,1277 @@
+{% extends 'inventory_templates/inventory_base.html' %}
+{% load static %}
+{% block page_title %} Home {% endblock page_title %}
+{% block custom_css %}
+    <link rel="stylesheet" href="{% static "dist/css/home_content.css" %}">
+    <link rel="stylesheet" href="{% static "dist/css/home_content_inventory.css" %}">
+
+    <style>
+        
+    </style>
+{% endblock custom_css %}
+ {% block main_content %}
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-3 col-6">
+                    <!-- small box -->
+                    <div class="small-box bg-info card-1">
+                        <div class="inner">
+                            <h3><b>৳</b> {{total_expense }}</h3>
+
+                            <p>Total Expense</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <a href="{% url 'total_transactions' %}" class="small-box-footer"
+                            >More info <i class="fas fa-arrow-circle-right"></i
+                        ></a>
+                    </div>
+                </div>
+                <!-- ./col -->
+                <div class="col-lg-3 col-6">
+                    <!-- small box -->
+                    <div class="small-box bg-success card-2">
+                        <div class="inner">
+                            <h3>{{ total_stock }}</h3>
+
+                            <p>Total Stock</p>
+                        </div>
+                        <div class="icon">
+                            {% comment %} <i class="ion ion-pie-graph"></i> {% endcomment %}
+                            <i class="fas fa-store"></i>
+                        </div>
+                        <a href="{% url 'total_expense' %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <!-- ./col -->
+                <div class="col-lg-3 col-6">
+                    <!-- small box -->
+                    <div class="small-box bg-warning card-3">
+                        <div class="inner">
+                            <h3>{{total_warehouse}}</h3>
+
+                            <p>Warehouse</p>
+                        </div>
+                        <div class="icon">
+                            {% comment %} <i class="ion ion-pie-graph"></i> {% endcomment %}
+                            <i class="fas fa-warehouse"></i>
+                        </div>
+                        <a href="{% url 'revenue_view' %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <!-- ./col -->
+                <div class="col-lg-3 col-6">
+                    <!-- small box -->
+                    <div class="small-box bg-danger card-4">
+                        <div class="inner">
+                            <h3><b>৳</b>{{ total_purchase_returns }}</h3>
+
+                            <p>Purchases Return</p>
+                        </div>
+                        <div class="icon">
+                            {% comment %} <i class="ion ion-pie-graph"></i> {% endcomment %}
+                            <i class="fas fa-undo"></i>
+                        </div>
+                        <a href="{% url 'total_transactions' %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="card card-piechart">
+                        <div class="card-header">
+                            <h3 class="card-title">Piechart Report</h3>
+
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <canvas
+                                id="pieChart"
+                                style="
+                                  min-height: 250px;
+                                  height: 250px;
+                                  max-height: 250px;
+                                  max-width: 100%;
+                                "
+                            ></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="card cash-flow-chart-card">
+                        <div class="card-header border-0">
+                            <div class="d-flex justify-content-between">
+                                <h3 class="card-title">Expense Vs Income</h3>
+                                <a href="javascript:void(0);">View Report</a>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="position-relative mb-4">
+                                <canvas id="cash-flow-chart" height="200"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="card card-info card-map">
+                        <div class="card-header">
+                            <h3 class="card-title">Map</h3>
+
+                            <div class="card-tools">
+                                <button
+                                    type="button"
+                                    class="btn btn-tool"
+                                    data-card-widget="collapse"
+                                >
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <button
+                                    type="button"
+                                    class="btn btn-tool"
+                                    data-card-widget="remove"
+                                >
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                          <div id="map" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></div>
+                        </div>
+                    </div>
+                </div>
+            
+    <div class="col-lg-6">
+        <div class="card card-warning card-customer-overview">
+            <div class="card-header">
+                <h3 class="card-title">Stock Chart</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                    <button type="button" class="btn btn-tool" data-card-widget="remove">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div id="stockChart"></div>
+            </div>
+        </div>
+    </div>
+
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="card card-info card-route">
+                            <div class="card-header">
+                                <h3 class="card-title-top">Top Billers (in {selectedMonthName})</h3>
+                                <div class="card-tools">
+                                    <span class="badge badge-primary">Top 5</span>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <table class="table" id="BillersTable">
+                                    <thead>
+                                        <tr>
+                                            <th>SL</th>
+                                            <th>Name</th>
+                                            <th>Total Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="BillersBody">
+                                        
+                                       
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                
+                        </div>
+                    <div class="col-lg-6">
+                        <div class="card card-info card-route">
+                            <div class="card-header">
+                                <h3 class="card-title-top">
+                                    Top Suppliers ({selectedMonthName})
+                               
+                                </h3>
+                                <div class="card-tools">
+                                    <span class="badge badge-primary">Top 5</span>
+                                    <!-- Add any additional tools or buttons here -->
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <table class="table" id="SuppliersTable">
+                                    <thead>
+                                        <tr>
+                                            <th>SL</th>
+                                            <th>Name</th>
+                                            <th>Total Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="SuppliersBody">
+                                        <!-- Data will be dynamically inserted here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+
+                                <div class="card card-info card-route">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Recent Bookings</h3>
+                                        <div class="card-tools">
+                                        
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <table class="table" id="recentBookingsTable">
+                                            <thead>
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th>Amount Paid</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="recentBookingsBody">
+                                           
+                                            </tbody>
+                                        </table>
+                                    </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card card-info card-route">
+    
+                                <ul class="tabs">
+                                    <li class="tab active col s3 d-flex p-0 justify-content-center"><a class="tab-link p-3" href="#purchases">Purchases</a></li>
+                                    <li class="tab col s3 d-flex p-0 justify-content-center"><a class="tab-link p-3" href="#payments">Payments</a></li>
+                                    <li class="tab col s3 d-flex p-0 justify-content-center"><a class="tab-link p-3" href="#purchaseReturns">Purchase Returns</a></li>
+                                    <li class="tab col s3 d-flex p-0 justify-content-center"><a class="tab-link p-3" href="#invoices">Invoices</a></li>
+                                </ul>
+                            </div>
+                            <div class="card-body">
+                                <!-- Add divs for each tab content -->
+                                <div id="purchases" class="col s12">
+                                    <div id="purchasesTable" class="table-container"></div>
+                                </div>
+                                <div id="payments" class="col s12">
+                                    <div id="paymentsTable" class="table-container"></div>
+                                </div>
+                                <div id="purchaseReturns" class="col s12">
+                                    <div id="purchaseReturnsTable" class="table-container"></div>
+                                </div>
+                                <div id="invoices" class="col s12">
+                                    <div id="invoicesTable" class="table-container"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    </section>
+<!-- /.content -->
+{% endblock main_content %} {% block custom_js %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+<!-- Leaflet JavaScript -->
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<!-- Include Chart.js library -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+<script>
+    const tabs = document.querySelectorAll('.tab');
+const underline = document.getElementById('underline');
+
+tabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    tabs.forEach(otherTab => {
+      otherTab.classList.remove('active');
+    });
+
+    tab.classList.add('active');
+    underline.style.left = tab.offsetLeft + tab.offsetWidth / 2 - underline.offsetWidth / 2;
+  });
+});
+</script>
+<script>
+    $(document).ready(function () {
+        // Fetch and display data for each tab
+        fetchAndDisplayData('{% url "combined_table_inventory" %}', 'purchasesTable', 'purchases');
+        fetchAndDisplayData('{% url "combined_table_inventory" %}', 'paymentsTable', 'payments');
+        fetchAndDisplayData('{% url "combined_table_inventory" %}', 'purchaseReturnsTable', 'purchase_returns');
+        fetchAndDisplayData('{% url "combined_table_inventory" %}', 'invoicesTable', 'invoices');
+
+        // Function to fetch and display data for a specific tab
+        function fetchAndDisplayData(apiUrl, containerId, dataKey) {
+            $.ajax({
+                url: apiUrl,
+                method: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    // Display data in the corresponding tab
+                    displayDataInTab(data[dataKey], containerId);
+
+                    // Reinitialize Materialize tabs after the content is loaded
+                    initializeMaterializeTabs();
+                },
+                error: function (error) {
+                    console.error(`Error fetching data for ${apiUrl}:`, error);
+                }
+            });
+        }
+
+        // Function to display data in a specific tab as a table
+        function displayDataInTab(tabData, containerId) {
+            const tableContainer = $(`#${containerId}`);
+            tableContainer.empty();
+
+            // Create the table header
+            const headerRow = $('<div class="row header-row"></div>');
+            Object.keys(tabData[0]).forEach(function (field) {
+                headerRow.append(`<div class="col s3">${field}</div>`);
+            });
+            tableContainer.append(headerRow);
+
+            // Create table rows
+            tabData.forEach(function (item) {
+                const dataRow = $('<div class="row"></div>');
+                Object.values(item).forEach(function (value) {
+                    dataRow.append(`<div class="col s3">${value}</div>`);
+                });
+                tableContainer.append(dataRow);
+            });
+        }
+
+        // Function to initialize Materialize tabs
+        function initializeMaterializeTabs() {
+            $('.tabs').tabs();
+        }
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Fetch data from the server
+        fetch('/active_user_list/')
+            .then(response => response.json())
+            .then(data => {
+                const userListContainer = document.getElementById('activeUserList');
+    
+                // Clear existing content
+                userListContainer.innerHTML = '';
+    
+                // Loop through the active user data and create elements
+                data.forEach(user => {
+                    const userContainer = document.createElement('div');
+                    userContainer.classList.add('user-container');
+    
+                    // Display profile picture
+                    const profilePicture = document.createElement('img');
+                    profilePicture.src = user.profile_picture;
+                    profilePicture.alt = 'Profile Picture';
+                    profilePicture.classList.add('profile-picture');
+                    userContainer.appendChild(profilePicture);
+    
+                    // Display name
+                    const nameElement = document.createElement('div');
+                    nameElement.innerText = user.username;
+                    nameElement.classList.add('user-name');
+                    userContainer.appendChild(nameElement);
+    
+                    // Display sign-in time
+                    const signInTime = document.createElement('div');
+                    signInTime.innerText = `Sign In Time: ${user.last_active}`;
+                    signInTime.classList.add('sign-in-time');
+                    userContainer.appendChild(signInTime);
+    
+                    // Display online/offline status
+                    const statusElement = document.createElement('div');
+                    statusElement.innerText = user.is_online ? 'Online' : 'Offline';
+                    statusElement.classList.add(user.is_online ? 'online' : 'offline');
+                    userContainer.appendChild(statusElement);
+    
+                    userListContainer.appendChild(userContainer);
+                });
+            })
+            .catch(error => console.error('Error fetching active user data:', error));
+    });
+    </script>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Get the stock data using Django views and pass it to the script
+            fetch('/stock_data/')
+                .then(response => response.json())
+                .then(data => {
+                    // Data for the stock chart
+                    var stockData = {
+                        chart: {
+                            type: 'bar',
+                            height: 350,
+                        },
+                        plotOptions: {
+                            bar: {
+                                horizontal: false,
+                                columnWidth: '20%',
+                                endingShape: 'rounded',
+                            },
+                        },
+                        dataLabels: {
+                            enabled: false,
+                        },
+                        series: [
+                            {
+                                name: 'Opening Stock',
+                                data: data.opening_stock,
+                            },
+                            {
+                                name: 'Closing Stock',
+                                data: data.closing_stock,
+                            },
+                        ],
+                        xaxis: {
+                            categories: data.years,
+                        },
+                        legend: {
+                            position: 'top',
+                        },
+                    };
+
+                    // Get the stock chart container
+                    var stockChartContainer = document.getElementById("stockChart");
+
+                    // Create the stock chart using ApexCharts
+                    var stockChart = new ApexCharts(stockChartContainer, stockData);
+                    stockChart.render();
+                })
+                .catch(error => console.error('Error fetching stock data:', error));
+        });
+    </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        fetch('/recent_bookings/')
+            .then(response => response.json())
+            .then(data => {
+      
+                const recentBookingsBody = document.getElementById('recentBookingsBody');
+
+                recentBookingsBody.innerHTML = '';
+
+               
+                const recentBookingsData = data.slice(0, 5);
+
+              
+                recentBookingsData.forEach(booking => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `<td>${booking['Customer Name']}</td><td>${booking['Amount Paid']}</td>`;
+                    recentBookingsBody.appendChild(row);
+                });
+            })
+            .catch(error => console.error('Error fetching recent bookings:', error));
+    });
+</script>
+
+
+
+<script>
+    // Wait for the DOM to be ready
+    $(document).ready(function () {
+        // Fetch top billers data when the page is loaded
+        fetchTopBillers();
+
+        // Function to fetch and display top billers data
+        function fetchTopBillers() {
+            // Make an AJAX request to your Django view for top billers
+            $.ajax({
+                url: '/top_billers/',  // Update the URL based on your Django project structure
+                method: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    // Convert numeric month to month name
+                    const selectedMonthName = getMonthName(data.selected_month);
+
+                    // Update the table with the fetched data
+                    updateBillersTable(data.top_billers, selectedMonthName);
+                },
+                error: function (error) {
+                    console.error('Error fetching top billers:', error);
+                }
+            });
+        }
+
+        // Function to update the table with top billers data
+        function updateBillersTable(topBillers, selectedMonthName) {
+            // Clear the existing table rows
+            $('#BillersBody').empty();
+
+            // Update the selected month in the card title
+            $('.card-title-top-pop').text(`Top Billers (${selectedMonthName})`);
+
+            // Iterate through the top billers data and append rows to the table
+            topBillers.forEach(function (biller, index) {
+                $('#BillersBody').append(`
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${biller.name}</td>
+                        <td>${biller.total_amount.toFixed(2)}</td>
+                    </tr>
+                `);
+            });
+        }
+
+        // Function to convert numeric month to month name
+        function getMonthName(monthNumber) {
+            const months = [
+                'January', 'February', 'March', 'April', 'May', 'June',
+                'July', 'August', 'September', 'October', 'November', 'December'
+            ];
+
+            // Ensure the monthNumber is within a valid range (1 to 12)
+            const validMonthNumber = Math.min(Math.max(monthNumber, 1), 12);
+
+            // Return the corresponding month name
+            return months[validMonthNumber - 1];
+        }
+    });
+</script>
+
+
+
+<script>
+    // Wait for the DOM to be ready
+    $(document).ready(function () {
+        // Fetch top suppliers data when the page is loaded
+        fetchTopSuppliers();
+    
+        // Function to fetch and display top suppliers data
+        function fetchTopSuppliers() {
+            // Make an AJAX request to your Django view
+            $.ajax({
+                url: '/top_suppliers/',  // Update the URL based on your Django project structure
+                method: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    // Convert numeric month to month name
+                    const selectedMonthName = getMonthName(data.selected_month);
+    
+                    // Update the table with the fetched data
+                    updateSuppliersTable(data.top_suppliers, selectedMonthName);
+                },
+                error: function (error) {
+                    console.error('Error fetching top suppliers:', error);
+                }
+            });
+        }
+    
+        // Function to update the table with top suppliers data
+        function updateSuppliersTable(topSuppliers, selectedMonthName) {
+            // Clear the existing table rows
+            $('#SuppliersBody').empty();
+    
+            // Update the selected month in the card title
+            $('.card-title-top').text(`Top Suppliers (${selectedMonthName})`);
+    
+            // Iterate through the top suppliers data and append rows to the table
+            topSuppliers.forEach(function (supplier, index) {
+                $('#SuppliersBody').append(`
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${supplier.name}</td>
+                        <td>${supplier.total_amount.toFixed(2)}</td>
+                    </tr>
+                `);
+            });
+        }
+    
+        // Function to convert numeric month to month name
+        function getMonthName(monthNumber) {
+            const months = [
+                'January', 'February', 'March', 'April', 'May', 'June',
+                'July', 'August', 'September', 'October', 'November', 'December'
+            ];
+    
+            // Ensure the monthNumber is within a valid range (1 to 12)
+            const validMonthNumber = Math.min(Math.max(monthNumber, 1), 12);
+    
+            // Return the corresponding month name
+            return months[validMonthNumber - 1];
+        }
+    });
+    </script>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Fetch recent voucher data from the Django view
+        fetch('/recent_vouchers/')
+            .then(response => response.json())
+            .then(data => {
+                // Handle the data and dynamically populate the table
+                renderRecentVouchers(data.slice(0, 5)); // Show only the most recent 5 vouchers
+            })
+            .catch(error => console.error('Error fetching recent vouchers:', error));
+    });
+    
+    function renderRecentVouchers(data) {
+        const recentVouchersBody = document.getElementById('recentVouchersBody');
+    
+        // Clear existing content in the table body
+        recentVouchersBody.innerHTML = '';
+    
+        // Iterate through the data and create table rows
+        data.forEach(voucher => {
+            const row = document.createElement('tr');
+    
+            row.innerHTML = `
+                <td>${voucher.Type}</td>
+                <td>${voucher.Date}</td>
+                <td>${voucher.Account}</td>
+                <td>${voucher['Voucher No']}</td>
+                <td>${voucher['Payment Type']}</td>
+                <td>${voucher.Amount}</td>
+            `;
+    
+            recentVouchersBody.appendChild(row);
+        });
+    }
+</script>
+    
+    
+  
+
+<script>
+    $(document).ready(function(){
+
+        var pieData = {
+                labels: [
+                    'Customers',
+                    'Staffs',
+                    'Bus'
+                ],
+                datasets: [
+                    {
+                        data: [{{ customer_count }},{{ staff_count }},{{ bus_count}}],
+                        backgroundColor: ['#4C0080', '#ff6a00', '#19147b'],
+                    }
+                ]
+        };
+
+        var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
+        var pieOptions     = {
+            maintainAspectRatio : false,
+            responsive : true,
+        }
+        //Create pie or douhnut chart
+        // You can switch between pie and douhnut using the method below.
+        var pieChart = new Chart(pieChartCanvas, {
+            type: 'pie',
+            data: pieData,
+            options: pieOptions
+        });
+
+
+        
+        var price_label
+        var month_label
+            
+
+        function monthlySalesChart(currenrYearPrices, lastYearPrices, months, totalPrice) {
+        'use strict';
+        
+        var ticksStyle = {
+            fontColor: '#495057',
+            fontStyle: 'bold'
+        };
+        
+        var mode = 'index';
+        var intersect = true;
+        
+        var $salesChart = $('#sales-chart');
+        var salesChart = new Chart($salesChart, {
+            type: 'bar',
+            data: {
+                    labels: months,
+                    datasets: [
+                            {
+                                    backgroundColor: '#007bff',
+                                    borderColor: '#007bff',
+                                    data: currenrYearPrices
+                            },
+                            {
+                                    backgroundColor: '#ced4da',
+                                    borderColor: '#ced4da',
+                                    data: lastYearPrices
+                            }
+                    ]
+            },
+            options: {
+                maintainAspectRatio: false,
+                tooltips: {
+                    mode: mode,
+                    intersect: intersect
+                },
+                hover: {
+                    mode: mode,
+                    intersect: intersect
+                },
+                legend: {
+                    display: false
+                },
+                scales: {
+                    yAxes: [{
+                        gridLines: {
+                            display: true,
+                            lineWidth: '4px',
+                            color: 'rgba(0, 0, 0, .2)',
+                            zeroLineColor: 'transparent'
+                        },
+                        ticks: $.extend({
+                            beginAtZero: true,
+                            callback: function (value) {
+                                if (value >= 1000) {
+                                    value /= 1000;
+                                    value += 'k';
+                                }
+                                return '৳' + value;
+                            }
+                        }, ticksStyle)
+                    }],
+                    xAxes: [{
+                        display: true,
+                        gridLines: {
+                            display: false
+                        },
+                        ticks: ticksStyle
+                    }]
+                }
+            }
+        });
+        }
+        
+        $(function() {
+            $.ajax({
+                url: '/admin_home_data/',
+                dataType: 'json',
+                success: function(data) {
+                        console.log(data);
+                        currentYear = parseInt(data.current_year)
+                        var lastYear = parseInt(data.last_year);
+
+                        console.log('current_year:', currentYear);
+                        console.log('test: ', data.booking_data[currentYear]);
+                        var lastYearPriceLabel = data.booking_data[lastYear].monthly_sales_price;
+                        var currentYearPriceLabel = data.booking_data[currentYear].monthly_sales_price;
+
+                        var monthLabel = data.booking_data[currentYear].month;
+
+                        console.log('price: ', currentYearPriceLabel);
+                        console.log('month: ', monthLabel);
+                        monthlySalesChart(currentYearPriceLabel, lastYearPriceLabel, monthLabel);
+                },
+                error: function(xhr, status, error) {
+                        console.log('error');
+                }
+            });
+        });
+          
+
+
+    });
+  $(document).ready(function(){
+        /*var pieData = {
+                labels: [
+                    'Customers',
+                    'Staffs',
+                    'Bus'
+                ],
+                datasets: [
+                    {
+                        data: [{{ customer_count }},{{ staff_count }},{{ bus_count}}],
+                        backgroundColor : ['#4C0080', '#ff6a00', '#19147b'],
+                    }
+                ]
+        };
+
+        var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
+        var pieOptions     = {
+            maintainAspectRatio : false,
+            responsive : true,
+        }
+        //Create pie or douhnut chart
+        // You can switch between pie and douhnut using the method below.
+        var pieChart = new Chart(pieChartCanvas, {
+            type: 'pie',
+            data: pieData,
+            options: pieOptions
+        });*/
+
+        //Second Chart for Total Subject in Each Course
+            /*var subject_count_list={{ subject_count_list }}
+            var course_name_list={{ course_name_list|safe }}
+            var donutChartCanvas = $('#donutChart').get(0).getContext('2d')
+            var donutData        = {
+                labels:course_name_list,
+                datasets: [
+                    {
+                        data: subject_count_list,
+                        backgroundColor : ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc', '#d2d6de'],
+                    }
+                ]
+            }
+            var donutOptions     = {
+                maintainAspectRatio : false,
+                responsive : true,
+            }
+            //Create pie or douhnut chart
+            // You can switch between pie and douhnut using the method below.
+            var donutChart = new Chart(donutChartCanvas, {
+                type: 'doughnut',
+                data: donutData,
+                options: donutOptions
+            });*/
+
+
+          //show total student in each course
+          /*var student_count_list_in_course={{ student_count_list_in_course }};
+
+            var pieData2 = {
+                labels:course_name_list,
+                datasets: [
+                    {
+                        data: student_count_list_in_course,
+                        backgroundColor : ['#f56954', '#00a65a','#aa00ff', '#ff3d00'],
+                    }
+                ]
+            };
+
+            var pieChartCanvas2 = $('#pieChart3').get(0).getContext('2d')
+            var pieOptions2     = {
+                maintainAspectRatio : false,
+                responsive : true,
+            }
+            var pieChart = new Chart(pieChartCanvas2, {
+                type: 'pie',
+                data: pieData2,
+                options: pieOptions2
+            });*/
+
+          //show total student in each Subject
+          /*var student_count_list_in_subject={{ student_count_list_in_subject }};
+          var subject_list={{ subject_list|safe }};
+
+            var pieData3  = {
+                labels:subject_list,
+                datasets: [
+                    {
+                        data: student_count_list_in_subject,
+                        backgroundColor : ['#f56954', '#00a65a','#aa00ff', '#ff3d00','#bf360c','#ffff00','#00e676','#40c4ff','#f56954', '#00a65a','#aa00ff', '#ff3d00','#bf360c','#ffff00','#00e676','#40c4ff'],
+                    }
+                ]
+            };
+
+            var pieChartCanvas3 = $('#pieChart4').get(0).getContext('2d')
+            var pieOption3     = {
+                maintainAspectRatio : false,
+                responsive : true,
+            }
+            var pieChart = new Chart(pieChartCanvas3, {
+                type: 'pie',
+                data: pieData3,
+                options: pieOption3
+            });
+
+            ///Staff Leave vs Attendance Bar Chart
+            var attendance_present_list_staff={{ attendance_present_list_staff }};
+            var attendance_absent_list_staff={{ attendance_absent_list_staff }};
+            var staff_name_list={{ staff_name_list|safe }};
+            var barChartData = {
+            labels  : staff_name_list,
+            datasets: [
+                {
+                    label               : 'Leaves',
+                    backgroundColor     : 'rgba(60,141,188,0.9)',
+                    borderColor         : 'rgba(60,141,188,0.8)',
+                    pointRadius          : false,
+                    pointColor          : '#3b8bba',
+                    pointStrokeColor    : 'rgba(60,141,188,1)',
+                    pointHighlightFill  : '#fff',
+                    pointHighlightStroke: 'rgba(60,141,188,1)',
+                    data                : attendance_absent_list_staff
+                },
+                {
+                    label               : 'Attendance',
+                    backgroundColor     : 'rgba(210, 214, 222, 1)',
+                    borderColor         : 'rgba(210, 214, 222, 1)',
+                    pointRadius         : false,
+                    pointColor          : 'rgba(210, 214, 222, 1)',
+                    pointStrokeColor    : '#c1c7d1',
+                    pointHighlightFill  : '#fff',
+                    pointHighlightStroke: 'rgba(220,220,220,1)',
+                    data                : attendance_present_list_staff
+                },
+            ]
+            }
+            var barChartCanvas = $('#barChart1').get(0).getContext('2d')
+            var temp0 = barChartData.datasets[0]
+            var temp1 = barChartData.datasets[1]
+            barChartData.datasets[0] = temp1
+            barChartData.datasets[1] = temp0
+
+            var barChartOptions = {
+                responsive              : true,
+                maintainAspectRatio     : false,
+                datasetFill             : false
+            }
+
+            var barChart = new Chart(barChartCanvas, {
+                type: 'bar',
+                data: barChartData,
+                options: barChartOptions
+            })
+
+            //Student Leaves vs Attendance
+            var attendance_present_list_student={{ attendance_present_list_student }};
+            var attendance_absent_list_student={{ attendance_absent_list_student }};
+            var student_name_list={{ student_name_list|safe }};
+            var barChartData2 = {
+            labels  : student_name_list,
+            datasets: [
+                {
+                    label               : 'Leaves',
+                    backgroundColor     : 'rgba(60,141,188,0.9)',
+                    borderColor         : 'rgba(60,141,188,0.8)',
+                    pointRadius          : false,
+                    pointColor          : '#3b8bba',
+                    pointStrokeColor    : 'rgba(60,141,188,1)',
+                    pointHighlightFill  : '#fff',
+                    pointHighlightStroke: 'rgba(60,141,188,1)',
+                    data                : attendance_absent_list_student
+                },
+                {
+                    label               : 'Attendance',
+                    backgroundColor     : 'rgba(210, 214, 222, 1)',
+                    borderColor         : 'rgba(210, 214, 222, 1)',
+                    pointRadius         : false,
+                    pointColor          : 'rgba(210, 214, 222, 1)',
+                    pointStrokeColor    : '#c1c7d1',
+                    pointHighlightFill  : '#fff',
+                    pointHighlightStroke: 'rgba(220,220,220,1)',
+                    data                : attendance_present_list_student
+                },
+            ]
+            }
+            var barChartCanvas2 = $('#barChart2').get(0).getContext('2d')
+            var temp02 = barChartData2.datasets[0]
+            var temp12 = barChartData2.datasets[1]
+            barChartData2.datasets[0] = temp12
+            barChartData2.datasets[1] = temp02
+
+            var barChartOptions2 = {
+                responsive              : true,
+                maintainAspectRatio     : false,
+                datasetFill             : false
+            }
+
+            var barChart2 = new Chart(barChartCanvas2, {
+                type: 'bar',
+                data: barChartData2,
+                options: barChartOptions2
+            })*/
+
+
+      
+  });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script> 
+
+
+<script>
+    // Fetch data from Django API endpoint
+    fetch('/get_customer_data/')
+        .then(response => response.json())
+        .then(data => {
+            const dailyCustomerCounts = data.daily_customer_counts;
+
+            // Update the customer overview chart
+            var ctx = document.getElementById('customerOverviewChart').getContext('2d');
+            var customerChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: Array.from({ length: dailyCustomerCounts.length }, (_, i) => `Day ${i + 1}`),
+                    datasets: [{
+                        label: "Daily Customer Count",
+                        data: dailyCustomerCounts,
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1,
+                        fill: true,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Day'
+                            }
+                        },
+                        y: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Customer Count'
+                            }
+                        }
+                    }
+                }
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching customer data:', error);
+        });
+</script>
+<script>
+    // Initialize the map
+    var map = L.map('map').setView([23.6850, 90.3563], 7); // Set the initial view to Bangladesh
+  
+    // Add a tile layer to the map (you can replace this with your preferred tile layer)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+  
+    // Load and display GeoJSON data
+    $.getJSON("static/json/bangladesh.geojson", function(data) {
+        L.geoJSON(data, {
+            style: {
+                  // Customize the border color
+                fillOpacity: 0.1 // Customize the fill opacity
+            }
+        }).addTo(map);
+    });
+  
+    // Add map pins (markers) to specific locations
+    var marker = L.marker([23.8103, 90.4125]).addTo(map); // Example location for Dhaka
+    marker.bindPopup("Dhaka"); // Add a popup to the marker
+  
+    // You can add more markers with similar code
+  
+  </script>
+
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Function to fetch cash flow data from the server
+        const fetchCashFlowData = async () => {
+            try {
+                const response = await fetch('/cash-flow-chart-data/');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch data');
+                }
+                return await response.json();
+            } catch (error) {
+                console.error('Error fetching cash flow data:', error);
+                return null;
+            }
+        };
+
+        // Function to render the cash flow chart
+        const renderCashFlowChart = (data) => {
+            if (!data) {
+                return; // Exit if data is not available
+            }
+
+            const cashFlowChartCanvas = document.getElementById('cash-flow-chart').getContext('2d');
+
+            const cashFlowChartData = {
+                labels: data.labels,
+                datasets: [
+                    {
+                        label: 'Income',
+                        data: data.datasets[0].data,
+                        backgroundColor: data.datasets[0].backgroundColor,
+                    },
+                    {
+                        label: 'Expense',
+                        data: data.datasets[1].data,
+                        backgroundColor: data.datasets[1].backgroundColor,
+                    },
+                ],
+            };
+
+            const cashFlowChartOptions = {
+                maintainAspectRatio: false,
+                responsive: true,
+                scales: {
+                    x: {
+                        grid: {
+                            display: false,
+                        },
+                    },
+                    y: {
+                        grid: {
+                            display: true,
+                        },
+                    },
+                },
+            };
+
+            new Chart(cashFlowChartCanvas, {
+                type: 'bar',
+                data: cashFlowChartData,
+                options: cashFlowChartOptions,
+            });
+        };
+
+        // Fetch data and render the chart on page load
+        fetchCashFlowData().then(renderCashFlowChart);
+    });
+</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        fetch('/staff_booking_data/')  // Replace with your actual URL
+            .then(response => response.json())
+            .then(data => {
+                var staffData = data.staff_data;
+                var staffNames = staffData.map(staff => staff.name);
+                var staffBookingTotals = staffData.map(staff => staff.total_bookings);
+
+                var ctx = document.getElementById("staffBookingGraph").getContext("2d");
+                var staffBookingChart = new Chart(ctx, {
+                    type: "bar",
+                    data: {
+                        labels: staffNames,
+                        datasets: [{
+                            label: "Total Bookings",
+                            data: staffBookingTotals,
+                            backgroundColor: "rgba(54, 162, 235, 0.6)",
+                            borderColor: "rgba(54, 162, 235, 1)",
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: "Total Bookings"
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: "Staff Names"
+                                }
+                            }
+                        }
+                    }
+                });
+            });
+    });
+</script>
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+    fetch('/route_booking_count_graph/')
+        .then(response => response.json())
+        .then(data => {
+            const routeNames = data.route_data.map(route => route.route_name);
+            const bookingCounts = data.route_data.map(route => route.booking_count);
+
+            const trace = {
+                x: routeNames,
+                y: bookingCounts,
+                type: 'bar'
+            };
+
+            const layout = {
+                title: 'Route Booking Ticket Count',
+                xaxis: {
+                    title: 'Routes'
+                },
+                yaxis: {
+                    title: 'Booking Ticket Count'
+                }
+            };
+
+            Plotly.newPlot('plotly-graph', [trace], layout);
+        })
+        .catch(error => console.error('Error fetching data:', error));
+</script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Data for the pie chart (replace these values with your actual data)
+        var data = {
+            labels: ["Expense", "Purchases"],
+            datasets: [
+                {
+                    data: [
+                        {{ total_expense|default_if_none:0.00 }},
+                        {{ total_purchases|default_if_none:0.00 }},
+                    ],
+                    backgroundColor: ["#FF5733", "#5DADE2"],
+                },
+            ],
+        };
+    
+        // Get the pie chart canvas
+        var ctx = document.getElementById("pieChart").getContext("2d");
+    
+        // Create the pie chart
+        var pieChart = new Chart(ctx, {
+            type: "pie",
+            data: data,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                legend: {
+                    position: "bottom",
+                },
+                tooltips: {
+                    callbacks: {
+                        label: function (tooltipItem, data) {
+                            var dataset = data.datasets[tooltipItem.datasetIndex];
+                            var total = dataset.data.reduce(function (previousValue, currentValue) {
+                                return previousValue + currentValue;
+                            });
+                            var currentValue = dataset.data[tooltipItem.index];
+                            var percentage = ((currentValue / total) * 100).toFixed(2);
+                            return data.labels[tooltipItem.index] + ': ' + currentValue + ' (' + percentage + '%)';
+                        },
+                    },
+                },
+            },
+        });
+    });
+</script>
+
+
+
+
+
+
+{% endblock custom_js %}

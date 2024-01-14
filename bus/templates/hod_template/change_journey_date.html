@@ -1,0 +1,76 @@
+{% extends 'hod_template/base_template.html' %}
+{% load static %}
+
+
+
+{% block custom_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/css/bootstrap-datepicker.min.css">
+<style>
+  .small-form .input-group.date {
+    width: 400px;
+  }
+  .small-form .btn-primary {
+    padding: 6px 12px;
+    font-size: 14px;
+  }
+</style>
+{% endblock custom_css %}
+
+{% block custom_js %}
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/js/bootstrap-datepicker.min.js"></script>
+<script>
+  $(document).ready(function() {
+    $("#new_journey_date").datepicker({
+      format: 'yyyy-mm-dd',
+      autoclose: true
+    });
+    
+    // Click event listener for the calendar icon
+    $("#calendar-icon").click(function() {
+      $("#new_journey_date").datepicker("show");
+    });
+  });
+</script>
+{% endblock custom_js %}
+
+{% block main_content %}
+<br>
+<br>
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-8 offset-md-2">
+        <div class="card card-primary small-form">
+          <div class="card-header"> 
+          </div>
+          <div class="card-body">
+            <h1>Change Journey Date</h1>
+            {% if messages %}
+            <div class="alert alert-success">
+              <ul class="messages">
+                {% for message in messages %}
+                  <li>{{ message|slice:": -1" }}</li>
+                {% endfor %}
+              </ul>
+            </div>
+          {% endif %}
+            <form method="post" action="{% url 'change_journey_date' %}">
+              {% csrf_token %}
+              <input type="hidden" name="marked_coaches" value="{{ marked_coaches }}">
+              <div class="input-group date">
+                <input type="text" name="new_journey_date" id="new_journey_date" class="form-control" readonly>
+                <div class="input-group-append">
+                  <span class="input-group-text" id="calendar-icon"><i class="far fa-calendar-alt"></i></span>
+                </div>
+              </div>
+              <br>
+              <button type="submit" class="btn btn-primary">Change</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock main_content %}

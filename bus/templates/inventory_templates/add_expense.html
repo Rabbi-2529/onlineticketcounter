@@ -1,0 +1,138 @@
+{% extends 'inventory_templates/inventory_base.html' %}
+{% load static %}
+{% block custom_css %}
+<link rel="stylesheet" href="{% static "dist/css/add_product.css" %}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.9/dist/flatpickr.min.css">
+<link rel="stylesheet" href="{% static "dist/css/trading.css" %}">
+{% endblock custom_css %}
+{% block page_title %}Add Expense{% endblock page_title %}
+
+{% block main_content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Add Expense</h3>
+                    </div>
+                    <div class="card-body">
+                        {% if messages %}
+                        {% for message in messages %}
+                        <div class="alert {% if message.tags == 'error' %}alert-danger{% elif message.tags == 'success' %}alert-success{% endif %}">
+                            {{ message }}
+                        </div>
+                        {% endfor %}
+                        {% endif %}
+                        
+                        <div class="flex-container">
+                            <form method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="row">
+                                    <div class="col-4 mt-4">
+                                        <div class="form-group">
+                                            <label for="date">Date:</label>
+                                            <input type="date" class="form-control" id="date" name="date" placeholder="Select a date">
+                                        </div>
+                                    </div>
+                                    <div class="col-4 mt-4">
+                                        <div class="form-group">
+                                            <label for="warehouse">Warehouse</label>
+                                            <!--customselect-->
+                                            <div class="select_mate" data-mate-select="dropdown-active" >
+                                                <select name="warehouse" onchange="" onclick="return false;" id="warehouse" >
+                                                    <option value="" disabled selected>Select Warehouse</option>
+                                                    {% for warehouse in warehouse %}
+                                                    <option value="{{ warehouse.id }}">{{ warehouse.name }}</option>
+                                                    {% endfor %}
+                                                  
+                                                </select>
+                                                <p class="selecionado_opcion"  onclick="open_select(this)" ></p><span onclick="open_select(this)" class="icon_select_mate" ><svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z"/>
+                                                    <path d="M0-.75h24v24H0z" fill="none"/>
+                                                </svg></span>
+                                                <div class="cont_list_select_mate">
+                                                <ul class="cont_select_int">  </ul> 
+                                                </div>
+                                            </div>
+                                      
+                                        </div>
+                                    </div>
+                    
+                                    <div class="col-4 mt-4">
+                                        <div class="form-group">
+                                            <label for="expense_category">Expense Type</label>
+                                            <!--customselect-->
+                                            <div class="select_mate" data-mate-select="dropdown-active" >
+                                                <select name="expense_category" onchange="" onclick="return false;" id="expense_category" >
+                                                    <option value="" disabled selected>Select an expense category</option>
+                                                    <option value="Direct">Direct Expense</option>
+                                                    <option value="Draft">Draft Expense</option>
+                                                </select>
+                                                <p class="selecionado_opcion"  onclick="open_select(this)" ></p><span onclick="open_select(this)" class="icon_select_mate" ><svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z"/>
+                                                    <path d="M0-.75h24v24H0z" fill="none"/>
+                                                </svg></span>
+                                                <div class="cont_list_select_mate">
+                                                <ul class="cont_select_int">  </ul> 
+                                                </div>
+                                            </div>
+                                            <!--customselect-->
+                                        </div>
+                                    </div>
+                                    <div class="col-4 mt-4">
+                                        <div class="form-group">
+                                         
+                                                    <label for="category">Expense Type</label>
+                                                    <!--customselect-->
+                                                    <div class="select_mate" data-mate-select="dropdown-active" >
+                                                        <select name="category" onchange="" onclick="return false;" id="category" >
+                                                            <option value="" disabled selected>Select Category</option>
+                                                            {% for subcategory in subcategory %}
+                                                            <option value="{{ subcategory.id }}">{{ subcategory.name }}</option>
+                                                            {% endfor %}
+                                                      
+                                                        </select>
+                                                        <p class="selecionado_opcion"  onclick="open_select(this)" ></p><span onclick="open_select(this)" class="icon_select_mate" ><svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                                                            <path d="M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z"/>
+                                                            <path d="M0-.75h24v24H0z" fill="none"/>
+                                                        </svg></span>
+                                                        <div class="cont_list_select_mate">
+                                                        <ul class="cont_select_int">  </ul> 
+                                                        </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-4 mt-4">
+                                        <div class="form-group">
+                                            <label for="voucher_no">Voucher No:</label>
+                                            <input type="text" id="voucher_no" class="form-control" name="voucher_no" placeholder="Enter voucher number">
+                                        </div>
+                                    </div>
+                                    <div class="col-4 mt-4">
+                                        <div class="form-group">
+                                            <label for="amount">Amount:</label>
+                                            <input type="number" class="form-control" step="0.01" id="amount" name="amount" placeholder="Enter amount">
+                                        </div>
+                                    </div>
+                                    <div class="col-6 mt-2">
+                                        <div class="form-group">
+                                            <label for="purchase_note">Purchase Note:</label>
+                                            <textarea class="form-control" id="purchase_note" name="purchase_note" placeholder="Enter purchase note"></textarea>
+                                        </div>
+                                    </div>
+                                    </div>
+                                 
+                                    <button type="submit" class="save-btn">Add Expense</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+</section>
+<script type="text/javascript" src="{% static "dist/js/select_dropdown.js" %}"></script>
+{% endblock main_content %}

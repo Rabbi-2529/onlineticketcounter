@@ -1,0 +1,71 @@
+
+{% extends 'hod_template/base_template.html' %} {% load static %} 
+{% load static %}
+{% block custom_css %}
+    
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <link rel="stylesheet" href="{% static "dist/css/add_route.css" %}">
+
+{% endblock custom_css %}
+
+{% block page_title %}Refund{% endblock page_title %} {% block main_content %}
+
+<div class="container-xl px-4 mt-4">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <div class="card card-primary">
+                    <div class="card-header d-flex justify-content-center">
+                        <h3 class="card-title">Refund Money</h3>
+                    </div>
+                    <div class="card-body">
+                        {% if messages %}
+                        <div class="alert alert-success">
+                            <ul>
+                                {% for message in messages %}
+                                <li>{{ message }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+
+                            <form method="post">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label for="booking_pnr">Booking PNR</label>
+                                    <input type="text" name="booking_pnr" id="booking_pnr" class="form-control" value="{{ booking.pnr }}" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label for="refund_amount">Refund Fee</label>
+                                    <input type="text" name="refund_amount" id="refund_amount" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="payment_type">Payment Type</label>
+                                    <select name="payment_type" id="payment_type" class="form-control py-0" required>
+                                        <option value="" disabled selected>Select Payment Type</option>
+                                        {% for payment_method in active_payment_methods %}
+                                            <option value="{{ payment_method.name }}">{{ payment_method.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="payment_details">Payment Details</label>
+                                    <input type="text" name="payment_details" id="payment_details" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="refund_reason">Refund Reason</label>
+                                    <input type="text" name="refund_reason" id="refund_reason" class="form-control" required>
+                                </div>
+                                <button type="submit" class="staff-btn">Submit Refund Request</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock main_content %}

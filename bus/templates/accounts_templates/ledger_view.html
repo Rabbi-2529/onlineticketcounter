@@ -1,0 +1,159 @@
+{% extends 'accounts_templates/accounts_base.html' %}
+{% load static %}
+{% block custom_css %}
+<link rel="stylesheet" href="{% static "dist/css/add_product.css" %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.9/dist/flatpickr.min.css">
+
+{% comment %} <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"> {% endcomment %}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<link rel="stylesheet" href="{% static "dist/css/add_product.css" %}">
+{% endblock custom_css %}
+{% block page_title %}Add Expense{% endblock page_title %}
+
+{% block main_content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-center">
+                        <h3 class="card-title">Add Expense</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="success-error-message" class="alert d-flex justify-content-center" style="margin-top: 10px">
+                            
+                        </div>
+                        
+                        <div class="flex-container">
+                            <form id="ledger-form" method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="row">
+                                    <div class="col-6 mt-4">
+                                        <div class="form-group">
+                                            <label for="group-name">Ledger Group<span class="required-star">*</span></label>
+                                            <!--customselect-->
+                                            <div class="select_mate" data-mate-select="dropdown-active" >
+                                                <select name="group_name" onchange="getAccountsName()" onclick="return false;" id="group-name" >
+                                                    <option value="" disabled selected>Select Ledger Group</option>
+                                                    {% for ledger_group in ledger_groups %}
+                                                        <option value="{{ ledger_group.id }}">{{ ledger_group.name }}</option>
+                                                    {% endfor %}
+                                                  
+                                                </select>
+                                                <p class="selecionado_opcion"  onclick="open_select(this)" ></p><span onclick="open_select(this)" class="icon_select_mate" ><svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z"/>
+                                                    <path d="M0-.75h24v24H0z" fill="none"/>
+                                                </svg></span>
+                                                <div class="cont_list_select_mate">
+                                                <ul class="cont_select_int">  </ul> 
+                                                </div>
+                                            </div>
+                                      
+                                        </div>
+                                    </div>
+                    
+                                    <div class="col-6 mt-4">
+                                        <div class="form-group">
+                                            <label for="ledger_name">Account Name<span class="required-star">*</span></label>
+                                            <select name="ledger_name" id="ledger_name" class="form-control">
+                                            {% comment %} <option value="" selected disabled>Select Account Name</option>1 {% endcomment %}
+                                                {% comment %} {% for district in districts|dictsort:"district_name"  %} {% endcomment %}
+                                                    {% comment %} <option value="{{ district.district_name }}">{{ district.district_name }}</option> {% endcomment %}
+                                                {% comment %} {% endfor %} {% endcomment %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-center mt-4">
+                                    <button type="submit" class="save-btn">Save Ledger</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+</section>
+{% endblock main_content %}
+
+{% block custom_js %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="{% static "dist/js/select_dropdown.js" %}"></script>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+
+    <script>
+        $(document).ready(function(){
+            $('#ledger_name').select2();
+
+            
+        });
+    </script>
+    <script>
+        function getAccountsName(){
+            let groupName = $('#group-name').val()
+            console.log('group name: ', groupName)
+            let url = `/get_accounts_name/?group_name=${groupName}`
+            fetch(url, {
+                method: 'GET',
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Network response was not ok (${response.status} ${response.statusText})`);
+                }
+                return response.json(); // Assuming the response is in JSON format
+            })
+            .then(data => {
+                /*var dropdown = $(targetDropdown);
+                dropdown.empty(); // Clear the dropdown before adding new options
+                data[contextData].forEach(item => {
+                    const option = new Option(item[textKey], item[valueKey]);
+                    dropdown.append(option);
+                });*/
+
+                //{data: '[{"model": "inventory.supplier", "pk": 3, "fields"…supplier", "pk": 4, "fields": {"name": "Daraz"}}]'}
+                // Above is the data format that is being retrieved from the fetch request. Need to parse the data into 
+                console.log('data.data.dta: ', data)
+                let parsedData = JSON.parse(data.data)
+                console.log('parsedData: ', parsedData)
+
+                var groupDropdown = $('#ledger_name');
+                console.log('groupDropdown: ', groupDropdown)
+                // Clear existing options from upazila dropdown
+                console.log('data after success division')
+                groupDropdown.empty(); // Clear the dropdown before adding new options
+                // Add new options for upazilas
+                if (Array.isArray(parsedData)) {
+                    // Handle parsedData as an array
+                    console.log('parsedData array: ', parsedData);
+                    parsedData.forEach(item => {
+                        const option = new Option(item.fields.name, item.pk);
+                        groupDropdown.append(option);
+                    });
+                }
+                /*data.data.forEach(name => {
+                    const option = new Option(name.name, name.id);
+                    console.log('accounts name: ', name.name)
+                    groupDropdown.append(option);
+                });*/
+                console.log('groupDropdown: ', groupDropdown.val());
+                var groupDropdownValue = groupDropdown.val();
+
+                // fetch thanas
+                //var selectedUpazilaID = $('#thana-name').val()
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+        }
+    </script>
+{% endblock custom_js %}
+

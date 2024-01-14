@@ -1,0 +1,123 @@
+{% extends 'hod_template/base_template.html' %}
+{% load static %}
+{% block custom_css %}
+    <link rel="stylesheet" href="{% static "dist/css/staff_type.css" %}">
+{% endblock custom_css %}
+
+{% block page_title %}Employee List{% endblock page_title %}
+
+{% block main_content %}
+<style>
+    {% comment %} .table {
+        margin-bottom: 0; /* Remove margin to make the table look cleaner */
+    }
+
+    .btn {
+        margin-right: 5px;
+    }
+
+    .alert {
+        margin-top: 10px;
+    }
+
+    .search-form {
+        display: flex;
+        align-items: center;
+    }
+
+    .search-input {
+        max-width: 200px;
+        margin-right: 10px;
+    }
+
+    .search-button {
+        padding: 6px 12px;
+        font-size: 12px;
+    } {% endcomment %}
+</style>
+<div class="container-xl px-4 mt-4">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header d-flex justify-content-center">
+                        <h3 class="card-title">Routes</h3>
+                    </div>
+                    <form method="GET" action="{% url 'manage_assigned_staff' %}" class="search-form">
+                    <div class="card-body row justify-content-between pb-0">
+                        <div class="add-staff-type-button col-md-6 col-12">
+                            <!-- Serial: 7 -->
+                            <a href="{% url 'assign_staff_type' %}" class="btn btn-primary add-staff-btn">Add Staff Type</a>
+                        </div>
+
+                        <div class="form-group mt-2 col-md-6 col-12">
+                            <div class="input-group">
+                            <input type="text" name="search_query" id="search-input"
+                            class="form-control form-control-sm search-input"
+                            placeholder="Search by Type name" value="{{ search_query }}">
+                    
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-primary search-button">
+                                Search
+                                </button>
+                            </div>
+                            </div>
+                        </div>
+
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Mobile</th>
+                                    <th>Type</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for staff in assigned_staff %}
+                                    <tr>
+                                        <td>{{ staff.admin.username }}</td>
+                                        <td>{{ staff.admin.email }}</td>
+                                        <td>{{ staff.admin.phone_number }}</td>
+                                        <td>{{ staff.staff_type.name }}</td>
+                                        <td>
+
+
+                                            <a href="{% url 'assign_staff_details' staff_id=staff.admin.id %}"
+                                            class="btn btn-primary btn-sm view-btn mb-2">
+                                            <i class="bi bi-eye"></i> Details
+                                        </a>
+                                        <a href="{% url 'assign_staff_details' staff_id=staff.admin.id %}"
+                                        class="btn btn-primary btn-sm edit-btn mb-2">
+                                        <i class="bi bi-pencil"></i> Edit
+                                    </a>
+                                        <a href="{% url 'delete_staff_assigned' staff_id=staff.admin.id %}"
+                                            class="btn btn-danger btn-sm delete-btn mb-2">
+                                            <i class="bi bi-trash"></i> Delete
+                                        </a>
+                              
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <div class="form-group">
+                            {% if messages %}
+                                {% for message in messages %}
+                                    {% if message.tags == 'error' %}
+                                        <div class="alert alert-danger">{{ message }}</div>
+                                    {% endif %}
+                                    {% if message.tags == 'success' %}
+                                        <div class="alert alert-success">{{ message }}</div>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock main_content %}

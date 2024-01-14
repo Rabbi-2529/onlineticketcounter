@@ -1,0 +1,167 @@
+{% extends 'hod_template/base_template.html' %}
+{% load static %}
+
+{% block page_title %}Add Bus Fitness{% endblock page_title %}
+
+{% block custom_css %}
+<link rel="stylesheet" href="{% static 'dist/css/manage_user.css' %}">
+<link rel="stylesheet" href="{% static "dist/css/add_product.css" %}">
+
+<style>
+    /* Center the form on the page */
+    .center-form {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        
+    }
+    {% comment %} .card {
+        border-radius: 20px;
+        /* box-shadow: 0 0.15rem 1.75rem 0 rgb(33 40 50 / 15%); */
+        box-shadow: 12px 16px 22px 9px rgba(0,0,0,0.1);
+    } {% endcomment %}
+    
+    .card-header {
+        background: linear-gradient(180deg, rgba(62,7,75,1) 0%, rgba(40,10,69,1) 63%);
+    }
+    
+    /* Styling for table headers */
+    .table thead tr th {
+        font-weight: 500;
+        color: rgb(0, 0, 0);
+    }
+    
+    /* Styling for table data cells */
+    .table tbody tr td {
+        font-size: 15px;
+        font-weight: 400;
+        color: rgb(41, 41, 41);
+    }
+    
+    
+
+    /* Style form labels */
+    label {
+        font-weight: bold;
+        margin-bottom: 5px;
+        display: block;
+    }
+    
+    /* Style form input fields */
+    input[type="text"],
+    input[type="date"],
+    input[type="number"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-bottom: 15px;
+    }
+    
+    /* Style submit button */
+    button[type="submit"] {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+    
+    button[type="submit"]:hover {
+        background-color: #0056b3;
+    }
+    .add_fitness {
+        background: linear-gradient(90deg, rgba(24,65,41,1) 0%, rgba(27,105,24,1) 93%);
+        border: none !important;
+    }
+    
+    .add_fitness:hover {
+        background: linear-gradient(90deg, rgba(24,65,41,1) 0%, rgba(13,134,88,1) 93%);
+    }
+
+    
+    /* Style input fields */
+    input[type="text"],
+    input[type="date"],
+    input[type="number"],
+    select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-bottom: 15px;
+    }
+    
+    /* Style select dropdown */
+    select {
+        appearance: none;
+        background: transparent;
+        background-image: url('{% static "img/arrow-icon.svg" %}');
+        background-position: right 5px center; /* Adjust the position of the icon */
+        background-repeat: no-repeat;
+        background-size: 15px 15px; /* Adjust the size of the icon */
+        padding-right: 20px; /* Add some space for the icon */
+    }
+    /* Style submit button */
+
+</style>
+{% endblock custom_css %}
+
+{% block main_content %}
+<div class="container-xl px-4 mt-4">
+ <div class="container-fluid">
+    <div class="row justify-content-center align-items-center min-vh-200">
+        <div class="col-md-6"> <!-- Adjust the column width as needed -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Add Bus Fitness</h3>
+                </div>
+                <div class="card-body">
+                        <form method="post">
+                            {% csrf_token %}
+                            
+                            <label for="fitness_name">Fitness Name:</label>
+                            <input type="text" id="fitness_name" name="fitness_name" required>
+                            <br>
+                            
+                            <label for="reg_number">Reg No:</label>
+                            <select id="vehicle" name="vehicle">
+                                {% for vehicle in vehicles %}
+                                    <option value="{{ vehicle.id }}">{{ vehicle.regi_number }}</option>
+                                {% endfor %}
+                            </select>
+                            <br>
+                            
+                            <label for="fitness_start_date">Fitness Start Date:</label>
+                            <input type="date" id="fitness_start_date" name="fitness_start_date" required>
+                            <br>
+                            
+                            <label for="fitness_end_date">Fitness End Date:</label>
+                            <input type="date" id="fitness_end_date" name="fitness_end_date" required>
+                            <br>
+                            
+                            <label for="start_mileage">Start Mileage:</label>
+                            <input type="text" id="start_mileage" name="start_mileage" required>
+                            <br>
+                            
+                            <label for="end_mileage">End Mileage:</label>
+                            <input type="text" id="end_mileage" name="end_mileage" required>
+                            <br>
+                            
+                            <button type="submit" class="save-btn">Add Fitness</button>
+                        </form>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock main_content %}
+
+{% block custom_js %}
+<!-- Include your custom JavaScript here -->
+{% endblock custom_js %}

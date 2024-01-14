@@ -1,0 +1,278 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<!-- start banner Area -->
+<section class="about-banner relative">
+  <div class="overlay overlay-bg"></div>
+  <br>
+  <div class="container">
+    <div class="row d-flex align-items-center justify-content-center">
+      <div class="about-content col-lg-12">
+        <h1 class="text-white">About Us</h1>
+        <p class="text-white link-nav">
+          <a href= {% url "index" %}>Home </a>
+          <span class="lnr lnr-arrow-right"></span>
+          <a href={% url "about" %}> About Us</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+<br />
+<section class="about-info-area section-gap">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-6 info-left">
+        <img class="img-fluid" src={% static "img/about/Bus1.jpg"%} alt="">
+      </div>
+      <div class="col-lg-6 info-right">
+        <h6>About Us</h6>
+        <h1>Who We Are?</h1>
+        <p>
+          We provide web hosting services in Bangladesh market from last 15 years. Our services is very user friendly services why not we have expert engineer in our support department. Our server category, Shared, Corporate, Dedicated Server.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="price-area section-gap">
+ 
+
+  <div class="container">
+    <div class="row d-flex justify-content-center">
+      <div class="menu-content pb-70 col-lg-12">
+        <div class="title text-center">
+          <h1 class="mb-10">Popular Destinations</h1>
+          <p>
+            We all live in an age that belongs to the young at heart. Life
+            that is becoming extremely fast, day.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="row mb-4">
+      <div class="col-lg-4">
+        <div class="card single-destination relative">
+          <img class="card-img-top" src="{% static 'img/d1.jpg' %}" alt="" />
+          <div class="card-body">
+            <h4 class="card-title">Dhaka</h4>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="card single-destination relative">
+          <img class="card-img-top" src="{% static 'img/d4.jpg' %}" alt="" />
+          <div class="card-body">
+            <h4 class="card-title">Chattogram</h4>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="card single-destination relative">
+          <img class="card-img-top" src="{% static 'img/d5.jpg' %}" alt="" />
+          <div class="card-body">
+            <h4 class="card-title">Khulna</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mb-4">
+      <div class="col-lg-4">
+        <div class="card single-destination relative">
+          <img class="card-img-top" src="{% static 'img/d7.jpg' %}" alt="" />
+          <div class="card-body">
+            <h4 class="card-title">Mymensingh</h4>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="card single-destination relative">
+          <img class="card-img-top" src="{% static 'img/d9.jpg' %}" alt="" />
+          <div class="card-body">
+            <h4 class="card-title">Sylhet</h4>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="card single-destination relative">
+          <img class="card-img-top" src="{% static 'img/d11.jpg' %}" alt="" />
+          <div class="card-body">
+            <h4 class="card-title">Cox's Bazar</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- End popular-destination Area -->
+
+<!-- Start price Area -->
+
+<!-- End price Area -->
+
+<!-- Start other-issue Area -->
+
+<!-- End other-issue Area -->
+
+<!-- Start testimonial Area -->
+<section class="testimonial-area section-gap">
+  <div class="container">
+    <div class="row d-flex justify-content-center">
+      <div class="menu-content pb-70 col-lg-8">
+        <div class="title text-center">
+          <h1 class="mb-10 text-info">Management Team</h1>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="active-testimonial">
+        <div class="single-testimonial item d-flex flex-row">
+          <div class="thumb">
+            <img class="img-fluid " src={% static "img/elements/avater1.jpeg" %}
+            alt="" />
+          </div>
+          <div class="desc">
+            <h4>Fazle Rabbi</h4>
+            <p>
+              has been Chief Executive Officer of redBus since June 2014. Prior
+              to redBus. He served as an Executive Vice President of Info Edge
+              India (Naukri group), heading two group businesses namely
+              Shiksha.com and Jeevansathi.com. He’s also worked as General
+              Manager of Marketing and Innovation at Airtel and has also had
+              multiple roles across Marketing, Brand Management and Sales at
+              Hindustan Unilever. Prakash has completed his MBA from IIM
+              Calcutta and also holds an Honours degree in Production
+              Engineering from Mumbai University.
+            </p>
+
+            <p>Best Refund Policy</p>
+          </div>
+        </div>
+
+        <div class="single-testimonial item d-flex flex-row">
+          <div class="thumb">
+            <img class="img-fluid" src={% static "img/elements/sajal.jpg" %}
+            alt="" />
+          </div>
+          <div class="desc">
+            <h4>Sajal</h4>
+            <p>
+              has been Chief Executive Officer of redBus since June 2014. Prior
+              to redBus. He served as an Executive Vice President of Info Edge
+              India (Naukri group), heading two group businesses namely
+              Shiksha.com and Jeevansathi.com. He’s also worked as General
+              Manager of Marketing and Innovation at Airtel and has also had
+              multiple roles across Marketing, Brand Management and Sales at
+              Hindustan Unilever. Prakash has completed his MBA from IIM
+              Calcutta and also holds an Honours degree in Production
+              Engineering from Mumbai University.
+            </p>
+
+            <p>Best Refund Policy</p>
+          </div>
+        </div>
+        <div class="single-testimonial item d-flex flex-row">
+          <div class="thumb">
+            <img class="img-fluid " src={% static "img/elements/avater1.jpeg" %}
+            alt="" />
+          </div>
+          <div class="desc">
+            <h4>Symon</h4>
+            <p>
+              has been Chief Executive Officer of redBus since June 2014. Prior
+              to redBus. He served as an Executive Vice President of Info Edge
+              India (Naukri group), heading two group businesses namely
+              Shiksha.com and Jeevansathi.com. He’s also worked as General
+              Manager of Marketing and Innovation at Airtel and has also had
+              multiple roles across Marketing, Brand Management and Sales at
+              Hindustan Unilever. Prakash has completed his MBA from IIM
+              Calcutta and also holds an Honours degree in Production
+              Engineering from Mumbai University.
+            </p>
+
+            <p>Best Refund Policy</p>
+          </div>
+        </div>
+        <div class="single-testimonial item d-flex flex-row">
+          <div class="thumb">
+            <img class="img-fluid" src={% static "img/elements/avater1.jpeg" %}
+            alt="" />
+          </div>
+          <div class="desc">
+            <h4>Fazle Rabbi</h4>
+            <p>
+              has been Chief Executive Officer of redBus since June 2014. Prior
+              to redBus. He served as an Executive Vice President of Info Edge
+              India (Naukri group), heading two group businesses namely
+              Shiksha.com and Jeevansathi.com. He’s also worked as General
+              Manager of Marketing and Innovation at Airtel and has also had
+              multiple roles across Marketing, Brand Management and Sales at
+              Hindustan Unilever. Prakash has completed his MBA from IIM
+              Calcutta and also holds an Honours degree in Production
+              Engineering from Mumbai University.
+            </p>
+
+            <p>Best Refund Policy</p>
+          </div>
+        </div>
+        <div class="single-testimonial item d-flex flex-row">
+          <div class="thumb">
+            <img class="img-fluid" src={% static "img/elements/avater1.jpeg" %}
+            alt="" />
+          </div>
+          <div class="desc">
+            <h4>Fazle Rabbi</h4>
+            <p>
+              has been Chief Executive Officer of redBus since June 2014. Prior
+              to redBus. He served as an Executive Vice President of Info Edge
+              India (Naukri group), heading two group businesses namely
+              Shiksha.com and Jeevansathi.com. He’s also worked as General
+              Manager of Marketing and Innovation at Airtel and has also had
+              multiple roles across Marketing, Brand Management and Sales at
+              Hindustan Unilever. Prakash has completed his MBA from IIM
+              Calcutta and also holds an Honours degree in Production
+              Engineering from Mumbai University.
+            </p>
+
+            <p>Best Refund Policy</p>
+          </div>
+        </div>
+        <div class="single-testimonial item d-flex flex-row">
+          <div class="thumb">
+            <img class="img-fluid" src={% static "img/elements/avater1.jpeg" %}
+            alt="" />
+          </div>
+          <div class="desc">
+            <h4>Fazle Rabbi</h4>
+            <p>
+              has been Chief Executive Officer of redBus since June 2014. Prior
+              to redBus. He served as an Executive Vice President of Info Edge
+              India (Naukri group), heading two group businesses namely
+              Shiksha.com and Jeevansathi.com. He’s also worked as General
+              Manager of Marketing and Innovation at Airtel and has also had
+              multiple roles across Marketing, Brand Management and Sales at
+              Hindustan Unilever. Prakash has completed his MBA from IIM
+              Calcutta and also holds an Honours degree in Production
+              Engineering from Mumbai University.
+            </p>
+
+            <p>Best Refund Policy</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock content %}
+<!-- End testimonial Area -->
+
+<!-- Start home-about Area -->
+
+<!-- End home-about Area -->
+
+<!-- Start blog Area -->
+
+<!-- start footer Area -->
+
+<!-- End footer Area -->

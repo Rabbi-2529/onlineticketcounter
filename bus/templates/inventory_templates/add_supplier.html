@@ -1,0 +1,398 @@
+{% extends 'inventory_templates/inventory_base.html' %}
+{% load static %}
+{% block custom_css %}
+<link rel="stylesheet" href="{% static "dist/css/add_product.css" %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.9/dist/flatpickr.min.css">
+
+<style>
+    .container-fluid {
+        width: 78%;
+        padding-right: 7.5px;
+        padding-left: 7.5px;
+        margin-right: auto;
+        margin-left: auto;
+    }
+    .select2-selection--single{
+        height: 37px !important;
+        border: 0px solid #aaa !important;
+    }
+</style>
+{% endblock custom_css %}
+{% block page_title %}Add Supplier{% endblock page_title %}
+
+{% block main_content %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Add Supplier</h3>
+                    </div>
+                    <div class="card-body">
+                        {% if messages %}
+                        <div class="alert alert-success">
+                            {% for message in messages %}
+                            {{ message }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        
+                        <div class="flex-container">
+                            <form method="post">
+                                {% csrf_token %}
+                                <div class="row">
+                                    <div class="col-4 mt-4">
+                                        <div class="form-group">
+                                            <label for="name" >Name:</label>
+                                            <input type="text" class="form-control" id="name" name="name"   placeholder="John Doe" required autocomplete="off">
+                                        </div>
+                                    </div>
+                                    <div class="col-4 mt-4">
+                                        <div class="form-group">
+                                            <label for="supplier_code">Supplier Code:</label>
+                                            <input type="number" class="form-control"  placeholder="Code" id="supplier_code" name="supplier_code">
+                                        </div>
+                                    </div>
+                                    <div class="col-4 mt-4">
+                                        <div class="form-group">
+                                            <label for="address">Address:</label>
+                                            <input type="text" class="form-control" id="address"  placeholder="House # 33A(4th Floor),Road # 4,Dhanmondi,Dhaka" name="address" required autocomplete="off">
+                                        </div>
+                                    </div>
+                                    <div class="col-4 mt-4">
+                                        <div class="form-group">
+                                            <label for="company">Company:</label>
+                                            <input type="text" class="form-control" id="company"  placeholder="IGL Web Ltd." name="company"  autocomplete="off">
+                                        </div>
+                                    </div>
+                                    <div class="col-4 mt-4">
+                                        <div class="form-group">
+                                            <label for="phone">Phone Number:</label>
+                                            <input type="text" class="form-control" name="phone" placeholder="Enter email" id="phone" autocomplete="off" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-4 mt-4">
+                                        <div class="form-group">
+                                            <label for="email">Email:</label>
+                                            <input type="email" class="form-control" name="email" placeholder="Enter email" id="id_email" autocomplete="off" required>
+                                        </div>
+                                    </div>
+                                  <div class="col-4 mt-4">
+                                        <div class="form-group">
+                                            {% comment %} <label for="address_country">Country:</label>
+                                            <input type="text" class="form-control" id="address_country" name="address_country"> {% endcomment %}
+                                            <label for="address_country">Country Name </label>
+                                            <select class="form-select" name="address_country" id="address_country">
+                                                <option value="" selected disabled>Select the Country</option>
+                                                {% for country in country_data %}
+                                                    <option value="{{ country.code }}">{{ country.name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                  
+                                  
+                                    <div class="col-4 mt-4">
+                                        <div class="form-group">
+                                            <label for="address_city">City:</label>
+                                            <input type="text" class="form-control" id="address_city" name="address_city" required autocomplete="off">
+                                        </div>
+                                    </div>
+                                   
+                                    <div class="col-4 mt-4">
+                                        <div class "form-group">
+                                            <label for="address_postal_code">Postal Code:</label>
+                                            <input type="number" class="form-control" id="address_postal_code" name="address_postal_code" required autocomplete="off">
+                                        </div>
+                                    </div>
+                                  
+                                    <div class="col-4 mt-4">
+                                        <div class="form-group">
+                                            <label for="website">Website:</label>
+                                            <input type="url" class="form-control" placeholder="Enter URL" id="website" name="website" autocomplete="off">
+                                        </div>
+                                    </div>
+                                    <div class="col-4 mt-4">
+                                        <div class="form-group">
+                                            <label for="payment_history">Payment History:</label>
+                                            <input class="form-control" id="payment_history" name="payment_history" rows="4" autocomplete="off"></input>
+                                        </div>
+                                    </div> 
+                                    <div class="col-4 mt-4">
+                                        <div class="form-group">
+                                            <label for="contract_start_date">Contract Start Date<span class="required-star">*</span></label>
+                                            <input type="text" id="contract_start_date" class="form-control datepicker mr-2" name="contract_start_date" placeholder="Select Date" value="" autocomplete="off">
+                                        </div>
+                                    </div>
+                                    <div class="col-4 mt-4">
+                                        <div class="form-group">
+                                            <label for="contract_end_date">Contract End Date<span class="required-star">*</span></label>
+                                            <input type="text" id="contract_end_date" class="form-control datepicker mr-2" name="contract_end_date" placeholder="Select Date" value="" autocomplete="off">
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Add other input fields for additional data if needed -->
+                                <button type="submit" class="save-btn">Add Supplier</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock main_content %}
+{% block custom_js %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.js"></script>
+<script type="text/javascript" src="{% static "dist/js/select_dropdown.js" %}"></script>
+<script>
+    // Maintain a list of selected products
+    $(document).ready(function(){
+        $('.datepicker').datepicker({
+            format: 'yyyy-mm-dd',
+            todayHighlight: true,
+            toggleActive: true
+        }).on('changeDate', function() {
+            // Hide the datepicker when a date is selected
+            $(this).datepicker('hide');
+        });
+    });
+
+
+</script>
+<script>
+    $(document).ready(function() {
+        $("#id_email").keyup(function() {
+        var email = $(this).val();
+    
+        if (email !== "") {
+            $.ajax({
+            url: "{% url 'check_email_exist' %}",
+            type: "POST",
+            data: { email: email }
+            })
+            .done(function(response) {
+                console.log(response);
+                if (response === "True") {
+                $(".email_error").remove();
+                $("<span class='email_error' style='padding: 5px;color: red;font-weight: bold;'>Email Not Available</span>").insertAfter("#id_email");
+                $("#id_email").addClass("error-field");
+                } else {
+                $(".email_error").remove();
+                $("<span class='email_error' style='padding: 5px;color: green;font-weight: bold;'>Email Available</span>").insertAfter("#id_email");
+                $("#id_email").removeClass("error-field");
+                }
+            })
+            .fail(function() {
+                console.log("failed");
+            });
+        } else {
+            $(".email_error").remove();
+            $("#id_email").removeClass("error-field");
+        }
+        });
+    
+        $("#id_username").keyup(function() {
+        var username = $(this).val();
+    
+        if (username !== "") {
+            $.ajax({
+            url: "{% url 'check_username_exist' %}",
+            type: "POST",
+            data: { username: username }
+            })
+            .done(function(response) {
+                console.log(response);
+                if (response === "True") {
+                $(".username_error").remove();
+                $("<span class='username_error' style='padding: 5px;color: red;font-weight: bold;'>Username Not Available</span>").insertAfter("#id_username");
+                $("#id_username").addClass("error-field");
+                } else {
+                $(".username_error").remove();
+                $("<span class='username_error' style='padding: 5px;color: green;font-weight: bold;'>Username Available</span>").insertAfter("#id_username");
+                $("#id_username").removeClass("error-field");
+                }
+            })
+            .fail(function() {
+                console.log("failed");
+            });
+        } else {
+            $(".username_error").remove();
+            $("#id_username").removeClass("error-field");
+        }
+        });
+    
+        $("#phone").on("input", function() {
+        var phoneNumber = $(this).val();
+        var numericPhoneNumber = phoneNumber.replace(/\D/g, ""); // Remove non-digit characters
+    
+        $(this).val(numericPhoneNumber); // Update the input value with the numeric version
+    
+        // Check if the phone number length is not 11
+        if (numericPhoneNumber.length !== 11) {
+            $(".phone_error").remove();
+            $(
+            "<span class='phone_error' style='padding: 5px;color: red;font-weight: bold;'>Phone Number must be 11 digits</span>"
+            ).insertAfter("#phone");
+            $("#phone").addClass("error-field");
+            return;
+        }
+    
+        // Check if the phone number starts with the allowed prefixes
+        var allowedPrefixes = ["019", "018", "017", "016", "013", "014"];
+        var isValidPrefix = false;
+    
+        for (var i = 0; i < allowedPrefixes.length; i++) {
+            if (numericPhoneNumber.startsWith(allowedPrefixes[i])) {
+            isValidPrefix = true;
+            break;
+            }
+        }
+    
+        if (!isValidPrefix) {
+            $(".phone_error").remove();
+            $(
+            "<span class='phone_error' style='padding: 5px;color: red;font-weight: bold;'>Invalid Formet</span>"
+            ).insertAfter("#phone");
+            $("#phoner").addClass("error-field");
+            return;
+        }
+    
+        // Phone number is valid, proceed with availability check
+        $(".phone_error").remove();
+        $("#phone").removeClass("error-field");
+        $.ajax({
+            url: "{% url 'check_phone_number_exist' %}",
+            type: "POST",
+            data: { phoneNumber: numericPhoneNumber },
+        })
+            .done(function(response) {
+            console.log(response);
+            if (response === "True") {
+                $(
+                "<span class='phone_error' style='padding: 5px;color: red;font-weight: bold;'>Phone Number Not Available</span>"
+                ).insertAfter("#phone");
+                $("#phone").addClass("error-field");
+            } else {
+                $(
+                "<span class='phone_error' style='padding: 5px;color: green;font-weight: bold;'>Phone Number Available</span>"
+                ).insertAfter("#phone");
+                $("#phone").removeClass("error-field");
+            }
+            })
+            .fail(function() {
+            console.log("failed");
+            });
+        });
+    
+        // Variables for delay and timeout
+        var delayTimer;
+        var timeout = 300;
+    
+        // Function to handle suggestion request
+        function performSuggestion(query) {
+        $.ajax({
+            url: "/staff_suggestion_view/",
+            type: "GET",
+            data: {
+            query: query
+            },
+            success: function(response) {
+            $("#suggestions").empty();
+            $.each(response.suggestions, function(index, suggestion) {
+                $("#suggestions").append("<p>" + suggestion + "</p>");
+            });
+            }
+        });
+        }
+    
+        // Function to handle search request
+        function performSearch(query) {
+        $.ajax({
+            url: "/add_staff/",
+            type: "GET",
+            data: {
+            query: query
+            },
+            success: function(response) {
+            $("#search-results").html(response);
+            }
+        });
+        }
+    
+        // Event handler for search form submission
+        $("#search-form").on("submit", function(event) {
+        event.preventDefault();
+        var query = $("#search-input").val();
+        performSearch(query);
+        });
+    
+        // Event handler for search input keyup
+        $("#search-input").on("keyup", function(event) {
+        var query = $(this).val();
+        clearTimeout(delayTimer);
+        if (query) {
+            delayTimer = setTimeout(function() {
+            performSuggestion(query);
+            }, timeout);
+        } else {
+            $("#suggestions").empty();
+        }
+        });
+    
+        // Event handler for form submission
+        $("form").on("submit", function(event) {
+        var isValid = true;
+        if ($("#id_email").hasClass("error-field")) {
+            isValid = false;
+        }
+        if ($("#id_username").hasClass("error-field")) {
+            isValid = false;
+        }
+        if ($("#phone_number").hasClass("error-field")) {
+            isValid = false;
+        }
+    
+        if (!isValid) {
+            event.preventDefault();
+            $(".error-field").css("border-color", "red");
+        }
+        });
+    });
+    </script>
+    <script>
+        $(document).ready(function () {
+            // Event handler for form submission
+            $("#supplier-form").on("submit", function (event) {
+                var isValid = true;
+    
+                // Loop through required fields and check if they are empty
+                $("input[required]").each(function () {
+                    if ($(this).val().trim() === "") {
+                        isValid = false;
+                        $(this).addClass("error-field");
+                    } else {
+                        $(this).removeClass("error-field");
+                    }
+                });
+    
+                if (!isValid) {
+                    event.preventDefault();
+                    // Add any additional styling or messages for invalid fields here
+                    // For example, you can add a red border or show an error message.
+                }
+            });
+        });
+    </script>
+    <script type="text/javascript" src="{% static "dist/js/select_dropdown.js" %}"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+    
+    <script>
+        $('#address_country').select2();
+      
+    </script>
+{% endblock custom_js %}

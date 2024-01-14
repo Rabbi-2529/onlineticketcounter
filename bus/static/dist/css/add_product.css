@@ -1,0 +1,979 @@
+.container-xl{
+    max-width: 1400px;
+}
+
+.card {
+    border-radius: 20px;
+    /* box-shadow: 0 0.15rem 1.75rem 0 rgb(33 40 50 / 15%); */
+    box-shadow: 12px 16px 22px 9px rgba(0,0,0,0.1);
+}
+
+
+.card-header{
+    border-top-left-radius: 20px !important;
+    border-top-right-radius: 20px !important;
+    background: rgb(62,7,75);
+    background: linear-gradient(180deg, rgba(62,7,75,1) 0%, rgba(40,10,69,1) 63%);
+}
+
+.card-body{
+    background-color: rgb(243, 243, 243);
+}
+
+ul {
+    list-style: none;
+    padding-left: 5 px;
+}
+
+/* Seat View */
+
+.form-group label{
+    font-size: 14px;
+    font-weight: 500 !important;
+    color: rgb(54, 54, 54);
+}
+
+.form-control {
+    display: block;
+    width: 100%;
+    /* padding: 0.875rem 1.125rem; */
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1;
+    color: #69707a;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgb(235, 235, 235);
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border-radius: 0.35rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.form-control::placeholder{
+    font-weight: 300;
+    color: rgb(187, 187, 187);
+}
+
+/* Adjust the font size and padding of the datepicker calendar */
+.ui-datepicker {
+    font-family: Arial, sans-serif;
+    background-color: #fff !important;
+    border: 1px solid #ccc !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    font-size: 14px; /* Adjust font size */
+}
+
+.ui-datepicker-header {
+    display: none; /* Remove the header containing "Previous" and "Next" buttons */
+}
+
+.ui-datepicker-title {
+    font-size: 20px; /* Increase the font size of the datepicker title */
+    font-weight: bold;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.ui-datepicker-calendar th,
+.ui-datepicker-calendar td {
+    text-align: center;
+    padding: 10px; /* Adjust padding */
+}
+
+.ui-datepicker-calendar td {
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.ui-datepicker-calendar td:hover {
+    background-color: #f0f0f0 !important;
+}
+
+.ui-datepicker-current-day {
+    background-color: #eaf3ff !important;
+}
+
+.datepicker .calendar-icon {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    font-size: 24px;
+    color: #999 !important;
+    cursor: pointer;
+}
+
+.datepicker .calendar-icon:hover {
+    color: #333 !important;
+}
+
+.ui-datepicker-calendar .ui-state-disabled{
+    color: #a3a3a3 !important;
+}
+
+.input-with-calendar {
+    position: relative;
+}
+
+.input-with-calendar .input-prefix {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+.ui-datepicker {
+    display: none;
+    position: absolute;
+    z-index: 9999;
+}
+
+.ui-datepicker-calendar {
+    background-color: #fff !important;
+    border: 1px solid #ccc !important;
+    padding: 10px; /* Adjust padding */
+}
+
+.ui-datepicker-prev,
+.ui-datepicker-next {
+    display: none; /* Remove the Previous and Next buttons */
+}
+
+.ui-datepicker-title {
+    text-align: center;
+    font-weight: bold;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.ui-datepicker-calendar th {
+    text-align: center;
+    padding: 10px; /* Adjust padding */
+}
+
+.ui-datepicker-calendar td {
+    text-align: center;
+    padding: 10px; /* Adjust padding */
+}
+
+.ui-datepicker-calendar td a {
+    text-decoration: none;
+    color: #333 !important;
+}
+
+.ui-datepicker-calendar td a:hover {
+    background-color: #f0f0f0 !important;
+}
+
+.save-btn {
+    color: rgb(238, 238, 238);
+    width: auto !important;
+    border: none !important;
+    border-radius: 10px;
+    padding: 0.875em 2em;
+    background: linear-gradient(90deg, #0f0566, transparent) #0a15b4;
+    transition: background-color 0.3s;
+}
+
+.save-btn:hover, .staff-btn:focus {
+    background-color: #031b46;
+}
+
+
+/* custom select design */
+  
+.icon_select_mate {
+    position: absolute;
+    top: 6px;
+    right: 2%;
+    font-size: 16px;
+    height: 22px;
+    transition: all 275ms;
+}
+
+.select_mate {
+    position: relative;
+    float: left;
+    width: 100%;
+    height: 40px;
+    color: #535353;
+    font-size: 14px;
+    font-weight: 400;
+    background-color: #f8f8f8;
+    border: 1px solid rgb(235, 235, 235);
+    /* box-shadow: 1px 2px 10px -2px rgba(0, 0, 0, 0.3); */
+    border-radius: 0.35rem;
+    transition: all 375ms ease-in-out;
+}
+
+.select_mate:hover{
+    background-color: rgb(228, 228, 228);
+}
+
+.select_mate select {
+    position: absolute;
+    overflow: hidden;
+    height: 0px;
+    opacity: 0;
+    z-index: -1;
+}
+
+.cont_list_select_mate {
+    position: relative;
+    left: -1px;
+    float: left;
+    width: 100%;
+}
+
+.cont_select_int {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    z-index: 999;
+    overflow: hidden;
+    height: 0px;
+    width: 100%;
+    background-color: #fff;
+    padding: 0px;
+    margin-bottom: 0px;
+    margin-top: 0px;
+    border-radius: 0px 0px 3px 3px;
+    box-shadow: 1px 4px 10px -2px rgba(0, 0, 0, 0.2);
+    transition: all 375ms ease-in-out;
+}
+
+.cont_select_int li {
+    position: relative;
+    float: left;
+    width: 100%;
+    border-bottom: 1px solid #E0E0E0;
+    background-color: #F5F5F5;
+    list-style-type: none;
+    padding: 10px 15px;
+    margin: 0px;
+    transition: all 275ms ease-in-out;
+    display: block;
+    cursor: pointer;
+}
+
+.cont_select_int li:last-child {
+    border-radius: 3px;
+    border-bottom: 0px;
+}
+
+.cont_select_int li:hover {
+    background-color: #ebebeb;
+}
+
+.cont_select_int li.dropdown-active {
+    background-color: #EEEEEE;
+}
+
+/* etiqueta <p> con la opción seleccionada  */
+.selecionado_opcion {
+    padding: 8px 8px;
+    width: 96%;
+    color: rgb(82, 82, 82) !important;
+    display: block;
+    margin: 0px;
+    cursor: pointer;
+}
+
+.required-star{
+    color: red;
+    font-size: 12px;
+}
+  
+/* custom select design */
+
+/* Date picker starts */
+.datepicker {
+    background-color: #fff;
+    border: none;
+}
+
+.datepicker-dropdown {
+    top: 0;
+    left: 0;
+}
+
+.datepicker table tr td.today, span.focused {
+    border-radius: 50% !important;
+}
+
+thead tr:nth-child(2) {
+    background: rgb(62,7,75);
+    background: linear-gradient(180deg, rgba(62,7,75,1) 0%, rgba(40,10,69,1) 63%);
+}
+
+thead tr:nth-child(3) th {
+    color: #400053 !important;
+    padding-top: 20px;
+    padding-bottom: 10px;
+}
+
+.dow, .old-day, .day, .new-day {
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 0px !important;
+}
+
+.old-day:hover, .day:hover, .new-day:hover, .month:hover, .year:hover, .decade:hover, .century:hover {
+    border-radius: 50% !important;
+    background-color: #eee;
+}
+
+/* .active {
+    border-radius: 50% !important;
+    background-image: linear-gradient(#140352, #2e024b) !important;
+    color: #fff !important;
+} */
+
+.prev, .next, .datepicker-switch {
+    border-radius: 0 !important;
+    padding: 20px 10px !important;
+    text-transform: uppercase;
+    font-size: 20px;
+    color: #fff;
+    opacity: 0.8; 
+}
+
+.prev:hover, .next:hover, .datepicker-switch:hover {
+    background-color: inherit !important;
+    opacity: 1;
+}
+  /* Date picker ends */
+
+  /* Table */
+.table{
+    background-color: rgb(253, 253, 253);
+    border-radius: 15px;
+    overflow-x: scroll;
+}
+
+
+
+.table thead th{
+    border-top: none;
+    border-bottom: none;
+}
+
+tbody, td, tfoot, th, thead, tr{
+    border-bottom: none;
+}
+
+.table tbody tr td{
+    min-width: 100px;
+}
+
+.table-hover tbody tr:hover{
+    background-color: rgb(255, 255, 255) !important;
+}
+
+.table thead tr th{
+    font-size: 13px;
+    font-weight: 400;
+    color: rgb(37, 37, 37);
+}
+
+.table tbody tr th, td{
+    font-size: 13px;
+    font-weight: 400;
+    color: rgb(54, 54, 54);
+}
+
+
+/* Table */
+
+
+@media(max-width:767px){
+    .container-xl{
+        padding-left: 2px !important;
+        padding-right: 2px !important;
+    }
+    .staff-card{
+        padding-right: 2px;
+        padding-left: 2px;
+    }
+}
+
+.card {
+    border-radius: 20px;
+    /* box-shadow: 0 0.15rem 1.75rem 0 rgb(33 40 50 / 15%); */
+    box-shadow: 12px 16px 22px 9px rgba(0,0,0,0.1);
+}
+
+.card-header{
+    border-top-left-radius: 20px !important;
+    border-top-right-radius: 20px !important;
+    background: rgb(62,7,75);
+    background: linear-gradient(180deg, rgba(62,7,75,1) 0%, rgba(40,10,69,1) 63%);
+}
+
+#selected_points_container {
+    display: none;
+    margin-top: 10px;
+}
+
+.selected-points-container {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-top: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    display: none;
+}
+
+.selected-points-container.show {
+    display: block;
+}
+
+.selected-point-item {
+    display: inline-block;
+    background-color: #f2f2f2;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    padding: 5px 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+.selected-point-item button {
+    margin-left: 5px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: red;
+}
+#selected_route_container {
+    display: none;
+    margin-top: 10px;
+}
+
+.selected-route-container {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.selected-route-item {
+    display: inline-block;
+    margin: 5px;
+    padding: 5px 10px;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+}
+
+.route-price-section{
+    background-color: rgb(233, 233, 233);
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+.remove-route-btn {
+    margin-left: 5px;
+    background-color: #ff0000;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.remove-route-btn:hover {
+    background-color: #cc0000;
+}
+
+.selected-facilities-box {
+    border: 1px solid #ccc;
+    padding: 1. 0px;
+    margin-top: 10px;
+    display: none;
+}
+
+.selected-facilities-box h4 {
+    margin-bottom: 5px;
+}
+
+.selected-facilities-box ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.selected-facilities-box li {
+    margin-bottom: 5px;
+}
+
+.selected-facilities-box {
+    border: 1px solid #ccc;
+    padding: 1. 0px;
+    margin-top: 10px;
+    display: none;
+}
+
+.selected-facilities-box h4 {
+    margin-bottom: 5px;
+}
+
+.selected-facilities-box ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.selected-facilities-box li {
+    margin-bottom: 5px;
+}
+.form-group-box {
+  position: relative;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.form-group-box .caret-icon {
+  position: absolute;
+  top: 12px;
+  right: 10px;
+}
+
+.form-group label{
+    font-size: 14px;
+    font-weight: 500 !important;
+    color: rgb(54, 54, 54);
+}
+
+.form-control {
+    display: block;
+    width: 100%;
+    /* padding: 0.875rem 1.125rem; */
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1;
+    color: #69707a;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgb(235, 235, 235);
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border-radius: 0.35rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.form-control::placeholder{
+    font-weight: 300;
+    color: rgb(187, 187, 187);
+}
+
+.submit-btn {
+    width: auto !important;
+    border: none !important;
+    border-radius: 10px;
+    padding: 0.875em 2em;
+    background: linear-gradient(90deg, #0f0566, transparent) #0a15b4;
+    transition: background-color 0.3s;
+}
+.submit-btn:hover, .submit-btn:focus {
+    background-color: #031b46;
+}
+
+.table-container {
+    margin-top: 20px;
+    overflow-x: scroll;
+}
+
+.table th{
+    font-size: 16px;
+    font-weight: 500 !important;
+    color: rgb(26, 26, 26);
+}
+
+.table td{
+    font-size: 15px;
+    font-weight: 400 !important;
+    color: rgb(48, 48, 48);
+}
+
+.save-btn {
+    width: auto !important;
+    border: none !important;
+    border-radius: 10px;
+    padding: 0.875em 2em;
+    background: linear-gradient(90deg, #0f0566, transparent) #0a15b4;
+    transition: background-color 0.3s;
+}
+
+.save-btn:hover, .staff-btn:focus {
+    background-color: #031b46;
+}
+
+.search-btn {
+    width: auto !important;
+    border: none !important;
+    border-radius: 10px;
+    padding: 7px 7px;
+    background: linear-gradient(90deg, #5381ff, transparent) #00b8c5;
+    transition: background-color 0.3s;
+}
+.search-btn:hover, .search-btn:focus {
+    background-color: #031b46;
+}
+
+/* search field */
+.search-button {
+    padding: 6px 12px;
+    font-size: 12px;
+    background: linear-gradient(90deg, #0f0566, transparent) #0a15b4;
+    border: none !important;
+    transition: background-color 0.3s;
+}
+
+.search-button:hover, .search-button:focus {
+    background-color: #220346;
+}
+
+.search-form {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.search-input {
+    max-width: 200px;
+    height: 40px;
+}
+
+.view-btn{
+    border: none !important;
+    background: linear-gradient(90deg, rgb(218, 5, 218), transparent) #eb47cf;
+    transition: background-color 0.3s;
+}
+
+.view-btn:hover, .view-btn:focus {
+    background-color: #e40044;
+}
+
+.edit-btn{
+    border: none !important;
+    background: linear-gradient(90deg, #3b0149, transparent) #620ab4;
+    transition: background-color 0.3s;
+}
+
+.edit-btn:hover, .edit-btn:focus {
+    background-color: #8c2eca;
+}
+
+.delete-btn{
+    border: none !important;
+    background: linear-gradient(90deg, rgb(218, 5, 51), transparent) #e96900;
+    transition: background-color 0.3s;
+}
+
+.delete-btn:hover, .delete-btn:focus {
+    background-color: #e40000;
+}
+
+.cancel-btn {
+    width: auto !important;
+    border-radius: 10px;
+    padding: 0.875em 2em;
+    background: linear-gradient(90deg, #9134cf, transparent) #1e9dcf;
+    transition: background-color 0.3s;
+}
+.cancel-btn:hover, .submit-btn:focus {
+    background-color: #ff0077;
+}
+
+.table td .view-coach{
+    color: rgb(104, 0, 105) !important;
+}
+
+@media(max-width:767px){
+    .container-xl{
+        padding-left: 2px !important;
+        padding-right: 2px !important;
+    }
+    .staff-card{
+        padding-right: 2px;
+        padding-left: 2px;
+    }
+}
+    /* Style for CSV button */
+    .buttons-csv {
+        background-color: transparent !important; /* Button background color */
+        border: 2px solid #007bff !important; /* Button border color */
+        color: #007bff !important; /* Button text color */
+    }
+    .button-excel{
+         background-color: transparent !important; /* Button background color */
+        border: 2px solid #007bff !important; /* Button border color */
+        color: #007bff
+    }
+
+    /* Style for PDF button */
+    .buttons-pdf {
+        background-color: transparent !important; /* Button background color */
+        border: 2px solid #28a745 !important; /* Button border color */
+        color: #28a745 !important; /* Button text color */
+    }
+
+    /* Style for Copy button */
+    .buttons-copy {
+        background-color: transparent !important; /* Button background color */
+        border: 2px solid #dc3545 !important; /* Button border color */
+        color: #dc3545 !important; /* Button text color */
+    }
+    .sl-column {
+        width: 20px;
+        text-align: center;
+    }
+   /* Rotate 180 Animation */
+.rotate-180-anim {
+    animation: rotate180 4s linear infinite;
+  }
+  
+  @keyframes rotate180 {
+    0% {
+      transform: rotate(0deg);
+    }
+    15% {
+      transform: rotate(180deg);
+    }
+    50% {
+      transform: rotate(180deg);
+    }
+    65% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(0deg);
+    }
+  }
+  
+  /* Rotate -45 Animation */
+  .rotate-45-anim {
+    transform: rotate(-45deg);
+    animation: rotate45 4s linear infinite;
+  }
+  
+  @keyframes rotate45 {
+    0% {
+      transform: rotate(-45deg);
+    }
+    15% {
+      transform: rotate(45deg);
+    }
+    50% {
+      transform: rotate(45deg);
+    }
+    65% {
+      transform: rotate(-45deg);
+    }
+    100% {
+      transform: rotate(-45deg);
+    }
+  }
+  
+  /* Background Color Animation */
+  .bg-anim {
+    animation: changebg 2s steps(2, jump-none) infinite;
+  }
+  
+  @keyframes changebg {
+    from {
+      background-color: #000;
+    }
+    to {
+      background-color: currentcolor;
+    }
+  }
+  
+  /* White Text Animation */
+  .white-text-anim {
+    animation: changewh 2s steps(2, jump-none) infinite;
+  }
+  
+  @keyframes changewh {
+    from {
+      color: currentcolor;
+    }
+    to {
+      color: #fff;
+    }
+  }
+  
+  /* Animation Delays */
+  .delay-1 {
+    animation-delay: 1s;
+  }
+  
+  .delay-2 {
+    animation-delay: 2s;
+  }
+  
+  .delay-3 {
+    animation-delay: 2.5s;
+  }
+  
+  /* Animation Durations */
+  .duration-5 {
+    animation-duration: 5s;
+  }
+  
+  .duration-1 {
+    animation-duration: 1s;
+  }
+  
+  /* Animation Direction */
+  .anim-reverse {
+    animation-direction: reverse;
+  }
+
+
+.custom-btn-group{
+    background-color: rgb(46, 41, 99);
+    font-weight: 400;
+}
+
+.custom-btn-group:hover{
+    background-color: rgb(9, 3, 66) !important;
+}
+
+.custom-btn-group:focus{
+    background-color: rgb(9, 3, 66) !important;
+}
+
+.action-link{
+    color: rgb(39, 39, 39) !important;
+    font-weight: 400;
+}
+
+.action-link:hover{
+    color: rgb(247, 247, 247) !important;
+    background-color: rgb(9, 3, 66) !important;
+}
+
+.btn-action{
+    color: rgb(247, 247, 247);
+    background-color: rgb(9, 3, 66);
+}
+
+.btn-action:hover{
+    color: rgb(247, 247, 247);
+    background-color: rgb(58, 19, 49);
+}
+
+.btn-action:focus{
+    color: rgb(247, 247, 247) !important;
+    background-color: rgb(58, 19, 49) !important;
+}
+
+/* Search + dropdown */
+.select2-container .select2-selection--single{
+    height: 40px !important;
+    border: 1px solid rgba(235, 235, 235) !important;
+    background-color: #f8f8f8 !important;
+}
+
+.select2-container--default .select2-dropdown.select2-dropdown--below{
+    background-color: #f8f8f8 !important;
+    border-left: 1px solid rgba(235, 235, 235) !important;
+    border-right: 1px solid rgba(235, 235, 235) !important;
+    border-bottom: 1px solid rgba(235, 235, 235) !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered{
+    font-size: 14px;
+    font-weight: 500 !important;
+}
+
+.select2-container--default .select2-results__option[aria-disabled=true]{
+    font-size: 14px;
+    font-weight: 500 !important;
+}
+
+.select2-container--default .select2-search--dropdown .select2-search__field{
+    font-size: 14px;
+    font-weight: 500;
+    color: rgb(63, 63, 63);
+    border-radius: 10px !important;
+    border: 1px solid rgb(243, 243, 243) !important;
+}
+
+.select2-container--default .select2-results__option--highlighted[aria-selected]{
+    background-color: rgb(30, 7, 59) !important;
+    color: white;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow b{
+    top: 18px !important;
+}
+/* Search + dropdown ends */
+
+.journal-mode{
+    padding: 6px 45px;
+}
+
+input[type="radio"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-color: #e7e6e7;
+    border: 2px solid #bbbbbb;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  
+/* Style the radio button when it's checked */
+input[type="radio"]:checked {
+    background-color: rgb(58, 10, 104);
+    border-color: rgb(58, 10, 104);
+}
+
+.mode-label{
+    cursor: pointer;
+}
+  
+/* Add some styling to the radio button label */
+.custom-control-label {
+    display: inline-block;
+    margin-left: 5px;
+}
+
+.success-alert{
+    background-color: rgba(0, 124, 0, 0.3) !important;
+    color: rgb(0, 63, 0);
+    font-weight: 400 !important;
+}
+
+.error-alert{
+    background-color: rgba(255, 0, 0, 0.3) !important;
+    color: rgb(206, 0, 0);
+    font-weight: 400 !important;
+}
+
+/* dropdown + search starts */
+
+
+/* dropdown + search ends */
+
+  

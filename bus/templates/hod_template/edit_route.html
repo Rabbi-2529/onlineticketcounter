@@ -1,0 +1,60 @@
+{% extends 'hod_template/base_template.html' %}
+{% load static %}
+{% block custom_css %}
+    <link rel="stylesheet" href="{% static "dist/css/add_route.css" %}">
+{% endblock custom_css %}
+{% block page_title %}{% endblock page_title %}
+
+{% block main_content %}
+
+<div class="container-xl px-4 mt-4">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+            <!-- general form elements -->
+            <div class="card card-primary">
+                <div class="card-header d-flex justify-content-center">
+                <h3 class="card-title">Edit Coach</h3>
+                </div>
+                <!-- /.card-header -->
+                <!-- form start -->
+                <form method="POST" action="{% url 'edit_route' route_id=route.id %}">
+                    {% csrf_token %}
+                    <div class="card-body">
+                    <div class="form-group">
+                        <label for="start_point">Starting Point</label>
+                        <input type="text" class="form-control" id="start_point" name="start_point" value="{{ route.start_point }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="end_point">Ending Point</label>
+                        <input type="text" class="form-control" id="end_point" name="end_point" value="{{ route.end_point }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="distance">Distance</label>
+                        <input type="number" class="form-control" id="distance" name="distance" value="{{ route.distance }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="travel_time">Travel Time</label>
+                        <input type="text" class="form-control" id="travel_time" name="travel_time" value="{{ route.travel_time }}" required>
+                    </div>
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-btn mb-3 d-flex justify-content-center">
+                        <button type="submit" class="btn btn-primary mx-2 save-btn">Save Changes</button>
+                        <a href="{% url 'manage_routes' %}" class="btn btn-secondary cancel-btn">Cancel</a>
+                    </div>
+                </form>
+                {% if messages %}
+                <div class="alert alert-success" style="margin-top: 10px">
+                    {% for message in messages %}
+                    {{ message }}
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            <!-- /.card -->
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock main_content %} 

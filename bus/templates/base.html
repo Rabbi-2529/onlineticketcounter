@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="zxx" class="no-js">
+  <head>
+    <!-- Mobile Specific Meta -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>Home</title>
+    {% block title %}{% endblock title %}
+
+    <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,400,300,500,600,700" rel="stylesheet"> 
+    <!--
+    CSS
+    
+    ============================================= -->
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link rel="stylesheet" href={% static "css/linearicons.css"%}>
+    <link rel="stylesheet" href={% static "css/font-awesome.min.css"%}>
+    <link rel="stylesheet" href={% static "css/bootstrap.css"%}>
+    <link rel="stylesheet" href={% static "css/magnific-popup.css"%}>
+    <link rel="stylesheet" href={% static "css/jquery-ui.css"%}>				
+    <link rel="stylesheet" href={% static "css/nice-select.css"%}>							
+    <link rel="stylesheet" href={% static "css/animate.min.css"%}>
+    <link rel="stylesheet" href={% static "css/owl.carousel.css"%}>				
+    <link rel="stylesheet" href={% static "css/main.css"%}>
+    <link rel="stylesheet" href={% static "css/index.css"%}>
+    {% block custom_css %}{% endblock custom_css %}
+
+
+    <style>
+      .nav-menu li.active a {
+        color: #f8b600; /* Change the color to your preferred active color */
+      }
+    </style>
+</head>
+  <body>
+
+    <header id="header" class="header-scrolled">
+        <div class="header-top">
+          <div class="container">
+            <div class="row align-items-center inner-container mx-auto">
+              <div class="col-lg-6 col-sm-6 col-6 header-top-left">
+                <ul>
+                  <li><a href="#">Visit Us</a></li>
+                  <li><a href="#">Buy Tickets</a></li>
+                </ul>			
+              </div>
+              {% comment %} <li><a href={% url 'show_login'%}>Login</a></li> {% endcomment %}
+              <div class="col-lg-6 col-sm-6 col-6 header-top-right">
+              <div class="header-social">
+                
+                {% if user.is_authenticated %}
+                <a href="tel:+8801965838328"><i class="fa fa-phone"></i>  +8801958666999</a>
+
+                <span style="color: #FFFF00;">Welcome, {{ user.username }}</span>
+                <a href="{% url 'logout' %}">Logout</a>
+                        {% else %}
+                <a href="tel:+8801965838328"><i class="fa fa-phone"></i> +8801958666999</a>
+
+
+
+                <a href={% url 'signup_user'%}>Signup</a>
+                <a href={% url 'show_login_user'%}>Login</a>
+
+ 
+                {% endif %}
+                
+              </div>
+              </div>
+            </div>			  					
+          </div>
+        </div>
+        <div class="main-menu">
+            <div class="container">
+            
+                <div class="row align-items-center inner-container justify-content-between">
+                    <div id="logo" class="col-md-4 col-9 ps-5 logo-div">
+                      <a href={% url "index"%}><img src={% static "img/logo.png"%} class="logo-image" alt="" title="" /></a>
+                    </div>
+                    <div class="col-md-8 col-3 d-flex justify-content-end">
+                    <nav id="nav-menu-container">
+                      <ul class="nav-menu">
+                        <li><a href={% url 'index'%}>Home</a></li>
+                        <li><a href={% url 'about'%}>About</a></li>
+                        <li><a href={% url 'contact'%}>Contact Us</a></li>
+                     
+                        <li><a href="{% url 'insurance'%}">Insurance Claim</a></li>
+                        {% if user.is_authenticated %}
+                        <li class="menu-has-children">
+                          <a href="">My Account</a>
+                          <ul class="">
+                            <li><a href="{% url 'dashboard' %}"><i class="fa fa-user fa-lg"></i> Manage My Account</a></li>
+                            <li><a href="{% url 'my_ticket_list' %} "><i class="fa fa-ticket fa-lg" aria-hidden="true"></i> My Ticket</a></li>
+                            <li><a href={% url 'complanints'%}><i class="fa fa-star fa-lg"></i> Complaint</a></li>
+                            <li><a href={% url "cancelticket" %}><i class="fa fa-window-close fa-lg" aria-hidden="true"></i> Ticket Cancellation</a></li>
+                            <li><a href="{% url 'logout' %}"><i class="fa fa-sign-out fa-lg" aria-hidden="true"></i> Logout</a></li>
+                          </ul>
+                        </li>
+                        {% endif %}
+                                                                                           
+                      
+                      </ul>
+                    </nav>
+                  </div>			      		  
+                </div>
+              
+              </div>
+        </div>
+      </header>
+      {% block content %}
+      
+      
+      {% endblock content %}
+
+      <footer class="footer-area section-gap">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-6">
+              <div class="single-footer-widget">
+                <h6>Bus Reservation</h6>
+                <p>
+                  logo
+  bis premium online booking portal which allows you to purchase ticket for various bus services, launch services, movies and events across the country
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+              <div class="single-footer-widget">
+                <h6>Company Info</h6>
+                <div class="row">
+                  <div class="col">
+                    <ul>
+                      <li><a href={% url "terms" %}>Terms and Conditions</a></li>
+                      <li><a href={% url "faq" %}>FAQ</a></li>
+                      <li><a href="{% url 'privacypolicy' %}">Privacy Policy</a></li>
+                      <li><a href="{% url "cacelationpolicy" %}">Cancellation Policy</a></li>
+                         <li><a href="#">How To Buy Ticket</a></li>
+                    
+                    </ul>
+                  </div>
+               
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+              <div class="single-footer-widget">
+                <h4 class="text-white">About Our Company</h4>
+               
+                <br>
+            
+                <div class="row">
+                  <div class="col">
+                    <ul>
+                      <li><a href="{% url 'about'%}">About Us</a></li>
+                      <li><a href="{% url 'contact'%}">Contact Us</a></li>
+                  
+                    </ul>
+                  </div>
+              </div>
+            </div>
+         
+           
+            </div>
+            <div class="col-lg-8 col-sm-8 footer-social">
+              <a href="#"><i class="fa fa-facebook"></i></a>
+              <a href="#"><i class="fa fa-twitter"></i></a>
+              <a href="#"><i class="fa fa-dribbble"></i></a>
+              <a href="#"><i class="fa fa-behance"></i></a>
+            </div>
+          </div>
+  
+          <div
+            class="row footer-top d-flex justify-content-between align-items-center"
+  >
+            <p class="col-lg-8 col-sm-12 footer-text m-0">
+              <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+              Copyright &copy;
+              <script>
+                document.write(new Date().getFullYear());
+              </script>
+              All rights reserved | This website is made 
+              <i class="fa fa-heart-o" aria-hidden="true"></i> by
+              <a href="https://iglweb.com/web/" target="_blank" style="color:#337ab7 !important"> IGL Web Ltd.</a>
+              <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+            </p>
+            
+          </div>
+        </div>
+      </footer>
+
+
+
+
+
+
+
+
+
+
+
+
+{% block js %}
+
+
+{% endblock js %}
+<script src={% static "js/vendor/jquery-2.2.4.min.js"%}></script>
+			<script src={% static "js/popper.min.js"%}></script>
+			<script src={% static "js/vendor/bootstrap.min.js"%}></script>			
+
+ 			<script src={% static "js/jquery-ui.js"%}></script>					
+  		<script src={% static "js/easing.min.js"%}></script>			
+			<script src={% static "js/hoverIntent.js"%}></script>
+			<script src={% static "js/superfish.min.js"%}></script>	
+			<script src={% static "js/jquery.ajaxchimp.min.js"%}></script>
+			<script src={% static "js/jquery.magnific-popup.min.js"%}></script>						
+			<script src={% static "js/jquery.nice-select.min.js"%}></script>					
+			<script src={% static "js/owl.carousel.min.js"%}></script>							
+			<script src={% static "js/mail-script.js"%}></script>	
+			<script src={% static "js/main.js"%}></script>
+            <script src={% static "js/searchbar.js"%}></script>
+            <script src={% static "js/popup.js"%}></script>
+            <script>
+              $(document).ready(function() {
+                // Check scroll position on page load
+                if ($(this).scrollTop() > 50) {
+                  $('#header').addClass('header-scrolled');
+                } else {
+                  $('#header').removeClass('header-scrolled');
+                }
+                
+                // Attach scroll event listener
+                $(window).on('scroll', function() {
+                  if ($(this).scrollTop() > 50) {
+                    $('#header').addClass('header-scrolled');
+                  } else {
+                    $('#header').removeClass('header-scrolled');
+                  }
+                });
+              });
+              </script>
+              
+
+              
+              
+              
+              <script type="text/javascript">
+                var seats = document.getElementsByClassName("seat-select");
+                var selectedSeat = null;
+                var selectedSeats = [];
+                var maxSeats = 4;
+              
+                for (var i = 0; i < seats.length; i++) {
+                  seats[i].addEventListener("mouseover", function () {
+                    this.nextElementSibling.style.transform = "scale(1)";
+                    this.style.color = "rgb(22, 206, 53)";
+                  });
+              
+                  seats[i].addEventListener("mouseout", function () {
+                    if (this.classList.contains("selected")) {
+                      this.nextElementSibling.style.transform = "scale(1)";
+                      this.style.color = "rgb(22, 206, 53)";
+                    } else {
+                      this.nextElementSibling.style.transform = "scale(0)";
+                      this.style.color = "";
+                    }
+                  });
+                }
+              
+                function toggleSeat() {
+                  // for (var i = 0; i < seats.length; i++) {
+                  //     seats[i].classList.remove("selected");
+                  // }
+              
+                  // remove the class 'selected', if already selected
+              
+                  if (this.classList.contains("selected")) {
+                    this.classList.remove("selected");
+              
+                    var rowId = document.getElementById("seat-" + this.id);
+                    if (rowId) {
+                      rowId.remove();
+                    }
+                    console.log("Not selected");
+                    selectedSeats.splice(selectedSeats.indexOf(this), 1);
+                  }
+              
+                  // maximum of four seats can be selected
+                  else {
+                    if (selectedSeats.length < maxSeats) {
+                      this.classList.add("selected");
+                      console.log("Has selected");
+              
+                      // If a seat is selected the seat is added in the table
+                      var tableBody = document.getElementById("seat-view-table");
+                      seatNumber = this.id;
+              
+                      // creates a row
+                      var newRow = document.createElement("tr");
+                      newRow.id = "seat-" + this.id;
+                      // newRow.classList.add('d-flex')
+              
+                      // creates a cell in the table
+                      var cell1 = document.createElement("td");
+                      cell1.classList.add("col-4");
+                      cell1.textContent = seatNumber;
+                      newRow.appendChild(cell1);
+              
+                      // creates a cell in the table
+                      var cell2 = document.createElement("td");
+                      cell2.classList.add("col-4", "ps-2");
+                      cell2.textContent = parseFloat("100");
+                      newRow.appendChild(cell2);
+              
+                      // creates a cell in the table
+                      var cell3 = document.createElement("td");
+                      cell3.classList.add("col-4", "ps-4");
+                      cell3.textContent = "First Class";
+                      newRow.appendChild(cell3);
+              
+                      tableBody.appendChild(newRow);
+              
+                      selectedSeats.push(this);
+                      console.log("selectedSeats: ", selectedSeats);
+                    } else {
+                      console.log("Maximum seat selection reached.");
+                    }
+                  }
+              
+                  // show the seat no. if the seat is already selected or booked
+                  for (var i = 0; i < seats.length; i++) {
+                    if (seats[i].classList.contains("selected")) {
+                      seats[i].nextElementSibling.style.transform = "scale(1)";
+                    } else if (seats[i].classList.contains("booked-seat")) {
+                      seats[i].nextElementSibling.style.transform = "scale(1)";
+                      seats[i].parentElement.style.cursor = "default";
+                    } else {
+                      seats[i].nextElementSibling.style.transform = "scale(0)";
+                    }
+                  }
+              
+                  var cell2Values = [];
+                  var cell2Elements = tableBody.querySelectorAll("td:nth-child(2)");
+                  console.log("cell2Elements: ", cell2Elements);
+                  totalAmount = 0;
+                  cell2Value = 0;
+                  var sum = 0;
+              
+                  // sum the cell values of Cell 2 to get the sum of fare
+                  for (var i = 0; i < cell2Elements.length; i++) {
+                    var cell2Value = parseFloat(cell2Elements[i].textContent);
+                    // cell2Values.push(cell2Value);
+                    // sum += cell2Value;
+                    totalAmount += cell2Value;
+                  }
+              
+                  console.log("cell2Values: ", cell2Values);
+                  totalFare = document.getElementById("total-fare");
+                  console.log("total fare: ", totalAmount);
+                  totalFare.textContent = totalAmount;
+                }
+              
+                for (var i = 0; i < seats.length; i++) {
+                  seats[i].addEventListener("click", toggleSeat);
+                }
+              
+                // Booking Process
+              
+                var continueBtn = document.getElementById("booking-process");
+              
+                function bookingProcess() {
+                  alert("Booking Sccessful");
+                  // for (var i = 0; i < seats.length; i++){
+                  //     console.log(seats[i])
+                  // }
+              
+                  for (var i = 0; i < seats.length; i++) {
+                    if (seats[i].classList.contains("selected")) {
+                      seats[i].classList.remove("selected");
+                      seats[i].classList.add("booked-seat");
+              
+                      seats[i].style.color = "rgb(230, 94, 94)";
+              
+                      seats[i].style.cursor = "none";
+                      seats[i].style.pointerEvents = "none";
+              
+                      console.log("Booking added");
+                      console.log(seats[i]);
+              
+                      if (
+                        seats[i].classList.contains("booked-seat") &&
+                        selectedSeats.includes(seats[i])
+                      ) {
+                        console.log("true");
+                        selectedSeats = [];
+                      }
+                    }
+                  }
+                }
+              
+                continueBtn.addEventListener("click", bookingProcess);
+              </script>
+              
+              <script>
+                $(document).ready(function() {
+                  // Add an 'active' class to the clicked navbar item and remove it from others
+                  $('.nav-menu li').on('click', function() {
+                    $(this).addClass('active').siblings().removeClass('active');
+                  });
+            
+                  // Check the current URL and set the active class for the appropriate navbar item
+                  var currentUrl = window.location.pathname;
+                  $('.nav-menu li').each(function() {
+                    var linkUrl = $(this).find('a').attr('href');
+                    if (currentUrl === linkUrl) {
+                      $(this).addClass('active');
+                    }
+                  });
+                });
+              </script>
+        
+</body>
+</html>

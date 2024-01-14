@@ -1,0 +1,316 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+    .form-control:focus {
+        box-shadow: none;
+        border-color: #BA68C8
+    }
+    
+    .profile-button {
+        background: rgb(99, 39, 120);
+        box-shadow: none;
+        border: none
+        
+
+    }
+    .profile-button .
+    .profile-button:hover {
+        background: #682773
+    }
+    
+    .profile-button:focus {
+        background: #682773;
+        box-shadow: none
+    }
+    
+    .profile-button:active {
+        background: #682773;
+        box-shadow: none
+    }
+    
+    .back:hover {
+        color: #682773;
+        cursor: pointer
+    }
+    
+    .labels {
+        font-size: 11px
+    }
+    
+    .add-experience:hover {
+        background: #BA68C8;
+        color: #fff;
+        cursor: pointer;
+        border: solid 1px #BA68C8
+    }
+    .navbar {
+      background-color: #f8f9fa;
+      border: none; /* Set the background color */
+    }
+    
+    .navbar-nav .nav-brand {
+      margin-bottom: 10px;
+      color: #333; /* Set the text color */
+    }
+    
+    .navbar-nav .nav-brand:hover,
+    .navbar-nav .nav-brand:focus {
+      background: #fff; /* Set the text color on hover/focus */
+    }
+    .navbar-nav .nav-item.active .nav-link {
+      font-weight: bold; /* Set the font weight for active nav link */
+    }
+    .list-group-item {
+      position: relative;
+      padding-left: 10px;
+    }
+    
+    .list-group-item::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 50%;
+      height: 10px; /* Adjust the height as desired */
+      width: 4px;
+      background-color: green;
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+      transform: translateY(-60%);
+    }
+    
+    .list-group-item:hover::before,
+    .list-group-item.active::before {
+      opacity: 1;
+    }
+    
+    .list-group-item a {
+      color: black;
+      transition: color 0.3s ease-in-out;
+    }
+    
+    .list-group-item:hover a {
+      color: green;
+    }
+    .list-group-item.active {
+      background-color: green;
+    }
+    
+    .list-group-item.active a {
+      color: white;
+    }
+    .error-message {
+      color: red;
+    }
+    .error-border {
+      border: 1px solid red;
+    }
+    .valid-border {
+      border-color: green;
+    }
+
+</style>
+
+<section class="about-banner relative">
+    <div class="overlay overlay-bg"></div>
+    <div class="container">
+      <div class="row d-flex align-items-center justify-content-center">
+        <div class="about-content col-lg-12">
+          <h1 class="text-white">Profile </h1>
+          <p class="text-white link-nav">
+          
+            <a href={% url "about" %}> Manage My Account</a>
+            <span class="lnr lnr-arrow-right"></span>
+            <a href={% url "about" %}> Profile Setting</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="profile-info-area">
+    <div class="container rounded bg-white mt-5 mb-5">
+      <div class="row">
+        <div class="col-md-3">
+          <!-- Profile Picture Section -->
+          <div class="card bg-white">
+            <div class="card-body" style="border-bottom: 1px solid #ccc; display: flex; flex-direction: column; align-items: center;">
+              
+              <form method="post" action="{% url 'profile' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+              <label for="profile-picture">
+                <div class="rounded-circle mt-5" style="width: 150px; height: 150px; overflow: hidden;">
+                  {% if form.instance.profile_picture %}
+                    <img class="img-fluid" src="{{ form.instance.profile_picture.url }}" alt="Profile Picture" id="profile-image">
+                  {% else %}
+                    <img class="img-fluid" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt="Demo Image" id="profile-image">
+                  {% endif %}
+                </div>
+              </label>
+              <input type="file" id="profile-picture" name="profile_picture" style="display: none;" onchange="showSelectedImage(event)">
+              <h5 class="card-title font-weight-bold">{{ request.user.username }}</h5>
+              <p class="card-text text-black-50">{{ request.user.email }}</p>
+              <div class="mt-3">
+                <button class="btn btn-info profile-button" type="button" onclick="chooseProfilePicture()">Upload your picture</button>
+ </div>
+            </div>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item border-0">
+                <a href="{% url 'dashboard' %}" class="nav-link">Manage My Account</a>
+              </li>
+              <li class="list-group-item border-0">
+                <a href="#" class="nav-link">My Ticket</a>
+              </li>
+              <li class="list-group-item border-0">
+                <a href={% url 'complanints'%}  class="nav-link">Complaint</a>
+              </li>
+              <li class="list-group-item border-0">
+                <a href="{% url 'cancelticket' %}" class="nav-link">Ticket Cancellation</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        
+        <div class="col-md-6">
+          {% if messages %}
+          {% for message in messages %}
+            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+          <!-- Profile Settings Form -->
+          <div class="card mb-3" style="border-style: solid none none none; border-width: 2px; border-color: green;">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="text-right">Profile Settings</h4>
+              </div>
+  
+       
+                <div class="row mt-2">
+                  <div class="col-md-6">
+                    <label class="labels">First Name</label>
+                    {{ form.first_name }}
+                  </div>
+                  <div class="col-md-6">
+                    <label class="labels">Last Name</label>
+                    {{ form.last_name }}
+                  </div>
+                </div>
+                <div class="row mt-3">
+                  <div class="col-md-12">
+                    <label class="labels" for="{{ form.mobile_number.id_for_label }}">Mobile Number</label>
+                    <div class="input-group">
+                      <input class="form-control form-control {% if form.mobile_number.errors %}error-border{% endif %}" id="{{ form.mobile_number.id_for_label }}" name="{{ form.mobile_number.html_name }}" type="text" value="{{ form.mobile_number.value }}" oninput="checkLength(this, 10)">
+                    </div>
+                    {% if form.mobile_number.errors %}
+                      <p class="error-message">{{ form.mobile_number.errors }}</p>
+                    {% endif %}
+                  </div>
+                  <div class="col-md-12">
+                    <label class="labels">Address</label>
+                    {{ form.address }}
+                  </div>
+                  <div class="col-md-12">
+                    <label class="labels" for="{{ form.nid.id_for_label }}">NID</label>
+                    <div class="input-group">
+                      <input class="form-control form-control {% if form.nid.errors %}error-border{% endif %}" id="{{ form.nid.id_for_label }}" name="{{ form.nid.html_name }}" type="text" value="{{ form.nid.value }}" oninput="checkLength(this, 10)">
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <label class="labels">Date Of Birth</label>
+                    <input type="date" class="form-control" name="{{ form.date_of_birth.name }}" id="date-of-birth-input" {% if form.date_of_birth.field.required %}required{% endif %}>
+                  </div>
+                  <div class="col-md-12">
+                    <label class="labels">Gender</label>
+                    {{ form.gender }}
+                  </div>
+                  <div class="col-md-12">
+                    <label class="labels">Postcode</label>
+                    {{ form.postcode }}
+                  </div>
+                  <div class="col-md-12">
+                    <label class="labels">State</label>
+                    {{ form.state }}
+                  </div>
+                </div>
+                <div class="mt-5 text-center">
+                  <button class="btn btn-info" type="submit">Save Profile</button>
+                </div>
+              </form>
+              <br>
+          
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+{% endblock content %}
+
+
+
+{% block js %}
+ <script>
+  // Get the current date
+  var currentDate = new Date();
+
+  // Set the maximum date to December 31, 2009
+  var maxDate = new Date(2009, 11, 31);
+
+  // Set the value of the date input field
+  var dateOfBirthInput = document.getElementById('date-of-birth-input');
+  dateOfBirthInput.valueAsDate = maxDate;
+
+  // Set the maximum date attribute
+  dateOfBirthInput.setAttribute('max', maxDate.toISOString().split('T')[0]);
+</script>
+
+<script>
+  // Function to show selected image in the profile picture section
+  function showSelectedImage(event) {
+    var selectedImage = event.target.files[0];
+    var reader = new FileReader();
+    var profileImage = document.getElementById('profile-image');
+
+    reader.onload = function (e) {
+        profileImage.src = e.target.result;
+    };
+
+    if (selectedImage) {
+        reader.readAsDataURL(selectedImage);
+    }
+}
+
+// Function to trigger file input click when profile-button is clicked
+function chooseProfilePicture() {
+    document.getElementById('profile-picture').click();
+}
+</script>
+
+
+<script>
+  function onlyDigits(event) {
+    var key = event.keyCode || event.which;
+    var keyChar = String.fromCharCode(key);
+  
+    // Allow only digits (0-9)
+    if (!/^[0-9]*$/.test(keyChar)) {
+      // Block alphabets except for backspace (keycode 8)
+      if (key !== 8) {
+        event.preventDefault();
+        return false;
+      }
+    }
+  }
+  function checkLength(input, length) {
+    if (input.value.length === length) {
+      input.classList.add('valid-border'); // Add the 'valid-border' class
+    } else {
+      input.classList.remove('valid-border'); // Remove the 'valid-border' class
+    }
+  }
+</script>
+
+
+{% endblock js %}

@@ -1,0 +1,531 @@
+{% extends 'accounts_templates/accounts_base.html' %}
+{% load static %}
+{% block custom_css %}
+<link rel="stylesheet" href="{% static "dist/css/add_product.css" %}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.9/dist/flatpickr.min.css">
+<style>
+    /* Custom status colors */
+    .custom-status-pending {
+        color: orange; /* Adjust the color as needed */
+    }
+
+    .custom-status-received {
+        color: green; /* Adjust the color as needed */
+    }
+
+    .custom-status-completed {
+        color: blue; /* Adjust the color as needed */
+    }
+
+    .custom-status-canceled {
+        color: red; /* Adjust the color as needed */
+    }
+    .make-payment-link,
+    .view-payment-link{
+        color: black !important;
+    }
+    .delete-purchase {
+        color: black !important;
+    }
+    .btn-btn-light {
+        border-color: black;
+    }
+    .btn-btn-light {
+        border-color: black;
+        color: black; /* Set the default text color */
+        transition: border-color 0.4s, color 0.4s; /* Add a smooth transition for the color change */
+    }
+
+    .btn-btn-light:hover {
+        border-color: blue;
+        color: blue; /* Change the text color to blue on hover */
+    }
+
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1050;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    /* CSS */
+    .custom-btn {
+        background-color: #EA4C89 !important;
+        border-radius: 8px;
+        border-style: none;
+        box-sizing: border-box;
+        color: #FFFFFF !important;
+        cursor: pointer;
+        display: inline-block;
+        font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        height: 40px;
+        line-height: 20px;
+        list-style: none;
+        margin: 0;
+        outline: none;
+        padding: 10px 16px;
+        position: relative;
+        text-align: center;
+        text-decoration: none;
+        transition: color 100ms;
+        vertical-align: baseline;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+    }
+
+    .custom-btn:hover,
+    .custom-btn:focus {
+        background-color: #F082AC !important;
+    }
+
+    /* Style the header cells */
+    table.expense-table thead th {
+        font-size: 13px;
+        font-weight: 400;
+        color: #20c997;
+    }
+
+    
+
+    
+
+    /* Style the text inside the modal */
+    .modal-body {
+        font-size: 16px; /* Change the font size */
+        font-family: Arial, sans-serif; /* Change the font family */
+        line-height: 1.6; /* Adjust the line height */
+    }
+    
+    /* Style the text inside the list items */
+    .modal-body ul li {
+        font-size: 13px; /* Change the font size for list items */
+    }
+    
+
+
+
+
+
+    .modal-logo {
+        width: 238px;
+        height: 67px;
+        margin-top: 11px;
+        margin-left: 233px;
+    } /* Add some margin between the logo and close button */
+    
+    
+    .close {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        z-index: 1;
+        font-size: 20px; /* Adjust the font size as needed */
+        color: #ff0000; /* Change the color to your preferred color */
+        cursor: pointer; /* Add a pointer cursor to indicate it's clickable */
+        transition: color 0.3s; /* Add a smooth color transition on hover */
+    
+        /* Add a little padding to make it more clickable */
+        padding: 5px;
+    }
+    
+    .close:hover {
+        color: #ff5555; /* Change the color on hover */
+    }
+</style>
+{% endblock custom_css %}
+
+{% block main_content %}
+<div class="container-xl px-4 mt-4">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header d-flex justify-content-center">
+                        <h3 class="card-title py-2">Payment Invoices List</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <div class="add-staff-type-button col-md-6 col-12 mb-2">
+                                <a href="{% url 'add_payment_invoice' %}" class="btn btn-success save-btn">Create Transaction</a>
+                            </div>
+                            <table id="invoiceList" class="table">
+                                <br>
+                                <thead>
+                                    <tr>
+                                        <th><input type="checkbox" id="select-all-invoices"></th>
+                                      
+                                        <th>Invoice Number</th>
+                                        <th>Account</th>
+                                        <th>Payment Type</th>
+                                        <th>Amount</th>
+                                        <th>Date</th>
+                                        <th>Reference</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for invoice in invoices %}
+                                        <tr class="invoice-row" data-invoice-id="{{ invoice.id }}">
+                                            <td><input type="checkbox" name="selected_invoices" value="{{ invoice.id }}"></td>
+                                            <td>{{ invoice.invoice_number }}</td>
+                                            <td>{{ invoice.account.account_name }}</td>
+                                            <td>{{ invoice.get_payment_type_display }}</td>
+                                            <td>{{ invoice.amount }}</td>
+                                            <td>{{ invoice.date }}</td>
+                                            <td>{{ invoice.reference }}</td>
+                                            <td>
+                                                <div class="btn-group dropdown">
+                                                    <button class="btn btn-secondary custom-btn-group dropdown-toggle" type="button"
+                                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                                        >
+                                                        Actions
+                                                    </button>
+                                                    <div class="dropdown-menu text-black">
+                                                        <a class="dropdown-item edit-invoice" href="#"
+                                                            data-toggle="modal" data-target="#editInvoiceModal{{ invoice.id }}">Edit</a>
+                                                        <a class="dropdown-item delete-invoice" data-id="{{ invoice.id }}" data-toggle="modal"
+                                                            data-target="#deleteInvoiceModal{{ invoice.id }}">Delete</a>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{% for invoice in invoices %}
+<div class="modal fade" id="editInvoiceModal{{ invoice.id }}" tabindex="-1" role="dialog"
+    aria-labelledby="editInvoiceModalLabel{{ invoice.id }}" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editInvoiceModalLabel{{ invoice.id }}">Edit Invoice</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+           
+                <form id="editInvoiceForm">
+                    {% csrf_token %}
+                    <input type="hidden" id="invoiceId" name="invoice_id" value="{{ invoice.id }}">
+             
+                    <button type="submit" class="custom-btn">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="deleteInvoiceModal{{ invoice.id }}" tabindex="-1" role="dialog"
+    aria-labelledby="deleteInvoiceModalLabel{{ invoice.id }}" aria-hidden="true">
+    <!-- Delete invoice modal content -->
+</div>
+
+{% comment %} <div class="modal fade" id="expenseDetailsModal" tabindex="-1" role="dialog" aria-labelledby="expenseDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="expenseDetailsModalLabel">Expense Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <ul>
+                    <li><strong>ID:</strong> <span id="expenseId"></span></li>
+                    <li><strong>Date:</strong> <span id="expenseDate"></span></li>
+                    <li><strong>Warehouse Name:</strong> <span id="expenseWarehouseName"></span></li>
+                    <li><strong>Warehouse Location:</strong> <span id="warehouseLocation"></span></li>
+                    <li><strong>Warehouse Phone Number:</strong> <span id="warehousePhoneNumber"></span></li>
+                    <li><strong>Warehouse Email:</strong> <span id="warehouseEmail"></span></li>
+                    <li><strong>Warehouse Address (Country):</strong> <span id="warehouseAddressCountry"></span></li>
+                    <li><strong>Warehouse Address (City):</strong> <span id="warehouseAddressCity"></span></li>
+                    <li><strong>Warehouse Address (Postal Code):</strong> <span id="warehouseAddressPostalCode"></span></li>
+                    <li><strong>Expense Type:</strong> <span id="expenseType"></span></li>
+                    <li><strong>Amount:</strong> <span id="expenseAmount"></span></li>
+                    <li><strong>Purchase Note:</strong> <span id="expensePurchaseNote"></span></li>
+
+                    <!-- Payment Details -->
+                    <li><strong>Payment Date:</strong> <span id="paymentDate"></span></li>
+                    <li><strong>Payment Amount:</strong> <span id="paymentAmount"></span></li>
+                    <li><strong>Payment Method:</strong> <span id="paymentMethod"></span></li>
+                    <li><strong>Transaction ID:</strong> <span id="transactionId"></span></li>
+                    <li><strong>Payment Status:</strong> <span id="paymentStatus"></span></li>
+                </ul>
+            </div>
+        </div>
+    </div>voucherNumber
+</div> {% endcomment %}
+
+<div class="modal fade" id="expenseDetailsModal"  tabindex="-1" role="dialog"
+aria-labelledby="expenseDetailsModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document"> 
+        <div class="modal-content">
+            <div class="modal-header">
+    
+                <img src="{% static 'img/logo.png'%}" alt="Your Logo" class="modal-logo">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+             
+                    <div class="col-md-6">
+                        <div class="warehouse-details">
+                           
+                            <ul>
+                                <li><strong>Date:</strong> <span id="expenseDate"></span></li>
+                                <li><strong>Warehouse:</strong> <span id="expenseWarehouseName"></span></li>
+                                <li><strong>Address:</strong> <span id="warehouseAddressCountry"></span>,<span id="warehouseAddressCity"></span>, <span id="warehouseAddressPostalCode"></span></li>
+                                <li><strong>Voucher:</strong> <span id="voucherNumber"></span></li>
+                                <li><strong>Email:</strong> <span id="warehouseEmail"></span></li>
+                                <li><strong>Phone Number:</strong> <span id="warehousePhoneNumber"></span></li>
+                            </ul>
+                        </div>
+                    </div>
+                
+                    <div class="col-md-6">
+                        <div class="payment-details">
+                            <ul>
+                                <li><strong>Payment Date:</strong> <span id="paymentDate"></span></li>
+                                <li><strong>Payment Amount:</strong> <span id="paymentAmount"></span></li>
+                                <li><strong>Payment Method:</strong> <span id="paymentMethod"></span></li>
+                                <li><strong>Transaction ID:</strong> <span id="transactionId"></span></li>
+                                <li><strong>Payment Status:</strong> <span id="paymentStatus"></span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <table class="table expense-table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Serial No</th>
+                            <th>Products</th>
+                            <th>Particular</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <td>{{ forloop.counter }}</td>
+                        <td>
+                            <span id="expenseSubCategory"></span>
+                        </td>
+                        <td>
+                            <span id="expenseCategory"></span>
+                        </td>
+                        <td>
+                            <span id="expenseAmount"></span>
+                        </td>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endblock main_content %}
+
+{% block custom_js %}
+<script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.9/dist/flatpickr.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#select-all-invoices').click(function() {
+            $('input[name="selected_invoices"]').prop('checked', this.checked);
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        flatpickr("#date", {
+            dateFormat: "Y-m-d",
+        });
+        $(document).on('submit', '#editInvoiceForm', function (e) {
+            e.preventDefault();
+            let form = $(this);
+            let url = form.attr('action');
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: form.serialize(),
+                success: function (data) {
+                    if (data.success) {
+                        alert(data.message);
+                        location.reload(); // Reload the page to reflect changes
+                    } else {
+                        alert(data.message);
+                    }
+                }
+            });
+        });
+
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script>
+    $(document).ready(function() {
+        $('.delete-invoice').click(function() {
+            // Get the transaction ID from the data attribute
+            var invoiceId = $(this).data('id');
+            
+            // Display a SweetAlert2 confirmation dialog
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You won\'t be able to revert this!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+         
+                    $.ajax({
+                        url: `/delete_invoice/${invoiceId}/`,
+                        type: 'POST',
+                        data: {
+                            csrfmiddlewaretoken: '{{ csrf_token }}'
+                        },
+                        success: function(response) {
+                            if (response.success) {
+              
+                                location.reload(); 
+                            } else {
+                                // Handle errors
+                                Swal.fire('Error', response.message, 'error');
+                            }
+                        },
+                        error: function() {
+                            // Handle AJAX errors
+                            Swal.fire('Error', 'An error occurred during the delete process.', 'error');
+                        }
+                    });
+                }
+            });
+        });
+    });
+</script>
+
+
+<script>
+    $(document).ready(function() {
+        $('#invoiceList').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'copy',
+                    text: '<i class="fa-solid fa-copy fa-lg"></i>',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7] // Specify which columns to include
+                    }
+                },
+                {
+                    extend: 'csv',
+                    text: '<i class="fa-solid fa-file-csv fa-lg"></i>',
+                    filename: 'Invoice List', // Specify the filename
+                    extension: '.csv',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7] // Specify which columns to include
+                    },
+                    fieldSeparator: ',', // Specify the field separator (comma)
+                    fieldBoundary: '"' // Specify the field boundary character
+                },
+                {
+                    extend: 'excel',
+                    text: '<i class="fas fa-file-excel  fa-lg"></i>',
+                    filename: 'Invoice List', // Specify the filename
+                    extension: '.xlsx',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7] // Specify which columns to include
+                    }
+                },
+                {
+                    extend: 'pdf',
+                    text: '<i class="fa-solid fa-file-pdf fa-lg"></i>',
+                    filename: 'Invoice List', // Specify the filename
+                    extension: '.pdf',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7] // Specify which columns to include
+                    }
+                },
+                'print'
+            ],
+            initComplete: function () {
+                console.log("DataTables initialized!"); // Debugging statement
+            }
+        });
+    });
+</script>
+
+
+<script>
+    $(document).ready(function() {
+        $('.invoice-row').click(function() {
+            const invoiceId = $(this).data('invoice-id');
+
+            $.ajax({
+                url: `/get_expense_details/${invoiceId}/`,
+                type: 'GET',
+                success: function(response) {
+                    // Update the modal with expense details
+                    $('#expenseId').text(response.id);
+                    $('#expenseDate').text(response.date);
+                    $('#expenseWarehouseName').text(response.warehouse_name);
+                    $('#warehouseLocation').text(response.warehouse_location);
+                    $('#warehousePhoneNumber').text(response.warehouse_phone_number);
+                    $('#warehouseEmail').text(response.warehouse_email);
+                    $('#warehouseAddressCountry').text(response.warehouse_address_country);
+                    $('#warehouseAddressCity').text(response.warehouse_address_city);
+                    $('#warehouseAddressPostalCode').text(response.warehouse_address_postal_code);
+                    $('#expenseType').text(response.expense_type);
+                    $('#expenseAmount').text(response.amount);
+                    $('#expensePurchaseNote').text(response.purchase_note);
+                    $('#expenseSubCategory').text(response.sub_category);
+                    $('#expenseCategory').text(response.category);
+
+                    // Display payment data
+                    $('#paymentDate').text(response.payment_data.payment_date);
+                    $('#paymentAmount').text(response.payment_data.payment_amount);
+                    $('#paymentMethod').text(response.payment_data.payment_method);
+                    $('#transactionId').text(response.payment_data.transaction_id);
+                    $('#paymentStatus').text(response.payment_data.payment_status);
+
+                    // Show the modal
+                    $('#expenseDetailsModal').modal('show');
+                    $('#voucherNumber').text(response.voucher_number);
+                },
+                error: function() {
+                    // Handle errors if the request fails
+                    alert('Failed to retrieve expense details.');
+                }
+            });
+
+            // Manually handle the close button click
+            $('#expenseDetailsModal').on('hidden.bs.modal', function () {
+                // Close the modal using JavaScript
+                $('#expenseDetailsModal').modal('hide');
+            });
+        });
+    });
+</script>
+
+
+
+
+
+
+{% endblock custom_js %}

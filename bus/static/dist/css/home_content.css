@@ -1,0 +1,51 @@
+.card-header {
+  background: rgb(0, 172, 255);
+  background: radial-gradient(
+    circle,
+    rgba(0, 172, 255, 1) 1%,
+    rgba(42, 47, 120, 1) 100%
+  );
+}
+
+.card-title {
+  color: rgb(255, 255, 255);
+}
+
+.sales-chart-card .card-header{
+    background: rgb(147,76,146);
+background: radial-gradient(circle, rgba(147,76,146,1) 0%, rgba(101,16,88,1) 50%);
+}
+
+.card-map .card-header{
+    background: rgb(71,162,107);
+    background: radial-gradient(circle, rgba(71,162,107,1) 0%, rgba(1,108,19,1) 55%);
+}
+
+.card-customer-overview .card-header{
+    background: rgb(98,65,182);
+    background: radial-gradient(circle, rgba(98,65,182,1) 0%, rgba(71,0,106,1) 65%);
+}
+
+.card-booking .card-header{
+    background: rgb(212,101,194);
+background: radial-gradient(circle, rgba(212,101,194,1) 0%, rgba(190,32,163,1) 65%);
+}
+
+.card-payment .card-header{
+    background: rgb(204,159,85);
+background: radial-gradient(circle, rgba(204,159,85,1) 0%, rgba(187,0,0,1) 65%);
+}
+
+.card-route .card-header{
+    background: rgb(117,85,204);
+background: radial-gradient(circle, rgba(117,85,204,1) 0%, rgba(65,0,156,1) 65%);
+}
+.sales-price {
+  color: black; /* Change this to the desired color */
+}
+
+/* Optionally style the sales text */
+.sales-text {
+  color: black; /* Change this to the desired color */
+  font-size: 14px; /* Customize the font size */
+}

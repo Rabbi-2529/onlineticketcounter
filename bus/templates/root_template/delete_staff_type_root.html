@@ -1,0 +1,28 @@
+{% extends 'root_template/base_template_root.html' %}
+
+{% block main_content %}
+    <div class="container-xl px-4 mt-4">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- general form elements -->
+                    <div class="card card-danger">
+                        <div class="card-header">
+                            <h3 class="card-title">Delete Staff Type</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <p>Are you sure you want to delete the Staff Type "{{ staff_type.name }}"?</p>
+                            <form method="POST">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                                <a href="{% url 'staff_type_list' %}" class="btn btn-secondary">Cancel</a>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- /.card -->
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock main_content %}

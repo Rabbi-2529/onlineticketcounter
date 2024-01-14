@@ -1,0 +1,207 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<style>
+    .container {
+        padding-left: 20px; /* Adjust the padding as needed */
+        padding-right: 20px; /* Adjust the padding as needed */
+    }
+    .term-tab-content {
+        padding: 20px;
+      }
+      
+      .term-tab-content h1 {
+        font-size: 35px;
+        text-align: center;
+        margin: 0;
+        padding: 15px 0;
+        text-decoration: underline;
+      }
+      
+      .term-tab-content h2 {
+        font-size: 30px;
+        text-align: center;
+        padding: 0;
+        text-decoration: underline;
+      }
+      
+      .term-tab-content p {
+        margin: 0;
+        line-height: 1.6;
+      }
+      
+      .term-tab-content b {
+        font-weight: bold;
+      }
+      
+      .term-tab-content ul {
+        list-style-type: disc;
+        padding-left: 20px;
+      }
+      
+      .term-tab-content li {
+        line-height: 1.6;
+      }
+      
+      .term-tab-content h5 {
+        text-decoration: underline;
+        font-weight: bold;
+        margin: 10px 0;
+      }
+      .contact-page-area {
+        padding: 20px;
+        padding-left: 40px;
+        padding-right: 40px;
+    }
+</style>
+<!-- #header -->
+
+<!-- start banner Area -->
+
+<!-- End banner Area -->
+
+<!-- Start contact-page Area -->
+<section class="relative about-banner">
+    <div class="overlay overlay-bg"></div>
+    <br>
+    <div class="container">
+      <div class="row d-flex align-items-center justify-content-center">
+        <div class="about-content col-lg-12">
+          <h1 class="text-white">Insurance</h1>
+          <p class="text-white link-nav">
+            <a href={% url "index" %}>Home </a>
+            <span class="lnr lnr-arrow-right"></span>
+            <a href={% url 'insurance'%}> Insurance </a>
+            <span class="lnr lnr-arrow-right"></span>
+            <a href={% url 'insurance_term'%}> Terms And Conditions </a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+<section class="contact-page-area section-gap " >
+    <div class="term-tab-content">
+        <div id="tab-1" class="tab-content clearfix current">
+            <h1 style="font-size: 35px; text-align: center; margin:0; padding: 15px 0; text-decoration:underline;">PASSENGER PROTECTION PLAN (THE SERVICE)</h1>
+            <h2 style="font-size: 30px; text-align: center; padding:0; text-decoration:underline;">TERMS AND CONDITIONS</h2>
+<br><br>
+
+            <p><b>Accidental Death Benefit: </b> For the purpose of an insurance policy under this Agreement, an <b>accidental death</b> is any <b>death</b> that results from an accident or external violence. Depending on the policy, there are often exclusions. These exclusions are generally death from acts of war, illegal activities or hazardous hobbies. Here, in this agreement, accidental death shall mean the death caused by an accident while travelling by bus/train/launch for which a formal ticket is purchased and accidental death benefit shall mean Tk. 2.00 lac payable to the legal successor/nominee of the deceased traveler. In case injury due to the accident, treatment support shall be given up to Tk. 50,000/- (fifty) thousand.</p>
+            <br>
+            <p><b>Death benefit:</b> For the purpose of an insurance policy under this Agreement, Death Benefit is the amount on a <b>life insurance</b> policy, annuity or pension that is payable to the beneficiary when the <b>insured</b> or annuitant passes away within 7 days of travel date. Here, in this agreement death shall mean the death caused naturally or due to illness and death benefit shall mean the amount of Tk. 50,000/- (fifty) thousand payable to a specific traveler within 07 days of his/her travel performed. </p>
+            <br>
+            <h5 style="text-decoration:underline">EXCLUSION FOR Natural/Accidental Death:</h5>
+            <p>Claim shall not be payable if death is caused by the following actions:</p>
+            <br>
+
+            <ul>
+                <li>attempted suicide or intentionally self-inflicted injury, while sane or insane;</li>
+                <li>strikes, riots, civil commotion, or assault, homicide, revolutions or any war like operations;</li>
+                <li>military or naval service in time of declared or undeclared war or while under orders for war like operations or restoration of public order;</li>
+                <li>making an arrest as an officer of the law;</li> 
+                <li>committing a felony;</li> 
+                <li>racing on wheels;</li>
+                <li>after reaching age 70 years in case of natural death but there will be no age bar in case of accidental death.</li> 
+                <li>accident occurring while or because the Insured is affected by alcohol or any drug;</li>
+                <li>service, travel or flight in or descent from any kind of aircraft, except as a passenger in 
+                    an aircraft operated by a commercial passenger airline on a scheduled air service over an established passenger route.</li> 
+            </ul>
+
+            <br>
+            <p><b>Minor injuries:</b> If the injury meets the definition of a minor injury, this will only impact the General Damages portion of the claim settlement. 
+                General Damages are the term for payments received to compensate instances such as pain and suffering and the inability to perform certain activities</p>
+            <br>
+            <p>Examples of minor injuries as a general case</p>
+            <ul>
+                <li>Sprains;</li>
+                <li>Strains;</li>
+                <li>General aches and pains;</li>
+                <li>Cuts;</li>
+                <li>Bruises;</li>
+                <li>Road rash;</li>
+                <li>Persistent pain;</li>
+                <li>Minor whiplash;</li>
+                <li>Temporomandibular joint disorder or TMJ (pain in your jaw joint and in the jaw muscles);</li>
+                <li>Mild concussions;</li>
+                <li>Short-term mental health conditions.</li>
+            </ul>
+            <br>
+            <p>The list of Minor Injuries mentioned above is not exhaustive. A medical professional will diagnose the
+                injury and determine whether it is minor or not.</p>
+            <br>
+            <p><b>Major Injuries:</b> A major injury is any injury that could potentially lead to death, prolonged disability
+                or permanently diminished quality of life. </p>
+            <br>
+            <p>Examples of major injuries:</p>
+            <ul>
+                <li>Compound fractures; </li>
+                <li>Any type of head or eye injury;</li>
+                <li>Deep lacerations or stab wounds;</li>
+                <li>Gunshot wounds;</li>
+                <li>Severe or extensive burns;</li>
+                <li>Injures accompanied by chest pain, paralysis, confusion, severe bleeding or
+                    unconsciousness.</li>
+            </ul>
+            <br>
+            <p>The list of Major Injuries mentioned above is not exhaustive. A medical professional will diagnose the
+                injury and determine whether it is major or not.</p>
+            <br>
+            <p><b>Claim:</b> An <b>insurance claim</b> is a formal request to an <b>insurance</b> company asking for a payment based
+                on the terms of the <b>insurance</b> policy. The <b>insurance</b> company reviews the <b>claim</b> for its validity and
+                then pays out to the <b>insured</b> or requesting party (on behalf of the insured) once approved. National
+                Identity Document (NID) and death related documents should be produced while lodging the claim.
+                The claim shall be placed to IGL first and then IGL will forward the same to Sunlife with a cover
+                letter/forwarding. This forwarding can be done electronically or by hard copy. A claim shall be settled
+                within 5-7 working days and in case of any urgency, the claim may be settled within 72 hours.</p>
+            <br>
+            <h5 style="text-decoration:underline">Claim Documentation</h5>
+            <p>The claimant among Customers must provide the documents mentioned below in digital format
+                and in physical hardcopy in order to submit a claim:</p>
+            <br>
+            <h5 style="text-decoration:underline">For Natural Deaths:</h5>
+            <ul>
+                <li>Death Certificate from the last attending physician/clinic/hospital mentioning the actual
+                    cause of death;</li>
+                <li>Proof of Age (NID/Passport/Birth Certificate)</li>
+                <li>Original Valid Bus Ticket or sufficient reference confirming the ticket</li>
+            </ul>
+            <br>
+            <h5 style="text-decoration:underline">For Accidental Deaths</h5>
+            <ul>
+                <li>Surtohal report done by Police.</li>
+                <li>Death Certificate from the last attending physician/clinic/hospital mentioning the actual
+                    cause of death;</li>
+                <li>Proof of Age (NID/Passport/Birth Certificate);</li>
+                <li>Original Valid Bus Ticket or sufficient reference confirming the ticket.</li>
+            </ul>
+            <br>
+            <h5 style="text-decoration:underline">For Accidental Hospitalization</h5>
+            <ul>
+                <li>Doctors’ Advice for hospitalization;</li>
+                <li>Discharge Certificate;</li>
+                <li>Original copy of the Hospital Bills;</li>
+                <li>All medical reports such as X-Ray, City Scan, MRI or such relevant reports;</li>
+                <li>Original Valid Bus Ticket or sufficient reference confirming the ticket;</li>
+                <li>Any other supporting documents (if required).</li>
+            </ul>
+            <br>
+            <p><b>online booking tickets:</b>  It shall mean, indicate and cover all types of tickets (Bus) that have been sold in association with IGL. Such types of tickets 
+            shall be under coverage of stated insurance benefits mentioned in clause 3.1 if the Customers of 
+            the tickets opt for it. As per the agreement the insurance benefit shall be given against travel 
+            with formal tickets or enjoyment of any events with formal tickets. Formal tickets shall mean the 
+            tickets sold by the concern authority in association with IGL, that is through IGL. </p>
+            <br><br>
+        </div>
+    </div> 
+</section>
+{% endblock content %}
+<!-- End contact-page Area -->
+
+<!-- start footer Area -->
+
+<!-- End footer Area -->
+{% block js %}
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBhOdIF3Y9382fqJYt5I_sswSrEw5eihAA"></script>
+
+{% endblock js %}

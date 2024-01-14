@@ -1,0 +1,135 @@
+{% extends 'root_template/base_template_root.html' %}
+
+{% load static %}
+{% block custom_css %}
+    <link rel="stylesheet" href="{% static "dist/css/add_coach.css" %}">
+    <link rel="stylesheet" href="{% static "dist/css/inventory_sub.css" %}">
+    
+{% endblock custom_css %}
+
+{% block main_content %}
+    <div class="container-xl px-4 mt-4">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- general form elements -->
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">Manage Coach</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <form method="GET" action="{% url 'manage_coach' %}" class="search-form">
+                            <div class="row card-body justify-content-between pb-0">
+                               
+                                {% comment %} <div class="form-group col-md-6 col-12">
+                                    <div class="input-group">
+                                        <input type="text" name="search_query" id="search-input" class="form-control form-control-sm search-input me-0" placeholder="Search by coach model name or coach number" value="{{ search_query }}">
+                                        <div class="input-group-append">
+                                            <button type="submit" class="btn btn-primary search-button">Search</button>
+                                        </div>
+                                    </div>
+                                </div> {% endcomment %}
+                            </div> 
+                        </form>
+                        <div class="card-body">
+                            <table id="paydetaillist" class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Company Name</th>
+                                    <th>Name</th>
+                                    <th>Mobile Number</th>
+                                    <th>Email</th>
+                                    <th>Department</th>
+                                    <th>Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    {% for company in companies %}
+                                    <tr>
+                                        <td>{{ company.name }}</td>
+                                        <td>{{ company.root_user.name }}</td>
+                                        <td>{{ company.root_user.phone_number }}</td>
+                                        <td>{{ company.root_user.email }}</td>
+                                        <td>
+                                            {% for staff_type in company.staff_types.all %}
+                                                {{ staff_type.name }}
+                                                {% if not forloop.last %}, {% endif %}
+                                            {% endfor %}
+                                        </td>
+                                        <td>
+                                            <div class="dropdown">
+                                                <button class="btn btn-secondary custom-btn-group dropdown-toggle" type="button" id="actionsDropdown{{ forloop.counter }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    Actions
+                                                </button>
+
+
+                                         <div class="dropdown-menu" aria-labelledby="actionsDropdown{{ forloop.counter }}">
+                                            <a class="dropdown-item action-link"  href="{% url 'assign_staff_type' company.company_id %}" >Assign</a>
+                                        
+                                         
+                                        </div>
+                                             
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="6">No companies found.</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        <br>
+                        
+                        </div>
+                    </div>
+                    <!-- /.card -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#paydetaillist').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'copy',
+                    text: 'Copy',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3] // Specify which columns to include
+                    }
+                },
+                {
+                    extend: 'csv',
+                    text: 'CSV',
+                    filename: 'Company list', // Specify the filename
+                    extension: '.csv',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3] // Specify which columns to include
+                    },
+                    fieldSeparator: ',', // Specify the field separator (comma)
+                    fieldBoundary: '"' // Specify the field boundary character
+                },
+                {
+                    extend: 'excel',
+                    text: 'Excel',
+                    filename: 'Payment Details', // Specify the filename
+                    extension: '.xlsx',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3] // Specify which columns to include
+                    }
+                },
+                'pdf',
+                'print'
+            ],
+            initComplete: function () {
+                console.log("DataTables initialized!"); // Debugging statement
+            }
+        });
+    });
+    </script>
+<!-- /.content -->
+{% endblock main_content %}

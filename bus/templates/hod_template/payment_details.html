@@ -1,0 +1,100 @@
+{% extends 'hod_template/base_template.html' %}
+{% load static %}
+{% block page_title %}
+Cancellation Confirmation
+{% endblock page_title %}
+{% block custom_css %}
+
+<link rel="stylesheet" href="{% static "dist/css/manage_user.css" %}">
+{% endblock custom_css %}
+{% block main_content %}
+
+<div class="container-xl px-4 mt-4">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header d-flex justify-content-center">
+                        <h3 class="card-title py-2">Payment Details</h3>
+                    </div>
+                    <div class="card-body">
+
+    
+                        <div class="table-responsive">
+                            <table id="paydetaillist" class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Amount Paid</th>
+                                        <th>Payment Type</th>
+                                        <th>Date Paid</th>
+                                        <th>Payment Created By</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for payment in payments %}
+                                    <tr>
+                                        <td>{{ payment.amount_paid }}</td>
+                                        <td>{{ payment.payment_type }}</td>
+                                        <td>{{ payment.date_paid|date:"F j, Y, g:i a" }}</td>
+                                        <td>{{ payment.created_by.username }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+    
+                        <!-- Add DataTables buttons and initialize DataTables -->
+                   
+    
+                        <!-- Add a link to go back to the booking list -->
+                        <a href="{% url 'booking_list' %}" class="btn btn-primary">Back to Booking List</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+$(document).ready(function() {
+    $('#paydetaillist').DataTable({
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                extend: 'copy',
+                text: 'Copy',
+                exportOptions: {
+                    columns: [0, 1, 2, 3] // Specify which columns to include
+                }
+            },
+            {
+                extend: 'csv',
+                text: 'CSV',
+                filename: 'Payment Details', // Specify the filename
+                extension: '.csv',
+                exportOptions: {
+                    columns: [0, 1, 2, 3] // Specify which columns to include
+                },
+                fieldSeparator: ',', // Specify the field separator (comma)
+                fieldBoundary: '"' // Specify the field boundary character
+            },
+            {
+                extend: 'excel',
+                text: 'Excel',
+                filename: 'Payment Details', // Specify the filename
+                extension: '.xlsx',
+                exportOptions: {
+                    columns: [0, 1, 2, 3] // Specify which columns to include
+                }
+            },
+            'pdf',
+            'print'
+        ],
+        initComplete: function () {
+            console.log("DataTables initialized!"); // Debugging statement
+        }
+    });
+});
+</script>
+{% endblock main_content %}

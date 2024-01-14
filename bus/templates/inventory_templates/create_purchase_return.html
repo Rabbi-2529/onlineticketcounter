@@ -1,0 +1,143 @@
+{% extends 'inventory_templates/inventory_base.html' %}
+{% load static %}
+
+{% block custom_css %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.9/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="{% static "dist/css/trading.css" %}">
+    <style>
+        .container-xl {
+            max-width: 648px;
+        }
+    </style>
+{% endblock custom_css %}
+
+{% block main_content %}
+<div class="container-xl px-2 mt-4">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header d-flex justify-content-center">
+                        <h3 class="card-title py-2">Add Returns</h3>
+                    </div>
+                    <div class="card-body">
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="purchase_return_date">Purchase Return Date</label>
+                                <input type="date" class="form-control" id="purchase_return_date" name="purchase_return_date" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="reference">Reference</label>
+                                <input type="text" class="form-control" id="reference" name="reference" required autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label for="supplier">Supplier</label>
+                                <select class="form-control" id="supplier" name="supplier" required>
+                                    <option value="" disabled selected>Select a supplier</option>
+                                    {% for supplier in suppliers %}
+                                        <option value="{{ supplier.id }}">{{ supplier.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="warehouse">Warehouse</label>
+                                <select class="form-control" id="warehouse" name="warehouse" required>
+                                    <option value="" disabled selected>Select a warehouse</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="amount">Amount</label>
+                                <input type="number" step="0.01" class="form-control" id="amount" name="amount" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="remark">Remark</label>
+                                <select class="form-control" id="remark" name="remark" required>
+                                    <option value="" disabled selected>Select a remark</option>
+                                    {% for choice in REMARK_CHOICES %}
+                                        <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                          
+                            <div class="form-group">
+                                <label for="purchase">Purchase</label>
+                                <select class="form-control" id="purchase" name="purchase" required>
+                                    <option value="" disabled selected>Select a purchase</option>
+                                    {% for purchase in purchases %}
+                                        <option value="{{ purchase.id }}">{{ purchase.product.name }} ({{ purchase.purchase_date }})</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                               <div class="form-group">
+                                <label for="remark">Action</label>
+                                <select class="form-control" id="remark" name="remark" required>
+                                    <option value="" disabled selected>Select a remark</option>
+                                    {% for choice in ACTION_CHOICES %}
+                                        <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <button type="submit" class="save-btn" style="color:#fbfbfb">Create Purchase Return</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#supplier').on('change', function () {
+            var supplierId = $(this).val();
+            if (supplierId) {
+                $.ajax({
+                    url: '/get_warehouses/' + supplierId + '/',
+                    type: 'GET',
+                    success: function (data) {
+                        $('#warehouse').empty().append('<option value="">Select a warehouse</option>');
+                        if (data.length > 0) {
+                            data.forEach(function (warehouse) {
+                                $('#warehouse').append('<option value="' + warehouse.id + '">' + warehouse.name + '</option>');
+                            });
+                        } else {
+                            $('#warehouse').append('<option value="">No warehouses available for this supplier</option>');
+                        }
+                    }
+                });
+            } else {
+                $('#warehouse').empty().append('<option value="">Select a warehouse</option>');
+                $('#purchase').empty().append('<option value="" disabled>Select a purchase</option>');
+            }
+        });
+
+        $('#warehouse').on('change', function () {
+            var supplierId = $('#supplier').val();
+            var warehouseId = $(this).val();
+            if (supplierId && warehouseId) {
+                $.ajax({
+                    url: '/get_purchases/' + supplierId + '/' + warehouseId + '/',
+                    type: 'GET',
+                    success: function (data) {
+                        $('#purchase').empty().append('<option value="" disabled selected>Select a purchase</option>');
+                        if (data.length > 0) {
+                            data.forEach(function (purchase) {
+                                $('#purchase').append('<option value="' + purchase.id + '">' + purchase.id + '</option>');
+                            });
+                        } else {
+                            $('#purchase').append('<option value="">No purchases available for this supplier and warehouse</option>');
+                        }
+                    }
+                });
+            } else {
+                $('#purchase').empty().append('<option value="" disabled selected>Select a purchase</option>');
+            }
+        });
+
+        // Add more JavaScript code here to handle form submission and other actions
+    });
+</script>
+{% endblock %}
